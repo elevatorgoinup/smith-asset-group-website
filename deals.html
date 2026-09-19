@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Active Deals — Smith Asset Group</title>
+<style>
+  :root{
+    --bg:#12140f; --surface:#1a1d15; --surface-2:#20241a; --border:#2c3122;
+    --text:#f3f4ee; --text-muted:#a7ab9b; --text-faint:#6f7362;
+    --lime:#c8f135; --lime-ink:#1c2408; --coral:#ff6b4a; --gold:#e3b34c;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background-color:var(--bg); color:var(--text); margin:0;
+    background-image:linear-gradient(rgba(200,241,53,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,241,53,.05) 1px, transparent 1px);
+    background-size:48px 48px;
+  }
+  .wrap{max-width:1100px; margin:0 auto; padding-inline:24px;}
+  .top-bar{height:3px; background:linear-gradient(90deg,var(--lime),var(--gold),var(--coral));}
+  h1,h2,h3{font-family:"Fraunces",Georgia,"Times New Roman",serif; text-wrap:balance; margin:0;}
+  p,li,a,button,span,label{font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;}
+  a{color:var(--lime); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  .tech-frame{position:relative;}
+  .tech-frame::before,.tech-frame::after{content:""; position:absolute; width:14px; height:14px; pointer-events:none;}
+  .tech-frame::before{top:-1px; left:-1px; border-top:2px solid var(--lime); border-left:2px solid var(--lime);}
+  .tech-frame::after{bottom:-1px; right:-1px; border-bottom:2px solid var(--lime); border-right:2px solid var(--lime);}
+
+  .mono-tag{font-family:"IBM Plex Mono",monospace; font-size:.74rem; color:var(--text-faint); margin-bottom:12px; display:block;}
+
+  header.site{position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:rgba(18,20,15,.88); backdrop-filter:blur(8px); border-bottom:1px solid var(--border);}
+  .nav{display:flex; align-items:center; justify-content:space-between; padding-block:16px;}
+  .logo{font-family:"Fraunces",serif; font-weight:700; font-size:1.15rem; color:var(--text);}
+  .logo em{color:var(--lime); font-style:normal;}
+  nav.links{display:flex; gap:20px; align-items:center;}
+  nav.links a{color:var(--text-muted); font-size:.9rem;}
+  nav.links a:hover{color:var(--text); text-decoration:none;}
+  nav.links a.active{color:var(--lime);}
+  .btn-nav{color:var(--bg)!important; background:var(--lime); padding:8px 16px; border-radius:3px; font-size:.88rem; font-weight:600;}
+
+  .eyebrow{font-family:"IBM Plex Mono",monospace; text-transform:uppercase; letter-spacing:.14em; font-size:.76rem; color:var(--lime); border-left:2px solid var(--lime); padding-left:10px;}
+
+  section{padding-block:60px; border-bottom:1px solid var(--border);}
+  section:last-of-type{border-bottom:none;}
+  .hero{padding-top:80px; padding-bottom:40px;}
+  .hero h1{font-size:clamp(2.1rem,4.6vw,3.2rem); line-height:1.12; font-weight:600; margin-top:20px; max-width:24ch;}
+  .hero .lede{font-size:1.06rem; color:var(--text-muted); max-width:58ch; margin-top:20px; line-height:1.6;}
+
+  .legend{display:flex; gap:22px; margin-top:26px; flex-wrap:wrap;}
+  .legend .item{display:flex; align-items:center; gap:8px; font-family:"IBM Plex Mono",monospace; font-size:.78rem; color:var(--text-muted);}
+  .legend .dot{width:8px; height:8px; border-radius:50%;}
+  .dot-available{background:var(--lime);}
+  .dot-contract{background:var(--gold);}
+  .dot-sold{background:var(--text-faint);}
+
+  .deals-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:24px;}
+  .deal-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:4px; overflow:hidden;
+    display:flex; flex-direction:column; transition:transform .15s, box-shadow .15s, border-color .15s;
+  }
+  .deal-card:hover{transform:translateY(-3px); box-shadow:0 14px 30px -18px rgba(0,0,0,.6); border-color:#3a4028;}
+  .deal-photo{
+    height:170px; background:
+      repeating-linear-gradient(135deg, var(--surface-2) 0px, var(--surface-2) 2px, var(--surface) 2px, var(--surface) 14px);
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; position:relative;
+  }
+  .deal-photo svg{width:40px; height:40px; color:var(--text-faint); opacity:.55;}
+  .deal-photo .ph-label{position:absolute; bottom:9px; left:11px; font-family:"IBM Plex Mono",monospace; font-size:.64rem; color:var(--text-faint); text-transform:uppercase; letter-spacing:.06em; background:rgba(18,20,15,.6); padding:3px 7px; border-radius:2px;}
+  .deal-status{position:absolute; top:10px; right:10px; font-family:"IBM Plex Mono",monospace; font-size:.66rem; text-transform:uppercase; letter-spacing:.06em; font-weight:600; padding:4px 9px; border-radius:2px; background:rgba(18,20,15,.82);}
+  .status-available{color:var(--lime); border:1px solid var(--lime);}
+  .status-contract{color:var(--gold); border:1px solid var(--gold);}
+  .status-sold{color:var(--text-faint); border:1px solid var(--border);}
+  .deal-body{padding:18px 20px 20px; display:flex; flex-direction:column; gap:6px; flex-grow:1;}
+  .deal-price{font-family:"Fraunces",serif; font-size:1.55rem; font-weight:600; color:var(--text); line-height:1.1;}
+  .deal-price small{font-family:"IBM Plex Mono",monospace; font-size:.68rem; font-weight:500; color:var(--text-faint); text-transform:uppercase; letter-spacing:.05em; display:block; margin-top:2px;}
+  .deal-addr{font-size:.95rem; font-weight:600; color:var(--text); margin-top:6px;}
+  .deal-loc{font-family:"IBM Plex Mono",monospace; font-size:.74rem; color:var(--text-faint);}
+  .deal-specs{display:flex; gap:16px; font-size:.83rem; color:var(--text-muted); flex-wrap:wrap; margin-top:8px; padding-top:10px; border-top:1px solid var(--border);}
+  .deal-specs span{display:inline-flex; align-items:center; gap:5px;}
+  .deal-specs svg{width:15px; height:15px; color:var(--text-faint); flex-shrink:0;}
+  .deal-desc{font-size:.85rem; color:var(--text-muted); line-height:1.55; margin:6px 0 0 0;}
+  .deal-cta{display:block; text-align:center; padding:13px; background:var(--surface-2); border-top:1px solid var(--border); font-weight:600; font-size:.86rem; color:var(--lime); margin-top:auto;}
+  .deal-cta:hover{background:var(--border); text-decoration:none;}
+  .sample-flag{font-family:"IBM Plex Mono",monospace; font-size:.66rem; color:var(--gold); text-transform:uppercase; letter-spacing:.06em;}
+
+  .empty-state{
+    background:var(--surface); border:1px dashed var(--border); border-radius:2px; padding:48px; text-align:center; margin-top:24px;
+  }
+  .empty-state h3{font-size:1.2rem; font-weight:600; margin-bottom:10px;}
+  .empty-state p{color:var(--text-muted); font-size:.92rem; max-width:52ch; margin:0 auto 20px auto; line-height:1.6;}
+
+  .cta-panel{background:linear-gradient(160deg,var(--surface-2),var(--surface)); border:1px solid var(--border); border-radius:2px; padding:40px; text-align:left;}
+  .cta-panel h2{font-size:clamp(1.6rem,3vw,2.1rem); max-width:24ch;}
+  .cta-panel p{color:var(--text-muted); margin-top:12px; max-width:48ch; line-height:1.6;}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:3px; font-weight:600; font-size:.92rem; border:1px solid transparent; cursor:pointer; margin-top:18px;}
+  .btn-lime{background:var(--lime); color:var(--lime-ink);}
+  .btn-lime:hover{background:#d8ff4c;}
+
+  footer.site{padding-block:40px;}
+  .foot-row{display:flex; justify-content:space-between; align-items:flex-start; gap:24px; flex-wrap:wrap;}
+  .foot-links{display:flex; gap:20px; flex-wrap:wrap;}
+  .foot-links a{color:var(--text-muted); font-size:.85rem;}
+  .foot-links a:hover{color:var(--text);}
+  .copyright{color:var(--text-faint); font-size:.8rem; font-family:"IBM Plex Mono",monospace;}
+
+  @media (max-width:900px){ .deals-grid{grid-template-columns:1fr 1fr;} }
+  @media (max-width:760px){
+    .deals-grid{grid-template-columns:1fr;}
+    nav.links{gap:12px;}
+    nav.links .hide-mobile{display:none;}
+    section{padding-block:44px;}
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,500..600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="top-bar"></div>
+<header class="site">
+  <div class="wrap nav">
+    <a class="logo" href="index.html">Smith Asset <em>Group</em></a>
+    <nav class="links">
+      <a href="deals.html" class="hide-mobile active">Deals</a>
+      <a href="index.html#sell" class="hide-mobile">Sell</a>
+      <a href="index.html#buy" class="hide-mobile">Buy</a>
+      <a href="agents.html" class="hide-mobile">Agents</a>
+      <a href="academy.html" class="hide-mobile">Academy</a>
+      <a href="grade.html" class="hide-mobile">Grade</a>
+      <a href="index.html" class="btn-nav">Home</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero wrap">
+  <div class="eyebrow">Active Inventory</div>
+  <h1>Deals ready to move.</h1>
+  <p class="lede">Off-market properties Smith Asset Group LLC currently has under contract or newly assigned, open to our cash buyer network. Updated directly by us as deals move &mdash; no stale listings.</p>
+  <div class="legend">
+    <span class="item"><span class="dot dot-available"></span>Available</span>
+    <span class="item"><span class="dot dot-contract"></span>Under Contract</span>
+    <span class="item"><span class="dot dot-sold"></span>Sold</span>
+  </div>
+</section>
+
+<section class="wrap">
+  <span class="mono-tag">// deals.sample_layout</span>
+  <div class="deals-grid" id="dealsGrid">
+    <div class="deal-card tech-frame">
+      <div class="deal-photo">
+        <span class="deal-status status-available">Available</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+        <span class="ph-label">Photo pending</span>
+      </div>
+      <div class="deal-body">
+        <span class="sample-flag">Sample layout &mdash; not a real listing</span>
+        <div class="deal-price">$0,000<small>Assignment fee</small></div>
+        <div class="deal-addr">123 Example St</div>
+        <div class="deal-loc">Augusta, GA &middot; Richmond County</div>
+        <div class="deal-specs">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M3 18h18M5 10V7a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3"/></svg>3 bd</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M6 12V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2M4 18a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4"/></svg>1.5 ba</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M9 3v18M3 9h6"/></svg>1,320 sqft</span>
+        </div>
+        <p class="deal-desc">This card shows how a real deal will look once one is published &mdash; photo, specs, assignment fee, and a direct inquiry link.</p>
+      </div>
+      <a class="deal-cta" href="index.html#buy">I'm Interested</a>
+    </div>
+  </div>
+
+  <div class="empty-state">
+    <h3>No live deals published yet</h3>
+    <p>This page is built and ready &mdash; it just needs your actual inventory. Send over the address, price/assignment fee, specs (beds/baths/sqft/condition), a short blurb, and photos for each active deal, and they'll go up here directly, in place of the sample card above.</p>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="cta-panel tech-frame">
+    <h2>Want first look at new deals as they go live?</h2>
+    <p>Join the buyer's list and get matched against inventory before it's posted here publicly.</p>
+    <a class="btn btn-lime" href="index.html#buy">Join the Buyer's List</a>
+  </div>
+</section>
+
+<footer class="site wrap">
+  <div class="foot-row">
+    <div class="copyright">&copy; 2026 Smith Asset Group LLC</div>
+    <div class="foot-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#sell">Sell</a>
+      <a href="index.html#buy">Buy</a>
+      <a href="agents.html">Agents</a>
+      <a href="vault.html">Vault</a>
+      <a href="academy.html">Academy</a>
+      <a href="grade.html">Grade</a>
+      <a href="terms.html">Terms &amp; Conditions</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Partnerships — Smith Asset Group</title>
+<style>
+  :root{
+    --bg:#12140f; --surface:#1a1d15; --surface-2:#20241a; --border:#2c3122;
+    --text:#f3f4ee; --text-muted:#a7ab9b; --text-faint:#6f7362;
+    --lime:#c8f135; --lime-ink:#1c2408; --coral:#ff6b4a; --gold:#e3b34c;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background-color:var(--bg); color:var(--text); margin:0;
+    background-image:linear-gradient(rgba(200,241,53,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,241,53,.05) 1px, transparent 1px);
+    background-size:48px 48px;
+  }
+  .wrap{max-width:1100px; margin:0 auto; padding-inline:24px;}
+  .top-bar{height:3px; background:linear-gradient(90deg,var(--lime),var(--gold),var(--coral));}
+  h1,h2,h3{font-family:"Fraunces",Georgia,"Times New Roman",serif; text-wrap:balance; margin:0;}
+  p,li,a,button,span,label,input,select,textarea{font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;}
+  a{color:var(--gold); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  .tech-frame{position:relative;}
+  .tech-frame::before,.tech-frame::after{content:""; position:absolute; width:14px; height:14px; pointer-events:none;}
+  .tech-frame::before{top:-1px; left:-1px; border-top:2px solid var(--gold); border-left:2px solid var(--gold);}
+  .tech-frame::after{bottom:-1px; right:-1px; border-bottom:2px solid var(--gold); border-right:2px solid var(--gold);}
+
+  .mono-tag{font-family:"IBM Plex Mono",monospace; font-size:.74rem; color:var(--text-faint); margin-bottom:12px; display:block;}
+  .mono-tag .path{color:var(--gold);}
+
+  header.site{position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:rgba(18,20,15,.88); backdrop-filter:blur(8px); border-bottom:1px solid var(--border);}
+  .nav{display:flex; align-items:center; justify-content:space-between; padding-block:16px;}
+  .logo{font-family:"Fraunces",serif; font-weight:700; font-size:1.15rem; color:var(--text);}
+  .logo em{color:var(--lime); font-style:normal;}
+  nav.links{display:flex; gap:24px; align-items:center;}
+  nav.links a{color:var(--text-muted); font-size:.92rem;}
+  nav.links a:hover{color:var(--text); text-decoration:none;}
+  nav.links a.active{color:var(--gold);}
+  .btn-nav{color:var(--bg)!important; background:var(--lime); padding:8px 16px; border-radius:3px; font-size:.88rem; font-weight:600;}
+  .btn-nav:hover{text-decoration:none; background:#d8ff4c;}
+
+  .eyebrow{font-family:"IBM Plex Mono",monospace; text-transform:uppercase; letter-spacing:.14em; font-size:.76rem; color:var(--gold); border-left:2px solid var(--gold); padding-left:10px;}
+
+  section{padding-block:64px; border-bottom:1px solid var(--border);}
+  section:last-of-type{border-bottom:none;}
+  .hero{padding-top:80px; padding-bottom:48px;}
+  .hero h1{font-size:clamp(2.1rem,4.6vw,3.3rem); line-height:1.12; font-weight:600; margin-top:20px; max-width:22ch;}
+  .hero h1 i{font-style:italic; color:var(--gold);}
+  .hero .lede{font-size:1.08rem; color:var(--text-muted); max-width:58ch; margin-top:20px; line-height:1.6;}
+
+  .kicker-row{display:flex; align-items:baseline; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:40px;}
+  .kicker-row h2{font-size:clamp(1.6rem,3vw,2.2rem); font-weight:600;}
+  .kicker-row .count{font-family:"IBM Plex Mono",monospace; color:var(--text-faint); font-size:.85rem;}
+
+  .fork-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  .fork-card{background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--gold); border-radius:2px; padding:32px; display:flex; flex-direction:column; gap:14px;}
+  .fork-card .tag{font-family:"IBM Plex Mono",monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.1em; color:var(--text-faint);}
+  .fork-card h3{font-size:1.35rem; font-weight:600;}
+  .fork-card p{color:var(--text-muted); font-size:.94rem; line-height:1.6; margin:0; flex-grow:1;}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:3px; font-weight:600; font-size:.92rem; border:1px solid transparent; cursor:pointer; align-self:flex-start;}
+  .btn-gold{background:var(--gold); color:var(--lime-ink);}
+  .btn-gold:hover{background:#f0c869;}
+
+  .info-block{background:var(--surface); border:1px solid var(--border); border-radius:2px; padding:32px; margin-top:20px;}
+  .info-block h3{font-size:1.15rem; font-weight:600; margin-bottom:14px;}
+  .info-block p{color:var(--text-muted); font-size:.95rem; line-height:1.65; margin:0 0 10px 0;}
+  .info-block ul{color:var(--text-muted); font-size:.92rem; line-height:1.7; margin:0; padding-left:20px;}
+  .info-block li{margin-bottom:6px;}
+  .info-block li b{color:var(--text);}
+  .info-note{font-size:.8rem; color:var(--text-faint); margin-top:14px; border-top:1px solid var(--border); padding-top:12px;}
+
+  .form-panel{background:var(--surface); border:1px solid var(--border); border-radius:2px; padding:40px;}
+  .form-panel .tag{font-family:"IBM Plex Mono",monospace; font-size:.72rem; text-transform:uppercase; letter-spacing:.1em; color:var(--gold);}
+  .form-panel h2{font-size:clamp(1.5rem,3vw,2rem); font-weight:600; margin-top:10px;}
+  .form-panel .sub{color:var(--text-muted); font-size:.94rem; margin-top:10px; max-width:56ch; line-height:1.6;}
+  .form-grid{display:grid; grid-template-columns:1fr 1fr; gap:18px 20px; margin-top:28px;}
+  .field{display:flex; flex-direction:column; gap:7px;}
+  .field.full{grid-column:1 / -1;}
+  .field label{font-size:.82rem; color:var(--text-muted); font-weight:500;}
+  .field label .req{color:var(--coral);}
+  .field input, .field select, .field textarea{background:var(--surface-2); border:1px solid var(--border); border-radius:3px; color:var(--text); padding:11px 12px; font-size:.95rem; width:100%;}
+  .field input:focus, .field select:focus, .field textarea:focus{outline:none; border-color:var(--gold);}
+  .field textarea{resize:vertical; min-height:80px;}
+  .submit-row{margin-top:26px; display:flex; align-items:center; gap:18px; flex-wrap:wrap;}
+  .form-note{font-size:.85rem; color:var(--text-faint); margin:0;}
+  .form-note.success{color:var(--gold);}
+
+  footer.site{padding-block:40px;}
+  .foot-row{display:flex; justify-content:space-between; align-items:flex-start; gap:24px; flex-wrap:wrap;}
+  .foot-links{display:flex; gap:22px; flex-wrap:wrap;}
+  .foot-links a{color:var(--text-muted); font-size:.85rem;}
+  .foot-links a:hover{color:var(--text);}
+  .copyright{color:var(--text-faint); font-size:.8rem; font-family:"IBM Plex Mono",monospace;}
+
+  @media (max-width:760px){
+    .fork-grid{grid-template-columns:1fr;}
+    .form-grid{grid-template-columns:1fr;}
+    .form-panel{padding:26px;}
+    nav.links{gap:14px;}
+    nav.links .hide-mobile{display:none;}
+    section{padding-block:48px;}
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,500..600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="top-bar"></div>
+<header class="site">
+  <div class="wrap nav">
+    <a class="logo" href="index.html">Smith Asset <em>Group</em></a>
+    <nav class="links">
+      <a href="deals.html" class="hide-mobile">Deals</a>
+      <a href="index.html#sell" class="hide-mobile">Sell</a>
+      <a href="index.html#buy" class="hide-mobile">Buy</a>
+      <a href="agents.html" class="hide-mobile active">Agents</a>
+      <a href="vault.html" class="hide-mobile">Vault</a>
+      <a href="academy.html" class="hide-mobile">Academy</a>
+      <a href="grade.html" class="hide-mobile">Grade</a>
+      <a href="index.html" class="btn-nav">Home</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero wrap">
+  <div class="eyebrow">For Licensed Georgia Agents &amp; Brokerages</div>
+  <h1>The agent and the wholesaler, <i>working the same deal.</i></h1>
+  <p class="lede">Smith Asset Group LLC isn't trying to replace agents &mdash; we're trying to work alongside them. Some sellers need speed and certainty more than top-dollar-and-months-on-market; some buyers on our assigned contracts still want representation. Either way, there's a lane for an agent to get paid on a deal that wouldn't have existed otherwise.</p>
+</section>
+
+<section class="wrap">
+  <span class="mono-tag">// partnership.choose_your_lane</span>
+  <div class="kicker-row">
+    <h2>Two ways to work together</h2>
+    <span class="count">Referral or representation</span>
+  </div>
+  <div class="fork-grid">
+    <div class="fork-card tech-frame">
+      <span class="tag">Bring Us a Lead</span>
+      <h3>Refer a seller</h3>
+      <p>You've got a seller who wants speed, certainty, or a no-repairs cash sale more than a traditional listing &mdash; inherited property, a portfolio liquidation, a seller who can't wait for financing to fall through twice. Refer them to us and a referral fee is agreed in writing before we ever contact your client.</p>
+      <a class="btn btn-gold" href="#partner-form">Refer a Seller</a>
+    </div>
+    <div class="fork-card tech-frame">
+      <span class="tag">Represent Our Buyers</span>
+      <h3>Work the buy side</h3>
+      <p>When one of our assigned contracts closes, the buyer's side of that transaction can still run through a licensed agent where applicable. If you represent active cash buyers or want to, we'll loop you in on deals that fit their box.</p>
+      <a class="btn btn-gold" href="#partner-form">Represent a Buyer</a>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <span class="mono-tag">// partnership.how_the_split_works</span>
+  <div class="info-block tech-frame">
+    <h3>How the split actually works</h3>
+    <p>There's no fixed public rate card here on purpose &mdash; every referral fee or co-broke split is negotiated per deal and put in writing before any client information changes hands, consistent with Georgia real estate license law (a referral fee to a licensed agent or broker is standard practice; nothing here is structured to pay an unlicensed party for activity that requires a license).</p>
+    <ul>
+      <li><b>Seller referral:</b> you introduce the seller, we handle the acquisition and paperwork, your fee is paid at closing per the written referral agreement.</li>
+      <li><b>Buyer-side representation:</b> your buyer client purchases an assigned contract or closes with us directly; your commission follows the agreement you already have with that buyer.</li>
+      <li><b>Nothing is exclusive.</b> Working with us on one deal doesn't obligate you (or us) on the next one &mdash; we'd just rather build a relationship than a one-off.</li>
+    </ul>
+    <p class="info-note">This page describes a general framework, not a binding offer or a specific commission rate. Terms for any individual deal are set out in a separate written referral or co-brokerage agreement reviewed by both parties.</p>
+  </div>
+</section>
+
+<section class="wrap" id="partner-form">
+  <span class="mono-tag">// agent_intake.form</span>
+  <div class="form-panel tech-frame">
+    <span class="tag">Agent Intake</span>
+    <h2>Tell us about you and the deal</h2>
+    <p class="sub">Whether you've got a seller to refer, a buyer to represent, or just want to open the relationship &mdash; start here.</p>
+
+    <form id="agentForm" novalidate>
+      <div class="form-grid">
+        <div class="field"><label for="a_name">Full name <span class="req">*</span></label><input id="a_name" name="Full name" type="text" required></div>
+        <div class="field"><label for="a_phone">Phone <span class="req">*</span></label><input id="a_phone" name="Phone" type="tel" required></div>
+        <div class="field"><label for="a_email">Email</label><input id="a_email" name="Email" type="email"></div>
+        <div class="field"><label for="a_brokerage">Brokerage</label><input id="a_brokerage" name="Brokerage" type="text"></div>
+        <div class="field"><label for="a_license">Georgia license #</label><input id="a_license" name="Georgia license number" type="text"></div>
+        <div class="field"><label for="a_type">Collaboration type <span class="req">*</span></label>
+          <select id="a_type" name="Collaboration type" required>
+            <option value="" disabled selected>Select one</option>
+            <option>Refer a seller lead</option>
+            <option>Represent a buyer</option>
+            <option>Both</option>
+            <option>Just exploring</option>
+          </select>
+        </div>
+        <div class="field"><label for="a_area">Primary area(s) served</label><input id="a_area" name="Primary areas served" type="text" placeholder="e.g. Richmond &amp; Columbia County"></div>
+        <div class="field full"><label for="a_details">Deal details</label><textarea id="a_details" name="Deal details" placeholder="Optional &mdash; property address, buyer criteria, or just a note to start the conversation"></textarea></div>
+      </div>
+      <div class="submit-row">
+        <button type="submit" class="btn btn-gold">Submit &amp; Email Us</button>
+        <p class="form-note" id="agentNote">We'll open an email to Smith Asset Group LLC with your details &mdash; nothing sends until you do.</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer class="site wrap">
+  <div class="foot-row">
+    <div class="copyright">&copy; 2026 Smith Asset Group LLC</div>
+    <div class="foot-links">
+      <a href="index.html">Home</a>
+      <a href="deals.html">Deals</a>
+      <a href="index.html#sell">Sell</a>
+      <a href="index.html#buy">Buy</a>
+      <a href="vault.html">Vault</a>
+      <a href="academy.html">Academy</a>
+      <a href="grade.html">Grade</a>
+      <a href="terms.html">Terms &amp; Conditions</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var form = document.getElementById('agentForm');
+  var note = document.getElementById('agentNote');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(!form.checkValidity()){ form.reportValidity(); return; }
+    var lines = [];
+    Array.prototype.forEach.call(form.elements, function(el){
+      if(!el.name) return;
+      var val = (el.value || '').trim();
+      if(val) lines.push(el.name + ': ' + val);
+    });
+    var subject = 'New Agent Partnership Inquiry — ' + (form.elements[0].value || 'New Contact');
+    var mailto = 'mailto:smithassetgrp@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(lines.join('\n'));
+    window.location.href = mailto;
+    note.textContent = 'Opening your email to send this to Smith Asset Group LLC. If nothing opens, email smithassetgrp@gmail.com directly.';
+    note.classList.add('success');
+  });
+})();
+</script>
+</body>
+</html>

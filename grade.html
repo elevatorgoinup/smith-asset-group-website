@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Member Grade — Smith Asset Group</title>
+<style>
+  :root{
+    --bg:#12140f; --surface:#1a1d15; --surface-2:#20241a; --border:#2c3122;
+    --text:#f3f4ee; --text-muted:#a7ab9b; --text-faint:#6f7362;
+    --lime:#c8f135; --lime-ink:#1c2408; --coral:#ff6b4a; --gold:#e3b34c;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background-color:var(--bg); color:var(--text); margin:0;
+    background-image:linear-gradient(rgba(200,241,53,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(200,241,53,.05) 1px, transparent 1px);
+    background-size:48px 48px;
+  }
+  .wrap{max-width:1100px; margin:0 auto; padding-inline:24px;}
+  .top-bar{height:3px; background:linear-gradient(90deg,var(--lime),var(--gold),var(--coral));}
+  h1,h2,h3{font-family:"Fraunces",Georgia,"Times New Roman",serif; text-wrap:balance; margin:0;}
+  p,li,a,button,span,label{font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;}
+  a{color:var(--lime); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  button{font-family:inherit;}
+
+  .tech-frame{position:relative;}
+  .tech-frame::before,.tech-frame::after{content:""; position:absolute; width:14px; height:14px; pointer-events:none;}
+  .tech-frame::before{top:-1px; left:-1px; border-top:2px solid var(--lime); border-left:2px solid var(--lime);}
+  .tech-frame::after{bottom:-1px; right:-1px; border-bottom:2px solid var(--lime); border-right:2px solid var(--lime);}
+
+  .mono-tag{font-family:"IBM Plex Mono",monospace; font-size:.74rem; color:var(--text-faint); margin-bottom:12px; display:block;}
+
+  header.site{position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:rgba(18,20,15,.88); backdrop-filter:blur(8px); border-bottom:1px solid var(--border);}
+  .nav{display:flex; align-items:center; justify-content:space-between; padding-block:16px;}
+  .logo{font-family:"Fraunces",serif; font-weight:700; font-size:1.15rem; color:var(--text);}
+  .logo em{color:var(--lime); font-style:normal;}
+  nav.links{display:flex; gap:24px; align-items:center;}
+  nav.links a{color:var(--text-muted); font-size:.92rem;}
+  nav.links a:hover{color:var(--text); text-decoration:none;}
+  nav.links a.active{color:var(--lime);}
+  .btn-nav{color:var(--bg)!important; background:var(--lime); padding:8px 16px; border-radius:3px; font-size:.88rem; font-weight:600;}
+  .btn-nav:hover{background:#d8ff4c;}
+
+  .eyebrow{font-family:"IBM Plex Mono",monospace; text-transform:uppercase; letter-spacing:.14em; font-size:.76rem; color:var(--lime); border-left:2px solid var(--lime); padding-left:10px;}
+  .coord-badge{font-family:"IBM Plex Mono",monospace; font-size:.72rem; color:var(--text-faint); letter-spacing:.04em; display:inline-flex; align-items:center; gap:8px; margin-top:16px;}
+  .coord-badge .dot{width:7px; height:7px; border-radius:50%; background:var(--lime); flex-shrink:0; box-shadow:0 0 0 0 rgba(200,241,53,.55); animation:pulse 2.4s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(200,241,53,.5);}70%{box-shadow:0 0 0 7px rgba(200,241,53,0);}100%{box-shadow:0 0 0 0 rgba(200,241,53,0);}}
+
+  section{padding-block:60px; border-bottom:1px solid var(--border);}
+  section:last-of-type{border-bottom:none;}
+  .hero{padding-top:80px; padding-bottom:44px;}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.3rem); line-height:1.1; font-weight:600; margin-top:20px; max-width:22ch;}
+  .hero .grade-tagline{
+    font-family:"Fraunces",Georgia,serif; font-style:italic; font-weight:600; font-size:1.2rem;
+    background:linear-gradient(90deg,var(--lime),var(--gold),var(--coral)); -webkit-background-clip:text; background-clip:text; color:transparent;
+    margin-top:14px; display:block;
+  }
+  .hero .lede{font-size:1.06rem; color:var(--text-muted); max-width:60ch; margin-top:20px; line-height:1.65;}
+
+  .kicker-row{display:flex; align-items:baseline; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:28px;}
+  .kicker-row h2{font-size:clamp(1.5rem,3vw,2rem); font-weight:600; margin-top:10px;}
+  .kicker-row .count{font-family:"IBM Plex Mono",monospace; font-size:.78rem; color:var(--text-faint);}
+
+  /* tier ladder */
+  .ladder{display:grid; grid-template-columns:repeat(7,1fr); gap:10px; margin-top:8px;}
+  .ladder-step{background:var(--surface); border:1px solid var(--border); border-radius:2px; padding:18px 14px; text-align:center; position:relative;}
+  .ladder-step .lg{font-family:"IBM Plex Mono",monospace; font-weight:700; font-size:1.3rem; display:block;}
+  .ladder-step .ll{font-size:.68rem; color:var(--text-faint); text-transform:uppercase; letter-spacing:.06em; margin-top:6px; display:block;}
+  .ladder-step.tier-new{border-top:2px solid var(--text-faint);}
+  .ladder-step.tier-new .lg{color:var(--text-muted);}
+  .ladder-step.tier-active{border-top:2px solid var(--gold);}
+  .ladder-step.tier-active .lg{color:var(--gold);}
+  .ladder-step.tier-proven{border-top:2px solid var(--lime);}
+  .ladder-step.tier-proven .lg{color:var(--lime);}
+  .ladder-legend{display:flex; gap:28px; flex-wrap:wrap; margin-top:22px;}
+  .ladder-legend .lgd{display:flex; align-items:center; gap:8px; font-size:.82rem; color:var(--text-muted);}
+  .ladder-legend .sw{width:10px; height:10px; border-radius:2px;}
+  .sw.new{background:var(--text-faint);} .sw.active{background:var(--gold);} .sw.proven{background:var(--lime);}
+
+  /* role tabs */
+  .role-tabs{display:flex; gap:10px; margin-top:36px; margin-bottom:22px; flex-wrap:wrap;}
+  .role-tab{background:var(--surface); border:1px solid var(--border); color:var(--text-muted); padding:9px 18px; border-radius:3px; font-size:.88rem; font-weight:600; cursor:pointer;}
+  .role-tab.is-active{background:var(--lime); color:var(--lime-ink); border-color:var(--lime);}
+  .role-panel{display:none;}
+  .role-panel.is-active{display:block;}
+  .criteria-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  .criteria-item{background:var(--surface); border:1px solid var(--border); border-radius:2px; padding:20px;}
+  .criteria-item .c-n{font-family:"IBM Plex Mono",monospace; font-size:.72rem; color:var(--gold); display:block; margin-bottom:8px;}
+  .criteria-item h4{font-size:.98rem; font-weight:600; margin-bottom:6px;}
+  .criteria-item p{color:var(--text-muted); font-size:.85rem; line-height:1.55; margin:0;}
+
+  /* sample members / breakdown */
+  .member-list{display:flex; flex-direction:column; gap:10px; margin-top:8px;}
+  .member-row{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    background:var(--surface); border:1px solid var(--border); border-radius:2px; padding:16px 20px; cursor:pointer;
+  }
+  .member-row:hover, .member-row.is-active{border-color:var(--lime);}
+  .member-who{display:flex; align-items:center; gap:14px;}
+  .member-avatar{width:38px; height:38px; border-radius:50%; background:var(--surface-2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-family:"IBM Plex Mono",monospace; font-size:.78rem; color:var(--text-muted); flex-shrink:0;}
+  .member-name{font-weight:600; font-size:.98rem;}
+  .member-role{color:var(--text-faint); font-size:.78rem; font-family:"IBM Plex Mono",monospace; margin-top:2px;}
+  .member-grade{font-family:"IBM Plex Mono",monospace; font-weight:700; font-size:1.15rem;}
+  .grade-tag{display:inline-flex; align-items:center; gap:6px; font-size:.72rem; color:var(--text-faint);}
+  .grade-tag .arrow{transition:transform .15s;}
+  .member-row.is-active .grade-tag .arrow{transform:rotate(90deg); color:var(--lime);}
+
+  .breakdown-panel{background:var(--surface-2); border:1px solid var(--border); border-left:3px solid var(--lime); border-radius:2px; padding:26px 28px; margin-top:14px;}
+  .breakdown-head{display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:18px;}
+  .breakdown-head h3{font-size:1.15rem; font-weight:600;}
+  .breakdown-head .bg{font-family:"IBM Plex Mono",monospace; font-weight:700; font-size:1.6rem; color:var(--lime);}
+  .breakdown-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
+  .bd-stat{border-top:1px solid var(--border); padding-top:10px;}
+  .bd-stat .bs-label{font-family:"IBM Plex Mono",monospace; font-size:.68rem; text-transform:uppercase; letter-spacing:.06em; color:var(--text-faint); display:block; margin-bottom:4px;}
+  .bd-stat .bs-value{font-size:1.05rem; font-weight:600;}
+
+  /* policy note */
+  .policy-box{background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--gold); border-radius:2px; padding:22px 24px; margin-top:8px;}
+  .policy-box p{color:var(--text-muted); font-size:.92rem; line-height:1.65; margin:0;}
+  .policy-box b{color:var(--gold);}
+
+  .cta-panel{background:var(--surface); border:1px solid var(--border); border-radius:2px; padding:40px; text-align:center;}
+  .cta-panel h2{font-size:1.6rem; font-weight:600;}
+  .cta-panel p{color:var(--text-muted); font-size:.98rem; max-width:52ch; margin:14px auto 26px; line-height:1.6;}
+  .cta-row{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:13px 24px; border-radius:3px; font-weight:600; font-size:.95rem; border:1px solid transparent; cursor:pointer;}
+  .btn-lime{background:var(--lime); color:var(--lime-ink);}
+  .btn-lime:hover{background:#d8ff4c; text-decoration:none;}
+  .btn-coral{background:transparent; color:var(--coral); border-color:var(--coral);}
+  .btn-coral:hover{background:rgba(255,107,74,.1); text-decoration:none;}
+
+  footer.site{padding-block:40px;}
+  .foot-row{display:flex; justify-content:space-between; align-items:flex-start; gap:24px; flex-wrap:wrap;}
+  .foot-links{display:flex; gap:22px; flex-wrap:wrap;}
+  .foot-links a{color:var(--text-muted); font-size:.85rem;}
+  .foot-links a:hover{color:var(--text);}
+  .copyright{color:var(--text-faint); font-size:.8rem; font-family:"IBM Plex Mono",monospace;}
+  .foot-note{color:var(--text-faint); font-size:.78rem; line-height:1.6; max-width:70ch; margin-top:20px;}
+
+  @media (max-width:760px){
+    .ladder{grid-template-columns:repeat(4,1fr);}
+    .ladder-step:nth-child(6),.ladder-step:nth-child(7){display:none;}
+    .criteria-grid{grid-template-columns:1fr;}
+    .breakdown-grid{grid-template-columns:1fr 1fr;}
+    nav.links{gap:14px;}
+    nav.links .hide-mobile{display:none;}
+    section{padding-block:44px;}
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,500..600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="top-bar"></div>
+<header class="site">
+  <div class="wrap nav">
+    <a class="logo" href="index.html">Smith Asset <em>Group</em></a>
+    <nav class="links">
+      <a href="deals.html" class="hide-mobile">Deals</a>
+      <a href="index.html#sell" class="hide-mobile">Sell</a>
+      <a href="index.html#buy" class="hide-mobile">Buy</a>
+      <a href="agents.html" class="hide-mobile">Agents</a>
+      <a href="vault.html" class="hide-mobile">Vault</a>
+      <a href="academy.html" class="hide-mobile">Academy</a>
+      <a href="grade.html" class="hide-mobile active">Grade</a>
+      <a href="index.html" class="btn-nav">Home</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero wrap">
+  <div class="eyebrow">Member Network &middot; Reputation System</div>
+  <h1>Member Grade</h1>
+  <span class="grade-tagline">Your Network. Your Reputation. Your Grade.</span>
+  <p class="lede">Every wholesaler, agent, and investor in the Smith Asset Group network carries a grade &mdash; earned from real activity, not paid for. It's a quick, honest read on how active and reliable someone actually is before you do business with them.</p>
+  <div class="coord-badge"><span class="dot"></span> C+ starting grade &middot; No downgrade for inactivity</div>
+</section>
+
+<section class="wrap">
+  <span class="mono-tag">// grade.tier_ladder</span>
+  <div class="kicker-row">
+    <h2>The ladder</h2>
+    <span class="count">C+ &rarr; A+</span>
+  </div>
+  <div class="ladder">
+    <div class="ladder-step tech-frame tier-new"><span class="lg">C+</span><span class="ll">Start</span></div>
+    <div class="ladder-step tech-frame tier-active"><span class="lg">B&minus;</span><span class="ll">Active</span></div>
+    <div class="ladder-step tech-frame tier-active"><span class="lg">B</span><span class="ll">Active</span></div>
+    <div class="ladder-step tech-frame tier-active"><span class="lg">B+</span><span class="ll">Active</span></div>
+    <div class="ladder-step tech-frame tier-proven"><span class="lg">A&minus;</span><span class="ll">Proven</span></div>
+    <div class="ladder-step tech-frame tier-proven"><span class="lg">A</span><span class="ll">Proven</span></div>
+    <div class="ladder-step tech-frame tier-proven"><span class="lg">A+</span><span class="ll">Proven</span></div>
+  </div>
+  <div class="ladder-legend">
+    <span class="lgd"><span class="sw new"></span>C+ &mdash; every new member starts here</span>
+    <span class="lgd"><span class="sw active"></span>B&minus; / B / B+ &mdash; active contributor</span>
+    <span class="lgd"><span class="sw proven"></span>A&minus; / A / A+ &mdash; proven contributor</span>
+  </div>
+</section>
+
+<section class="wrap">
+  <span class="mono-tag">// grade.criteria_by_role</span>
+  <div class="kicker-row">
+    <h2>How your grade moves</h2>
+    <span class="count">Criteria vary slightly by role</span>
+  </div>
+  <div class="role-tabs">
+    <button class="role-tab is-active" data-role="wholesaler">Wholesaler</button>
+    <button class="role-tab" data-role="agent">Agent</button>
+    <button class="role-tab" data-role="investor">Investor</button>
+  </div>
+
+  <div class="role-panel is-active" data-role-panel="wholesaler">
+    <div class="criteria-grid">
+      <div class="criteria-item tech-frame"><span class="c-n">01</span><h4>Deals submitted &amp; closed</h4><p>Contracts submitted through the platform and deals that actually close move your grade the most.</p></div>
+      <div class="criteria-item tech-frame"><span class="c-n">02</span><h4>Leads generated</h4><p>Seller leads you bring into the network, whether they close with you or get referred out.</p></div>
+      <div class="criteria-item tech-frame"><span class="c-n">03</span><h4>Buyer connections</h4><p>Cash buyers, agents, and investors you actively connect deals with.</p></div>
+      <div class="criteria-item tech-frame"><span class="c-n">04</span><h4>Time active</h4><p>Consistent presence in the network over time &mdash; not just a single burst of activity.</p></div>
+      <div class="criteria-item tech-frame"><span class="c-n">05</span><h4>Referrals</h4><p>Other wholesalers, agents, or buyers you bring into Smith Asset Group.</p></div>
+      <div class="criteria-item tech-frame"><span class="c-n">06</span><h4>Reliability</h4><p>Deals that hold together through closing, not ones that fall out after being submitted.</p></div>
+    </div>
+  </div>
+
+  <div class="role-panel" data-role-panel="agent">
+    <div class="criteria-grid">
+      <div class="criteria-item tech-frame"><span class="c-n">01</span><h4>Deals closed with SAG buyers</h4><p>Transactions you complete alongside Smith Asset Group's buyer network.</p></div>
+      <div class="criteria-item tech-frame"><span class="c-n">02</span><h4>Listings &amp; referrals submitted</h4><p>Off-market or motivated-seller leads you route through the platform.</p></div>
+      <div class="criteria-item tech-frame"><span class="c-n">03</span><h4>Buyer &amp; investor connections</h4><p>Active relationships you build with cash buyers and investors in the network.</p></div>
+      <div class="criteria-item tech-frame"><span class="c-n">04</span><h4>Time active</h4><p>How long and how consistently you've been engaged with the network.</p></div>
+      <div class="criteria-item tech-frame"><span class="c-n">05</span><h4>Referrals</h4><p>Other agents, wholesalers, or clients you bring in.</p></div>
+      <div class="criteria-item tech-frame"><span class="c-n">06</span><h4>Responsiveness</h4><p>How quickly and reliably you follow through on introductions and deals.</p></div>
+    </div>
+  </div>
+
+  <div class="role-panel" data-role-panel="investor">
+    <div class="criteria-grid">
+      <div class="criteria-item tech-frame"><span class="c-n">01</span><h4>Deals purchased &amp; closed</h4><p>Assignments and properties you actually buy and close through the network.</p></div>
+      <div class="criteria-item tech-frame"><span class="c-n">02</span><h4>Buy box clarity &amp; follow-through</h4><p>How reliably you act on deals that match the criteria you gave us.</p></div>
+      <div class="criteria-item tech-frame"><span class="c-n">03</span><h4>Wholesaler &amp; agent connections</h4><p>Relationships you build with the wholesalers and agents feeding you deals.</p></div>
+      <div class="criteria-item tech-frame"><span class="c-n">04</span><h4>Time active</h4><p>Ongoing presence and deal flow over time, not a single one-off purchase.</p></div>
+      <div class="criteria-item tech-frame"><span class="c-n">05</span><h4>Referrals</h4><p>Other investors or buyers you bring into the network.</p></div>
+      <div class="criteria-item tech-frame"><span class="c-n">06</span><h4>Closing reliability</h4><p>Deals you commit to that actually make it to closing table.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <span class="mono-tag">// grade.member_breakdown</span>
+  <div class="kicker-row">
+    <h2>See it in action</h2>
+    <span class="count">Click a member to expand their breakdown</span>
+  </div>
+  <div class="member-list" id="memberList">
+    <div class="member-row tech-frame is-active" data-member="0">
+      <div class="member-who">
+        <div class="member-avatar">JS</div>
+        <div><div class="member-name">John Smith</div><div class="member-role">Wholesaler &middot; Member since Jan 2026</div></div>
+      </div>
+      <div class="member-who">
+        <span class="member-grade" style="color:var(--gold)">B+</span>
+        <span class="grade-tag">Details <span class="arrow">&rsaquo;</span></span>
+      </div>
+    </div>
+    <div class="member-row tech-frame" data-member="1">
+      <div class="member-who">
+        <div class="member-avatar">MR</div>
+        <div><div class="member-name">Maria Reyes</div><div class="member-role">Investor / Buyer &middot; Member since Mar 2026</div></div>
+      </div>
+      <div class="member-who">
+        <span class="member-grade" style="color:var(--lime)">A&minus;</span>
+        <span class="grade-tag">Details <span class="arrow">&rsaquo;</span></span>
+      </div>
+    </div>
+    <div class="member-row tech-frame" data-member="2">
+      <div class="member-who">
+        <div class="member-avatar">DT</div>
+        <div><div class="member-name">Devon Turner</div><div class="member-role">Agent &middot; Member since Jul 2026</div></div>
+      </div>
+      <div class="member-who">
+        <span class="member-grade" style="color:var(--text-muted)">C+</span>
+        <span class="grade-tag">Details <span class="arrow">&rsaquo;</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="breakdown-panel" id="breakdownPanel">
+    <div class="breakdown-head">
+      <h3 id="bdName">John Smith &mdash; Wholesaler</h3>
+      <span class="bg" id="bdGrade">B+</span>
+    </div>
+    <div class="breakdown-grid" id="bdGrid">
+      <div class="bd-stat"><span class="bs-label">Member Since</span><span class="bs-value">Jan 2026</span></div>
+      <div class="bd-stat"><span class="bs-label">Deals</span><span class="bs-value">6 closed</span></div>
+      <div class="bd-stat"><span class="bs-label">Leads</span><span class="bs-value">14 generated</span></div>
+      <div class="bd-stat"><span class="bs-label">Transactions</span><span class="bs-value">5 closed / 1 pending</span></div>
+      <div class="bd-stat"><span class="bs-label">Connections</span><span class="bs-value">9 buyers &amp; agents</span></div>
+      <div class="bd-stat"><span class="bs-label">Activity</span><span class="bs-value">Active weekly</span></div>
+      <div class="bd-stat"><span class="bs-label">Referrals</span><span class="bs-value">3 brought in</span></div>
+      <div class="bd-stat"><span class="bs-label">Grade</span><span class="bs-value">B+</span></div>
+    </div>
+  </div>
+  <p class="vault-note" style="color:var(--text-faint); font-size:.8rem; margin-top:14px;">Illustrative sample members &mdash; shown to demonstrate how the grade breakdown works.</p>
+</section>
+
+<section class="wrap">
+  <span class="mono-tag">// grade.policy</span>
+  <div class="policy-box tech-frame">
+    <p><b>No downgrade for inactivity.</b> Your grade only moves up as you do more &mdash; more deals, more leads, more connections, more time in the network. Taking a slow month doesn't cost you anything you've already earned. If a decay system is ever added for long-term inactivity, it will be announced here first.</p>
+  </div>
+</section>
+
+<section class="wrap" style="border-bottom:none;">
+  <div class="cta-panel tech-frame">
+    <span class="eyebrow" style="display:inline-block;">Get Started</span>
+    <h2 style="margin-top:16px;">Start building your grade</h2>
+    <p>Every member starts at C+. What you do next &mdash; deals, leads, connections &mdash; is what moves it.</p>
+    <div class="cta-row">
+      <a class="btn btn-lime" href="index.html#sell">I'm a Seller</a>
+      <a class="btn btn-coral" href="index.html#buy">I'm a Buyer / Investor</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site wrap">
+  <div class="foot-row">
+    <div class="copyright">&copy; 2026 Smith Asset Group LLC</div>
+    <div class="foot-links">
+      <a href="index.html">Home</a>
+      <a href="deals.html">Deals</a>
+      <a href="index.html#sell">Sell</a>
+      <a href="index.html#buy">Buy</a>
+      <a href="agents.html">Agents</a>
+      <a href="vault.html">Vault</a>
+      <a href="academy.html">Academy</a>
+      <a href="terms.html">Terms &amp; Conditions</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </div>
+  <p class="foot-note">Member Grade is an internal reputation system based on self-reported and platform-tracked activity. It is not a credit score, background check, or license verification, and Smith Asset Group LLC does not guarantee the accuracy of any member's underlying activity data.</p>
+</footer>
+
+<script>
+(function(){
+  var roleTabs = document.querySelectorAll('.role-tab');
+  var rolePanels = document.querySelectorAll('.role-panel');
+  roleTabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      var role = tab.getAttribute('data-role');
+      roleTabs.forEach(function(t){ t.classList.remove('is-active'); });
+      rolePanels.forEach(function(p){ p.classList.remove('is-active'); });
+      tab.classList.add('is-active');
+      document.querySelector('[data-role-panel="' + role + '"]').classList.add('is-active');
+    });
+  });
+
+  var members = [
+    {name:'John Smith', role:'Wholesaler', grade:'B+', color:'var(--gold)', since:'Jan 2026', deals:'6 closed', leads:'14 generated', tx:'5 closed / 1 pending', conn:'9 buyers & agents', activity:'Active weekly', ref:'3 brought in'},
+    {name:'Maria Reyes', role:'Investor / Buyer', grade:'A-', color:'var(--lime)', since:'Mar 2026', deals:'11 purchased', leads:'—', tx:'11 closed / 0 pending', conn:'6 wholesalers & agents', activity:'Active weekly', ref:'2 brought in'},
+    {name:'Devon Turner', role:'Agent', grade:'C+', color:'var(--text-muted)', since:'Jul 2026', deals:'1 closed', leads:'2 generated', tx:'1 closed / 1 pending', conn:'2 buyers', activity:'Active this month', ref:'0 brought in'}
+  ];
+
+  var rows = document.querySelectorAll('.member-row');
+  var bdName = document.getElementById('bdName');
+  var bdGrade = document.getElementById('bdGrade');
+  var bdGrid = document.getElementById('bdGrid');
+
+  function renderMember(i){
+    var m = members[i];
+    bdName.textContent = m.name + ' — ' + m.role;
+    bdGrade.textContent = m.grade;
+    bdGrade.style.color = m.color;
+    bdGrid.innerHTML =
+      '<div class="bd-stat"><span class="bs-label">Member Since</span><span class="bs-value">' + m.since + '</span></div>' +
+      '<div class="bd-stat"><span class="bs-label">Deals</span><span class="bs-value">' + m.deals + '</span></div>' +
+      '<div class="bd-stat"><span class="bs-label">Leads</span><span class="bs-value">' + m.leads + '</span></div>' +
+      '<div class="bd-stat"><span class="bs-label">Transactions</span><span class="bs-value">' + m.tx + '</span></div>' +
+      '<div class="bd-stat"><span class="bs-label">Connections</span><span class="bs-value">' + m.conn + '</span></div>' +
+      '<div class="bd-stat"><span class="bs-label">Activity</span><span class="bs-value">' + m.activity + '</span></div>' +
+      '<div class="bd-stat"><span class="bs-label">Referrals</span><span class="bs-value">' + m.ref + '</span></div>' +
+      '<div class="bd-stat"><span class="bs-label">Grade</span><span class="bs-value">' + m.grade + '</span></div>';
+  }
+
+  rows.forEach(function(row){
+    row.addEventListener('click', function(){
+      rows.forEach(function(r){ r.classList.remove('is-active'); });
+      row.classList.add('is-active');
+      renderMember(parseInt(row.getAttribute('data-member'), 10));
+      document.getElementById('breakdownPanel').scrollIntoView({behavior:'smooth', block:'nearest'});
+    });
+  });
+})();
+</script>
+</body>
+</html>
