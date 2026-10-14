@@ -1,5 +1,15 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Smith Asset Group</title>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<title>Sell Your House Fast for Cash in Augusta, GA | Smith Asset Group</title>
+<meta name="description" content="Sell your Augusta, GA house fast for cash with no repairs, commissions, or showings. Off-market deals for sellers and cash buyers across the CSRA.">
+<link rel="canonical" href="https://smithassetgrp.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Smith Asset Group">
+<meta property="og:title" content="Sell Your House Fast for Cash in Augusta, GA | Smith Asset Group">
+<meta property="og:description" content="Sell your Augusta, GA house fast for cash with no repairs, commissions, or showings. Off-market deals for sellers and cash buyers across the CSRA.">
+<meta property="og:url" content="https://smithassetgrp.com/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Smith Asset Group", "legalName": "Smith Asset Group LLC", "url": "https://smithassetgrp.com/", "email": "smithassetgrp@gmail.com", "telephone": "+1-762-215-4466", "description": "Off-market residential real estate wholesaling in Augusta, GA and the CSRA. We buy houses for cash and connect sellers with a vetted cash buyer network.", "address": {"@type": "PostalAddress", "addressLocality": "Augusta", "addressRegion": "GA", "addressCountry": "US"}, "areaServed": [{"@type": "City", "name": "Augusta, GA"}, {"@type": "AdministrativeArea", "name": "Richmond County, GA"}, {"@type": "AdministrativeArea", "name": "Columbia County, GA"}, {"@type": "AdministrativeArea", "name": "Aiken County, SC"}]}</script>
+</head><body>
 <style>
   :root{
     --bg:#12140f; --surface:#1a1d15; --surface-2:#20241a; --border:#2c3122;
@@ -709,6 +719,7 @@
     <p class="sub">No commissions, no repairs, no showings. Fill this out and Smith Asset Group LLC will reach out directly with next steps &mdash; usually within one business day.</p>
 
     <form id="sellForm" novalidate>
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <div class="form-grid">
         <div class="field"><label for="s_name">Full name <span class="req">*</span></label><input id="s_name" name="Full name" type="text" required></div>
         <div class="field"><label for="s_phone">Phone <span class="req">*</span></label><input id="s_phone" name="Phone" type="tel" required></div>
@@ -741,8 +752,8 @@
         <div class="field full"><label for="s_reason">Reason for selling</label><textarea id="s_reason" name="Reason for selling" placeholder="Optional &mdash; helps us make a fair offer faster"></textarea></div>
       </div>
       <div class="submit-row">
-        <button type="submit" class="btn btn-lime">Submit &amp; Email Us</button>
-        <p class="form-note" id="sellNote">We'll open an email to Smith Asset Group LLC with your details &mdash; nothing sends until you do.</p>
+        <button type="submit" class="btn btn-lime">Get My Cash Offer</button>
+        <p class="form-note" id="sellNote">Your info goes straight to Smith Asset Group LLC. We never sell your info.</p>
       </div>
     </form>
   </div>
@@ -756,6 +767,7 @@
     <p class="sub">We'll match you against off-market deals as they come through &mdash; buy-and-hold, fix-and-flip, and fellow wholesalers all welcome.</p>
 
     <form id="buyForm" novalidate>
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <div class="form-grid">
         <div class="field"><label for="b_name">Full name <span class="req">*</span></label><input id="b_name" name="Full name" type="text" required></div>
         <div class="field"><label for="b_phone">Phone <span class="req">*</span></label><input id="b_phone" name="Phone" type="tel" required></div>
@@ -811,8 +823,8 @@
         </div>
       </div>
       <div class="submit-row">
-        <button type="submit" class="btn btn-coral">Submit &amp; Email Us</button>
-        <p class="form-note" id="buyNote">We'll open an email to Smith Asset Group LLC with your buy box &mdash; nothing sends until you do.</p>
+        <button type="submit" class="btn btn-coral">Join the Buyer List</button>
+        <p class="form-note" id="buyNote">Your buy box goes straight to Smith Asset Group LLC. We'll text or email you first-look deals that fit.</p>
       </div>
     </form>
   </div>
@@ -1007,12 +1019,40 @@
       });
       var subject = subjectPrefix + ' — ' + (form.elements[0].value || 'New Lead');
       var body = lines.join('\n');
-      var mailto = 'mailto:smithassetgrp@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-      window.location.href = mailto;
-      if(note){
-        note.textContent = 'Opening your email to send this to Smith Asset Group LLC. If nothing opens, email smithassetgrp@gmail.com directly with these details.';
-        note.classList.add('success');
-      }
+      var data = {};
+      Array.prototype.forEach.call(form.elements, function(el){
+        if(el.name && (el.value || '').trim()) data[el.name] = el.value.trim();
+      });
+      if(form.querySelector('[name="_honey"]') && form.querySelector('[name="_honey"]').value) return;
+      data._subject = subject;
+      data._template = 'table';
+      data._captcha = 'false';
+      data['Submitted from'] = location.href;
+      var btn = form.querySelector('button[type="submit"]');
+      var btnText = btn ? btn.textContent : '';
+      if(btn){ btn.disabled = true; btn.textContent = 'Sending...'; }
+      if(note){ note.classList.remove('success'); note.textContent = 'Sending your details to Smith Asset Group LLC...'; }
+      fetch('https://formsubmit.co/ajax/smithassetgrp@gmail.com', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+        body: JSON.stringify(data)
+      }).then(function(r){ return r.json(); }).then(function(res){
+        if(res && String(res.success) === 'true'){
+          form.reset();
+          if(btn){ btn.textContent = 'Sent!'; }
+          if(note){
+            note.textContent = 'Got it! Smith Asset Group LLC will reach out within one business day. Need us sooner? Call or text (762) 215-4466.';
+            note.classList.add('success');
+          }
+        } else { throw new Error('send failed'); }
+      }).catch(function(){
+        if(btn){ btn.disabled = false; btn.textContent = btnText; }
+        if(note){
+          note.textContent = 'Our form hit a snag, so we opened an email with your details. Hit send, or call or text (762) 215-4466.';
+          note.classList.add('success');
+        }
+        window.location.href = 'mailto:smithassetgrp@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      });
     });
   }
   wireForm('sellForm', 'New Seller Lead', 'sellNote');
@@ -2100,4 +2140,13 @@
 })();
 </script>
 
+<style id="readability">
+:root{--text-faint:#9da190;--text-muted:#c4c7b9;}
+p,li{line-height:1.65;}
+.mono-tag,.eyebrow,.coord-badge,.credit-tier .ct-credits,.kicker-row .count,.fork-card .tag,.room-cta-note,.room-count-badge,.room-handle,.room-time,.room-reactions,.room-note,.form-panel .tag,.card .tag,.area-panel .label,.lb-search button,.lb-chip,.lb-build,.lb-list-head .sub,.lb-list-item .meta,.lb-detail .status,.lb-detail p,.lb-detail a,.contact-links .sub,.p-chip,.parcel-status,.p-tag,.pc-label,.pc-link,.parcel-source,.view-toggle button,.foot-note,.copyright{font-size:13.5px !important;}
+input,select,textarea{font-size:16px !important;}
+.field label{font-size:14.5px !important;}
+.form-note{font-size:14px;}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--lime);outline-offset:2px;}
+</style>
 </body></html>
