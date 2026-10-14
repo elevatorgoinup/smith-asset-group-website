@@ -513,46 +513,31 @@
   </div>
 </section>
 
-<section class="wrap">
-  <span class="mono-tag">// site.what_platforms_dont_give_you</span>
-  <div class="kicker-row">
-    <h2>What the platforms don't give you</h2>
-    <span class="count">Built for Augusta &amp; the CSRA &mdash; not retrofitted onto one</span>
+<section class="wrap" id="parcelLookup">
+  <span class="mono-tag">// coverage.live_parcel_map</span>
+  <div class="map-section-head kicker-row">
+    <h2>Explore every Richmond County parcel, live</h2>
+    <span class="count">Live data &middot; straight from Augusta-Richmond County GIS</span>
   </div>
-  <p class="diff-lede">Plenty of tools can move a lead through a pipeline or put a pin on a map. This is what's actually different about running your deals through Smith Asset Group instead &mdash; built specifically around Augusta, Richmond County, and the CSRA, by someone closing deals in it, not a generic nationwide tool with a Georgia filter switched on.</p>
+  <p class="parcel-lede">A real satellite map of Augusta-Richmond County with every parcel pulled live from the county's own GIS system. Zoom in on any neighborhood, tap a lot, and see the owner of record, assessed value, acreage, and zoning. Search any street or address below.</p>
 
-  <div class="diff-grid">
-    <div class="diff-item tech-frame">
-      <span class="diff-icon">01</span>
-      <h3>Real Richmond County parcel data</h3>
-      <p>The parcel lookup below is pulled straight from Augusta-Richmond County's own public GIS system &mdash; real owners, real assessed values, real PINs, not illustrative sample data.</p>
-    </div>
-    <div class="diff-item tech-frame">
-      <span class="diff-icon">02</span>
-      <h3>Real documents in the Vault</h3>
-      <p>The Contract Vault previews Smith Asset Group's actual wholesale agreement and third-party authorization &mdash; not stock legal templates pulled from the internet.</p>
-    </div>
-    <div class="diff-item tech-frame">
-      <span class="diff-icon">03</span>
-      <h3>Georgia-first, not GA-as-an-afterthought</h3>
-      <p>Built around Augusta, Richmond County, and the CSRA as the home market &mdash; with the same playbook ready to scale into every other state that allows wholesaling as the network grows.</p>
-    </div>
-    <div class="diff-item tech-frame">
-      <span class="diff-icon">04</span>
-      <h3>Reputation you earn, not a tier you buy</h3>
-      <p>Every member carries a Member Grade built from real activity &mdash; deals, leads, and connections &mdash; not a paid subscription level. <a class="inline-link" href="grade.html">See how grading works &rarr;</a></p>
-    </div>
-    <div class="diff-item tech-frame">
-      <span class="diff-icon">05</span>
-      <h3>A network, not a comment section</h3>
-      <p>The Living Room puts you in real conversation with wholesalers, agents, and investors working these same streets &mdash; not a support ticket queue or a review thread.</p>
-    </div>
-    <div class="diff-item tech-frame">
-      <span class="diff-icon">06</span>
-      <h3>Run by someone doing the deals</h3>
-      <p>Smith Asset Group LLC closes real wholesale deals through this same system &mdash; it isn't software built by outsiders guessing at how a Georgia wholesale desk actually works.</p>
-    </div>
+  <div class="lm-search-row">
+    <input id="lmSearch" type="text" placeholder="Search an address or street, e.g. 1548 Koger St" autocomplete="off" aria-label="Search an address or street">
+    <button id="lmSearchGo" class="btn btn-lime" type="button">Search</button>
   </div>
+  <div id="lmStatus" class="lm-status" role="status" aria-live="polite"></div>
+  <div id="lmResults" class="lm-results"></div>
+
+  <div class="lm-wrap tech-frame">
+    <div id="lmMap" class="lm-map" aria-label="Live Richmond County parcel map"></div>
+    <div class="lm-layer-toggle" role="group" aria-label="Map style">
+      <button type="button" id="lmSat" class="is-active">Satellite</button>
+      <button type="button" id="lmStreet">Street</button>
+    </div>
+    <div class="lm-zoom-hint" id="lmHint">Zoom in to see parcel lines</div>
+  </div>
+
+  <p class="parcel-source">Source: <a href="https://gismap.augustaga.gov/augustats/" target="_blank" rel="noopener">Augusta-Richmond County GIS</a>, live public record data. Imagery &copy; Esri; streets &copy; OpenStreetMap contributors. Not a warranty of title, value, or condition. Confirm details on the <a href="https://qpublic.schneidercorp.com/Application.aspx?App=RichmondCountyGA&amp;Layer=Parcels&amp;PageType=Search" target="_blank" rel="noopener">official qPublic record</a>.</p>
 </section>
 
 <section class="room-wrap" id="livingRoom">
@@ -882,32 +867,7 @@
   </div>
 </section>
 
-<section class="wrap" id="parcelLookup">
-  <span class="mono-tag">// coverage.live_parcel_map</span>
-  <div class="map-section-head kicker-row">
-    <h2>Explore every Richmond County parcel, live</h2>
-    <span class="count">Live data &middot; straight from Augusta-Richmond County GIS</span>
-  </div>
-  <p class="parcel-lede">A real satellite map of Augusta-Richmond County with every parcel pulled live from the county's own GIS system. Zoom in on any neighborhood, tap a lot, and see the owner of record, assessed value, acreage, and zoning. Search any street or address below.</p>
 
-  <div class="lm-search-row">
-    <input id="lmSearch" type="text" placeholder="Search an address or street, e.g. 1548 Koger St" autocomplete="off" aria-label="Search an address or street">
-    <button id="lmSearchGo" class="btn btn-lime" type="button">Search</button>
-  </div>
-  <div id="lmStatus" class="lm-status" role="status" aria-live="polite"></div>
-  <div id="lmResults" class="lm-results"></div>
-
-  <div class="lm-wrap tech-frame">
-    <div id="lmMap" class="lm-map" aria-label="Live Richmond County parcel map"></div>
-    <div class="lm-layer-toggle" role="group" aria-label="Map style">
-      <button type="button" id="lmSat" class="is-active">Satellite</button>
-      <button type="button" id="lmStreet">Street</button>
-    </div>
-    <div class="lm-zoom-hint" id="lmHint">Zoom in to see parcel lines</div>
-  </div>
-
-  <p class="parcel-source">Source: <a href="https://gismap.augustaga.gov/augustats/" target="_blank" rel="noopener">Augusta-Richmond County GIS</a>, live public record data. Imagery &copy; Esri; streets &copy; OpenStreetMap contributors. Not a warranty of title, value, or condition. Confirm details on the <a href="https://qpublic.schneidercorp.com/Application.aspx?App=RichmondCountyGA&amp;Layer=Parcels&amp;PageType=Search" target="_blank" rel="noopener">official qPublic record</a>.</p>
-</section>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style id="livemap-css">
