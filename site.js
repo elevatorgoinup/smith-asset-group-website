@@ -16,7 +16,8 @@
     ["I'm a Buyer", H + '#buy'],
     ["I'm an Agent", 'agents.html'],
     ['Live Parcel Map', H + '#parcelLookup'],
-    ['Deals', 'deals.html'],
+    ['Seller FAQ', H + '#faq'],
+    ['Deal Board', H + '#deals'],
     ['Contract Vault', 'vault.html'],
     ['Academy', 'academy.html'],
     ['Member Grade', 'grade.html']
