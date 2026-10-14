@@ -194,6 +194,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <p class="sub">Whether you've got a seller to refer, a buyer to represent, or just want to open the relationship &mdash; start here.</p>
 
     <form id="agentForm" novalidate>
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <div class="form-grid">
         <div class="field"><label for="a_name">Full name <span class="req">*</span></label><input id="a_name" name="Full name" type="text" required></div>
         <div class="field"><label for="a_phone">Phone <span class="req">*</span></label><input id="a_phone" name="Phone" type="tel" required></div>
@@ -213,8 +214,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
         <div class="field full"><label for="a_details">Deal details</label><textarea id="a_details" name="Deal details" placeholder="Optional &mdash; property address, buyer criteria, or just a note to start the conversation"></textarea></div>
       </div>
       <div class="submit-row">
-        <button type="submit" class="btn btn-gold">Submit &amp; Email Us</button>
-        <p class="form-note" id="agentNote">We'll open an email to Smith Asset Group LLC with your details &mdash; nothing sends until you do.</p>
+        <button type="submit" class="btn btn-gold">Connect With Us</button>
+        <p class="form-note" id="agentNote">Your info goes straight to Smith Asset Group LLC. We never sell your info.</p>
       </div>
     </form>
   </div>
@@ -251,10 +252,30 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       if(val) lines.push(el.name + ': ' + val);
     });
     var subject = 'New Agent Partnership Inquiry — ' + (form.elements[0].value || 'New Contact');
-    var mailto = 'mailto:smithassetgrp@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(lines.join('\n'));
-    window.location.href = mailto;
-    note.textContent = 'Opening your email to send this to Smith Asset Group LLC. If nothing opens, email smithassetgrp@gmail.com directly.';
-    note.classList.add('success');
+    var body = lines.join('\n');
+    if(form.querySelector('[name="_honey"]').value) return;
+    var data = {};
+    Array.prototype.forEach.call(form.elements, function(el){
+      if(el.name && el.name !== '_honey' && (el.value || '').trim()) data[el.name] = el.value.trim();
+    });
+    data._subject = subject; data._template = 'table'; data._captcha = 'false'; data['Submitted from'] = location.href;
+    var btn = form.querySelector('button[type="submit"]'), btnText = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Sending...';
+    note.classList.remove('success'); note.textContent = 'Sending your details to Smith Asset Group LLC...';
+    fetch('https://formsubmit.co/ajax/smithassetgrp@gmail.com', {
+      method: 'POST', headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}, body: JSON.stringify(data)
+    }).then(function(r){ return r.json(); }).then(function(res){
+      if(res && String(res.success) === 'true'){
+        form.reset(); btn.textContent = 'Sent!';
+        note.textContent = 'Got it! Smith Asset Group LLC will reach out within one business day. Need us sooner? Call or text (762) 215-4466.';
+        note.classList.add('success');
+      } else { throw new Error('send failed'); }
+    }).catch(function(){
+      btn.disabled = false; btn.textContent = btnText;
+      note.textContent = 'Our form hit a snag, so we opened an email with your details. Hit send, or call or text (762) 215-4466.';
+      note.classList.add('success');
+      window.location.href = 'mailto:smithassetgrp@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    });
   });
 })();
 </script>
