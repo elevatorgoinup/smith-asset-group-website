@@ -87,7 +87,7 @@
   .snf .split{display:grid; grid-template-columns:.9fr 1.1fr; gap:24px; align-items:start;}
   @media (max-width:900px){ .snf .split{grid-template-columns:1fr;} }
   .snf .plays{display:grid; gap:12px; margin-top:10px;}
-  .snf .plays div{display:grid; grid-template-columns:40px 1fr; gap:12px; align-items:start;}
+  .snf .plays > div{display:grid; grid-template-columns:40px 1fr; gap:12px; align-items:start;}
   .snf .plays i{font:800 26px/1 "Barlow Condensed",sans-serif; color:var(--gold); font-style:normal;}
   .snf .plays b{display:block; font:700 20px/1.1 "Barlow Condensed",sans-serif; letter-spacing:.04em; text-transform:uppercase;}
   .snf .plays span{color:var(--mut); font-size:15px;}
