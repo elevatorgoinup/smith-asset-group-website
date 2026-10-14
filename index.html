@@ -683,7 +683,7 @@
   </div>
 </section>
 
-<section class="wrap" id="credits">
+<section class="wrap" id="credits" hidden>
   <span class="mono-tag">// members.credits</span>
   <div class="kicker-row">
     <h2>Member Credits</h2>
@@ -883,69 +883,183 @@
 </section>
 
 <section class="wrap" id="parcelLookup">
-  <span class="mono-tag">// coverage.real_parcel_lookup</span>
+  <span class="mono-tag">// coverage.live_parcel_map</span>
   <div class="map-section-head kicker-row">
-    <h2>Look up a real Richmond County parcel</h2>
-    <span class="count">Real data &middot; pulled directly from Augusta-Richmond County's public GIS system</span>
+    <h2>Explore every Richmond County parcel, live</h2>
+    <span class="count">Live data &middot; straight from Augusta-Richmond County GIS</span>
   </div>
-  <p class="parcel-lede">This is genuine Richmond County parcel data &mdash; real owners of record, real assessed values, real tax status &mdash; pulled straight from the county's own GIS system. It's a growing snapshot of real corridors, not a live connection to every parcel in the county (a public site can't hold a direct line to an outside government server), so it currently covers <strong style="color:var(--text)">287 parcels across 15 major Richmond County corridors</strong> below &mdash; we're adding more every week, working toward full coverage. Type any address on one of these roads, or search any address in the county &mdash; a miss here still hands you straight to the official county record below.</p>
+  <p class="parcel-lede">A real satellite map of Augusta-Richmond County with every parcel pulled live from the county's own GIS system. Zoom in on any neighborhood, tap a lot, and see the owner of record, assessed value, acreage, and zoning. Search any street or address below.</p>
 
-  <div class="parcel-chips" id="parcelChips">
-    <span class="p-chip" data-addr="Broad St">Broad St</span>
-    <span class="p-chip" data-addr="Washington Rd">Washington Rd</span>
-    <span class="p-chip" data-addr="Wrightsboro Rd">Wrightsboro Rd</span>
-    <span class="p-chip" data-addr="Deans Bridge Rd">Deans Bridge Rd</span>
-    <span class="p-chip" data-addr="Peach Orchard Rd">Peach Orchard Rd</span>
-    <span class="p-chip" data-addr="Laney Walker Blvd">Laney Walker Blvd</span>
-    <span class="p-chip" data-addr="Windsor Spring Rd">Windsor Spring Rd</span>
-    <span class="p-chip" data-addr="Gordon Hwy">Gordon Hwy</span>
-    <span class="p-chip" data-addr="Central Ave">Central Ave</span>
-    <span class="p-chip" data-addr="Wheeler Rd">Wheeler Rd</span>
-    <span class="p-chip" data-addr="Walton Way">Walton Way</span>
-    <span class="p-chip" data-addr="Barton Chapel Rd">Barton Chapel Rd</span>
-    <span class="p-chip" data-addr="Tobacco Rd">Tobacco Rd</span>
-    <span class="p-chip" data-addr="Doug Barnard Pkwy">Doug Barnard Pkwy</span>
-    <span class="p-chip" data-addr="Telfair St">Telfair St</span>
+  <div class="lm-search-row">
+    <input id="lmSearch" type="text" placeholder="Search an address or street, e.g. 1548 Koger St" autocomplete="off" aria-label="Search an address or street">
+    <button id="lmSearchGo" class="btn btn-lime" type="button">Search</button>
   </div>
+  <div id="lmStatus" class="lm-status" role="status" aria-live="polite"></div>
+  <div id="lmResults" class="lm-results"></div>
 
-  <div class="parcel-search-row">
-    <input id="parcelSearch" type="text" placeholder="e.g. Broad St, Washington Rd, Windsor Spring Rd…" autocomplete="off">
-    <button id="parcelSearchGo" class="btn btn-lime" type="button">Look Up</button>
-    <div class="view-toggle" role="tablist" aria-label="Results view">
-      <button type="button" id="parcelViewList" class="is-active" role="tab" aria-selected="true">List</button>
-      <button type="button" id="parcelViewMap" role="tab" aria-selected="false">Map</button>
+  <div class="lm-wrap tech-frame">
+    <div id="lmMap" class="lm-map" aria-label="Live Richmond County parcel map"></div>
+    <div class="lm-layer-toggle" role="group" aria-label="Map style">
+      <button type="button" id="lmSat" class="is-active">Satellite</button>
+      <button type="button" id="lmStreet">Street</button>
     </div>
-  </div>
-  <div id="parcelStatus" class="parcel-status"></div>
-  <div id="parcelResults" class="parcel-results"></div>
-
-  <div class="pmap-wrap" id="pmapWrap" style="display:none">
-    <div class="pmap-viewport" id="pmapViewport">
-      <div class="pmap-canvas" id="pmapCanvas">
-        <svg viewBox="0 0 960 700" width="960" height="700" id="pmapSvg">
-          <path class="pmap-river" d="M20,30 C120,70 150,140 130,220 C110,300 180,330 170,420"/>
-          <path class="pmap-county-shape" d="M60,40 L360,25 L520,60 L680,50 L860,120 L900,240 L880,380 L900,500 L820,620 L640,660 L460,670 L280,650 L140,600 L70,500 L40,360 L30,220 L40,120 Z"/>
-          <g id="pmapRoads"></g>
-          <g id="pmapPins"></g>
-        </svg>
-      </div>
-      <div class="pmap-legend">
-        <span><span class="dot" style="background:var(--lime)"></span>Standard</span>
-        <span><span class="dot" style="background:var(--coral)"></span>Vacant</span>
-        <span><span class="dot" style="background:var(--gold)"></span>Tax delinquent</span>
-      </div>
-      <div class="pmap-controls">
-        <button id="pmapZoomIn" type="button" aria-label="Zoom in">+</button>
-        <button id="pmapZoomOut" type="button" aria-label="Zoom out">&minus;</button>
-        <button id="pmapZoomReset" type="button" aria-label="Reset view">&#8634;</button>
-      </div>
-      <div class="pmap-hint">Drag to pan &middot; scroll/pinch to zoom &middot; click a bubble</div>
-    </div>
-    <p class="pmap-note">A schematic navigator built from real Richmond County parcel data &mdash; road positions here are illustrative, not survey-accurate, because a public page can't embed live satellite map tiles (same restriction that blocks a direct live query to the county's own server). Every pin and card still links straight out to Google's real satellite imagery and the official county record for that exact parcel.</p>
+    <div class="lm-zoom-hint" id="lmHint">Zoom in to see parcel lines</div>
   </div>
 
-  <p class="parcel-source">Source: <a href="https://gismap.augustaga.gov/augustats/" target="_blank" rel="noopener">Augusta-Richmond County GIS</a> &mdash; real public record data, snapshotted periodically. Not a warranty of title, value, or condition; for any address (including ones not in this snapshot yet), confirm with the <a href="https://qpublic.schneidercorp.com/Application.aspx?App=RichmondCountyGA&amp;Layer=Parcels&amp;PageType=Search" target="_blank" rel="noopener">official qPublic record</a>.</p>
+  <p class="parcel-source">Source: <a href="https://gismap.augustaga.gov/augustats/" target="_blank" rel="noopener">Augusta-Richmond County GIS</a>, live public record data. Imagery &copy; Esri; streets &copy; OpenStreetMap contributors. Not a warranty of title, value, or condition. Confirm details on the <a href="https://qpublic.schneidercorp.com/Application.aspx?App=RichmondCountyGA&amp;Layer=Parcels&amp;PageType=Search" target="_blank" rel="noopener">official qPublic record</a>.</p>
 </section>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style id="livemap-css">
+  .lm-search-row{display:flex; gap:10px; margin:18px 0 8px; flex-wrap:wrap;}
+  .lm-search-row input{flex:1 1 260px; min-width:0; background:var(--surface-2); border:1px solid var(--border); color:var(--text); padding:12px 14px; border-radius:2px;}
+  .lm-status{color:var(--text-muted); font-size:14px; min-height:20px; margin:4px 0 8px;}
+  .lm-results{display:flex; flex-direction:column; gap:6px; margin-bottom:12px;}
+  .lm-results button{all:unset; cursor:pointer; background:var(--surface); border:1px solid var(--border); padding:10px 12px; border-radius:2px; color:var(--text); font-size:15px;}
+  .lm-results button:hover,.lm-results button:focus-visible{border-color:var(--lime);}
+  .lm-results small{display:block; color:var(--text-muted); font-size:13px; margin-top:2px;}
+  .lm-wrap{position:relative; border:1px solid var(--border); background:var(--surface);}
+  .lm-map{height:560px; width:100%; background:#0e100b;}
+  @media (max-width:640px){ .lm-map{height:440px;} }
+  .lm-layer-toggle{position:absolute; top:10px; right:10px; z-index:500; display:flex; background:var(--surface); border:1px solid var(--border); border-radius:2px; overflow:hidden;}
+  .lm-layer-toggle button{all:unset; cursor:pointer; padding:8px 12px; font-size:13.5px; color:var(--text-muted);}
+  .lm-layer-toggle button.is-active{background:var(--lime); color:var(--lime-ink); font-weight:600;}
+  .lm-zoom-hint{position:absolute; left:50%; bottom:14px; transform:translateX(-50%); z-index:500; background:rgba(18,20,15,.9); border:1px solid var(--border); color:var(--text); font-size:13.5px; padding:6px 12px; border-radius:2px; pointer-events:none; white-space:nowrap;}
+  .lm-zoom-hint[hidden]{display:none;}
+  .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--surface); color:var(--text); border:1px solid var(--border); border-radius:2px;}
+  .leaflet-popup-content{margin:14px 16px; font-size:14px; line-height:1.5; min-width:220px;}
+  .leaflet-popup-content h4{margin:0 0 6px; font-size:16px; color:var(--text); font-family:"IBM Plex Sans",system-ui,sans-serif;}
+  .leaflet-popup-content dl{display:grid; grid-template-columns:auto 1fr; gap:3px 10px; margin:6px 0 10px;}
+  .leaflet-popup-content dt{color:var(--text-muted);}
+  .leaflet-popup-content dd{margin:0; color:var(--text);}
+  .leaflet-popup-content a{color:var(--lime);}
+  .leaflet-container a.leaflet-popup-close-button{color:var(--text-muted);}
+  .leaflet-control-zoom a{background:var(--surface)!important; color:var(--text)!important; border-color:var(--border)!important;}
+  .leaflet-control-attribution{background:rgba(18,20,15,.8)!important; color:var(--text-muted)!important;}
+  .leaflet-control-attribution a{color:var(--text-muted)!important;}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script id="livemap-js">
+(function(){
+  var el = document.getElementById('lmMap');
+  if(!el || !window.L) return;
+  var LAYER = 'https://gismap.augustaga.gov/arcgis/rest/services/AGOL/AGSGeneralFeatures/MapServer/32';
+  var FIELDS = 'pin,siteaddress,site_citystzip,own1,curr_val,totalacres,zoningcode,propdesc,vacant,flood_zone';
+  var MIN_ZOOM = 16;
+  var statusEl = document.getElementById('lmStatus');
+  var resultsEl = document.getElementById('lmResults');
+  var hint = document.getElementById('lmHint');
+
+  var map = L.map(el, {center:[33.44,-82.04], zoom:12, minZoom:10, maxZoom:20, scrollWheelZoom:false});
+  var sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {maxZoom:20, maxNativeZoom:19, attribution:'Imagery &copy; Esri'});
+  var labels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {maxZoom:20, maxNativeZoom:19, opacity:.9});
+  var street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:20, maxNativeZoom:19, attribution:'&copy; OpenStreetMap contributors'});
+  sat.addTo(map); labels.addTo(map);
+  el.addEventListener('click', function(){ map.scrollWheelZoom.enable(); }, {once:true});
+
+  var satBtn = document.getElementById('lmSat'), stBtn = document.getElementById('lmStreet');
+  satBtn.addEventListener('click', function(){ map.removeLayer(street); sat.addTo(map); labels.addTo(map); satBtn.classList.add('is-active'); stBtn.classList.remove('is-active'); });
+  stBtn.addEventListener('click', function(){ map.removeLayer(sat); map.removeLayer(labels); street.addTo(map); stBtn.classList.add('is-active'); satBtn.classList.remove('is-active'); });
+
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function money(v){ return (v || v === 0) ? '$' + Number(v).toLocaleString('en-US') : 'n/a'; }
+  function title(s){ return String(s || '').toLowerCase().replace(/\b\w/g, function(c){ return c.toUpperCase(); }); }
+  function popupHtml(p){
+    var addr = p.siteaddress ? esc(p.siteaddress) : 'No site address';
+    var q = encodeURIComponent((p.siteaddress || '') + ' Augusta GA');
+    return '<h4>' + addr + '</h4>' +
+      '<dl>' +
+      '<dt>Owner</dt><dd>' + esc(title(p.own1) || 'n/a') + '</dd>' +
+      '<dt>Assessed</dt><dd>' + money(p.curr_val) + '</dd>' +
+      '<dt>Acres</dt><dd>' + esc(p.totalacres != null ? p.totalacres : 'n/a') + '</dd>' +
+      '<dt>Zoning</dt><dd>' + esc((p.zoningcode || '').trim() || 'n/a') + '</dd>' +
+      '<dt>Type</dt><dd>' + esc(p.propdesc || 'n/a') + '</dd>' +
+      '<dt>Flood zone</dt><dd>' + esc(p.flood_zone || 'n/a') + '</dd>' +
+      '<dt>Parcel #</dt><dd>' + esc(p.pin || 'n/a') + '</dd>' +
+      '</dl>' +
+      '<a href="https://qpublic.schneidercorp.com/Application.aspx?App=RichmondCountyGA&Layer=Parcels&PageType=Search" target="_blank" rel="noopener">County record</a> &middot; ' +
+      '<a href="https://www.google.com/maps/search/?api=1&query=' + q + '" target="_blank" rel="noopener">Google Maps</a> &middot; ' +
+      '<a href="#sell">Own it? Get a cash offer</a>';
+  }
+  var style = {color:'#c8f135', weight:1.2, opacity:.9, fillColor:'#c8f135', fillOpacity:.06};
+  var hiStyle = {color:'#ff6b4a', weight:3, opacity:1, fillColor:'#ff6b4a', fillOpacity:.18};
+  var parcels = L.geoJSON(null, {style:function(){ return style; }, onEachFeature:function(f, layer){
+    layer.bindPopup(popupHtml(f.properties || {}), {maxWidth:300});
+    layer.on('mouseover', function(){ layer.setStyle({weight:2.4, fillOpacity:.16}); });
+    layer.on('mouseout', function(){ if(layer !== hiLayer) layer.setStyle(style); });
+  }}).addTo(map);
+  var hiLayer = null, pending = null;
+  function highlightPending(){
+    if(!pending) return;
+    var target = null;
+    parcels.eachLayer(function(l){ if(l.feature && l.feature.properties.pin === pending.pin) target = l; });
+    if(!target){ parcels.addData(pending.gj); parcels.eachLayer(function(l){ if(l.feature && l.feature.properties.pin === pending.pin) target = l; }); }
+    pending = null;
+    if(target){ if(hiLayer) hiLayer.setStyle(style); hiLayer = target; target.setStyle(hiStyle); target.openPopup(); }
+  }
+
+  var reqId = 0, timer = null, loadedKey = '';
+  function load(){
+    var z = map.getZoom();
+    if(z < MIN_ZOOM){ parcels.clearLayers(); loadedKey = ''; hint.hidden = false; hint.textContent = 'Zoom in to see parcel lines'; return; }
+    var b = map.getBounds().pad(0.15);
+    var key = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()].map(function(n){ return n.toFixed(4); }).join(',');
+    if(key === loadedKey) return;
+    var my = ++reqId;
+    hint.hidden = false; hint.textContent = 'Loading parcels...';
+    var url = LAYER + '/query?geometry=' + key + '&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects' +
+      '&outFields=' + FIELDS + '&returnGeometry=true&outSR=4326&geometryPrecision=6&resultRecordCount=2000&f=geojson';
+    fetch(url).then(function(r){ return r.json(); }).then(function(gj){
+      if(my !== reqId) return;
+      parcels.clearLayers(); hiLayer = null;
+      if(gj && gj.features){ parcels.addData(gj); loadedKey = key; hint.hidden = true; highlightPending(); }
+      else { hint.textContent = 'County map is busy. Try moving the map again.'; }
+    }).catch(function(){ if(my === reqId){ hint.textContent = 'Could not reach the county map. Try again in a moment.'; } });
+  }
+  map.on('moveend', function(){ clearTimeout(timer); timer = setTimeout(load, 250); });
+  load();
+
+  function flyToParcel(attrs){
+    var url = LAYER + "/query?where=" + encodeURIComponent("pin='" + String(attrs.pin).replace(/'/g, "''") + "'") +
+      '&outFields=' + FIELDS + '&returnGeometry=true&outSR=4326&f=geojson';
+    statusEl.textContent = 'Finding ' + (attrs.siteaddress || attrs.pin) + '...';
+    fetch(url).then(function(r){ return r.json(); }).then(function(gj){
+      if(!gj.features || !gj.features.length){ statusEl.textContent = 'Could not find that parcel on the map.'; return; }
+      var bounds = L.geoJSON(gj).getBounds();
+      pending = {pin: attrs.pin, gj: gj};
+      statusEl.textContent = 'Showing ' + (attrs.siteaddress || attrs.pin) + '. Tap any other lot for its details.';
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+      map.flyToBounds(bounds, {maxZoom:18, duration:.8});
+      setTimeout(function(){ if(pending && loadedKey) highlightPending(); }, 2500);
+    }).catch(function(){ statusEl.textContent = 'Could not reach the county map. Try again in a moment.'; });
+  }
+
+  var input = document.getElementById('lmSearch'), go = document.getElementById('lmSearchGo');
+  function search(){
+    var q = input.value.trim().toUpperCase().replace(/[^A-Z0-9 .-]/g, '').replace(/\s+/g, ' ');
+    resultsEl.innerHTML = '';
+    if(q.length < 3){ statusEl.textContent = 'Type at least 3 characters of an address or street.'; return; }
+    statusEl.textContent = 'Searching the county records...';
+    var where = "UPPER(siteaddress) LIKE '%" + q.replace(/'/g, "''") + "%'";
+    var url = LAYER + '/query?where=' + encodeURIComponent(where) + '&outFields=pin,siteaddress,own1,curr_val&returnGeometry=false&orderByFields=siteaddress&resultRecordCount=25&f=json';
+    fetch(url).then(function(r){ return r.json(); }).then(function(j){
+      var feats = (j && j.features) || [];
+      if(!feats.length){ statusEl.textContent = 'No parcels found for "' + input.value.trim() + '". Try just the street name, like "Koger".'; return; }
+      if(feats.length === 1){ flyToParcel(feats[0].attributes); return; }
+      statusEl.textContent = feats.length + (feats.length === 25 ? '+' : '') + ' matches. Tap one to see it on the map.';
+      feats.forEach(function(f){
+        var a = f.attributes, b = document.createElement('button');
+        b.type = 'button';
+        b.innerHTML = esc(a.siteaddress || a.pin) + '<small>' + esc(title(a.own1)) + ' &middot; ' + money(a.curr_val) + '</small>';
+        b.addEventListener('click', function(){ resultsEl.innerHTML = ''; flyToParcel(a); });
+        resultsEl.appendChild(b);
+      });
+    }).catch(function(){ statusEl.textContent = 'Could not reach the county records. Try again in a moment.'; });
+  }
+  go.addEventListener('click', search);
+  input.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); search(); } });
+})();
+</script>
 
 <section class="wrap">
   <div class="card tech-frame">
