@@ -1,41 +1,5 @@
 {
   "updated": "2026-10-14",
-  "note": "Public deal feed for smithassetgrp.com/deals.html. Never put seller names, seller phone numbers, full street numbers of protected deals, or the posting wholesaler/agent's contact info in this file. Everything here is public.",
-  "deals": [
-    {
-      "id": "SAG-0001",
-      "status": "Available",
-      "propertyType": "Single family",
-      "street": "Dabney Dr",
-      "area": "Sherwood Extension",
-      "city": "Augusta",
-      "state": "GA",
-      "zip": "30906",
-      "county": "Richmond",
-      "approxLat": 33.407,
-      "approxLng": -82.008,
-      "price": 8000,
-      "priceLabel": "Asking",
-      "arv": null,
-      "repairs": null,
-      "rent": null,
-      "beds": 2,
-      "baths": 1,
-      "sqft": 1020,
-      "yearBuilt": 1954,
-      "lotAcres": 0.17,
-      "zoning": "R-1B",
-      "countyValue": 32879,
-      "countyValueYear": 2026,
-      "condition": null,
-      "occupancy": null,
-      "closeBy": null,
-      "emd": null,
-      "access": "Shared after buyer verification",
-      "photos": [],
-      "headline": "Sherwood Extension 2-bed, asking $8,000",
-      "summary": "Off-market 2 bed / 1 bath on a 0.17-acre lot in South Augusta's Sherwood Extension. County records list 1,020 sq ft, built 1954, with a 2026 county value of $32,879. Condition, occupancy, and access details are shared with verified buyers.",
-      "posted": "2026-10-14"
-    }
-  ]
+  "note": "Public deal feed. Everything in this file is public: never put seller names, seller phone numbers, full street numbers of protected deals, or a poster's contact info here.",
+  "deals": []
 }
