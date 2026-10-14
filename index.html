@@ -1,7 +1,7 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 <title>Sell Your House Fast for Cash in Augusta, GA | Smith Asset Group</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%2312140f'/%3E%3Ctext%20x='32'%20y='44'%20text-anchor='middle'%20font-family='Georgia,serif'%20font-size='36'%20font-weight='700'%20fill='%23c8f135'%3ES%3C/text%3E%3C/svg%3E">
-<meta name="theme-color" content="#12140f">
+<meta name="theme-color" content="#f7f3ea">
 <meta property="og:image" content="https://smithassetgrp.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -457,6 +457,7 @@
     .lb-map-col{height:360px;}
   }
 </style>
+<link rel="stylesheet" href="site.css?v=5">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -468,7 +469,7 @@
   <div class="wrap nav">
     <div class="logo">Smith Asset <em>Group</em></div>
     <nav class="links">
-      <a href="deals.html" class="hide-mobile">Deals</a>
+      <a href="#deals" class="hide-mobile">Deals</a>
       <a href="#sell" class="hide-mobile">Sell</a>
       <a href="#buy" class="hide-mobile">Buy</a>
       <a href="agents.html" class="hide-mobile">Agents</a>
@@ -584,6 +585,23 @@
   </div>
 </section>
 
+<section id="deals" class="snf" aria-label="SAG Deal Board"><div id="dealBoard"></div></section>
+<script src="deals-board.js?v=5" defer></script>
+
+<section class="wrap" id="how" style="padding-top:56px;">
+  <div class="kicker-row">
+    <h2>Selling to us is simple</h2>
+    <span class="count">Four steps &middot; your timeline</span>
+  </div>
+  <div class="sag-how">
+    <div><i>STEP 01</i><b>Tell us about the house</b><p>Two minutes online or one phone call. Any condition, any situation.</p></div>
+    <div><i>STEP 02</i><b>We run the numbers</b><p>We look at recent Augusta sales and call you back, usually within one business day.</p></div>
+    <div><i>STEP 03</i><b>Get a written offer</b><p>A quick walkthrough, then a written cash offer. No obligation, no pressure.</p></div>
+    <div><i>STEP 04</i><b>Close when you're ready</b><p>You pick the date. A Georgia closing attorney handles the paperwork.</p></div>
+  </div>
+  <div class="sag-trust"><span>Augusta-based, local team</span><span>No commissions or fees charged to you</span><span>Sell as-is, no repairs</span><span>Attorney closings</span><span>Your info stays private</span></div>
+</section>
+
 <section class="wrap" id="sell">
   <span class="mono-tag">// seller.intake_form</span>
   <div class="form-panel sell tech-frame">
@@ -624,11 +642,32 @@
         <div class="field"><label for="s_price">Asking price expectation</label><input id="s_price" name="Asking price expectation" type="text" placeholder="Optional"></div>
         <div class="field full"><label for="s_reason">Reason for selling</label><textarea id="s_reason" name="Reason for selling" placeholder="Optional &mdash; helps us make a fair offer faster"></textarea></div>
       </div>
+      <label class="sag-consent"><input type="checkbox" name="SMS consent" value="Yes"> (Optional) Smith Asset Group LLC may call or text me at the number above about my inquiry, including by automated means. Consent is not a condition of any purchase or sale. Msg frequency varies; msg &amp; data rates may apply. Reply STOP to opt out, HELP for help.</label>
       <div class="submit-row">
         <button type="submit" class="btn btn-lime">Get My Cash Offer</button>
         <p class="form-note" id="sellNote">Your info goes straight to Smith Asset Group LLC. We never sell your info.</p>
       </div>
     </form>
+  </div>
+</section>
+
+<section class="wrap" id="faq" style="padding-top:48px;">
+  <div class="kicker-row">
+    <h2>Seller questions, straight answers</h2>
+    <span class="count">Still unsure? Call or text (762) 215-4466</span>
+  </div>
+  <div class="sag-faq">
+    <details><summary>How do you come up with your offer?</summary><p>We look at what similar homes nearby have sold for, what the house needs, and what it costs us to buy, hold, and resell it. We walk you through the math so you can see how we got there.</p></details>
+    <details><summary>Will your offer be lower than listing with an agent?</summary><p>Usually, yes. A cash offer is typically below full retail value. In exchange you skip repairs, showings, commissions, and months of waiting, and you get a firm closing date. If listing makes more sense for you, we'll tell you.</p></details>
+    <details><summary>Do I have to make repairs or clean out the house?</summary><p>No. Sell it as-is. Take what you want and leave the rest.</p></details>
+    <details><summary>Are there any fees or commissions?</summary><p>We don't charge you fees or commissions. We'll go over who pays which closing costs in writing before you sign anything.</p></details>
+    <details><summary>How fast can you close? Can I pick a later date?</summary><p>Many deals can close in a few weeks once title is clear. If you need more time to move, you pick the date.</p></details>
+    <details><summary>Am I obligated to accept your offer?</summary><p>Never. Our offer is free and there's no obligation.</p></details>
+    <details><summary>Can I sell with tenants, liens, back taxes, or code violations?</summary><p>Often, yes. These situations are common, and the closing attorney sorts out payoffs and title. Tell us what's going on and we'll be straight with you about your options.</p></details>
+    <details><summary>What if I inherited the house or it's in probate?</summary><p>We work with inherited properties regularly. If probate isn't finished yet, we can still talk and plan around your attorney's timeline.</p></details>
+    <details><summary>Will you sell or assign the contract to another buyer?</summary><p>Sometimes. We may close on the house ourselves or assign our contract to one of our investor buyers. Either way your price and terms stay the same, and we'll tell you up front.</p></details>
+    <details><summary>Who handles the closing?</summary><p>A licensed Georgia closing attorney. That's standard in Georgia and it protects you.</p></details>
+    <details><summary>Will you share my information?</summary><p>No. We never sell your information. It's used only to work on your request.</p></details>
   </div>
 </section>
 
@@ -695,6 +734,7 @@
           </select>
         </div>
       </div>
+      <label class="sag-consent"><input type="checkbox" name="SMS consent" value="Yes"> (Optional) Smith Asset Group LLC may call or text me at the number above about my inquiry, including by automated means. Consent is not a condition of any purchase or sale. Msg frequency varies; msg &amp; data rates may apply. Reply STOP to opt out, HELP for help.</label>
       <div class="submit-row">
         <button type="submit" class="btn btn-coral">Join the Buyer List</button>
         <p class="form-note" id="buyNote">Your buy box goes straight to Smith Asset Group LLC. We'll text or email you first-look deals that fit.</p>
@@ -1073,7 +1113,7 @@
   <div class="foot-row">
 <div class="copyright">&copy; 2026 Smith Asset Group LLC · Augusta, GA</div>
     <div class="foot-links">
-      <a href="deals.html">Deals</a>
+      <a href="#deals">Deals</a>
       <a href="#sell">Sell</a>
       <a href="#buy">Buy</a>
       <a href="agents.html">Agents</a>
@@ -1104,13 +1144,14 @@
       var lines = [];
       Array.prototype.forEach.call(form.elements, function(el){
         if(!el.name) return;
-        var val = (el.value || '').trim();
+        var val = el.type === 'checkbox' ? (el.checked ? 'Yes' : 'No') : (el.value || '').trim();
         if(val) lines.push(el.name + ': ' + val);
       });
-      var subject = subjectPrefix + ' — ' + (form.elements[0].value || 'New Lead');
+      var subject = subjectPrefix + ' — ' + ((form.querySelector('[name="Full name"]') || {}).value || 'New Lead');
       var body = lines.join('\n');
       var data = {};
       Array.prototype.forEach.call(form.elements, function(el){
+        if(el.name && el.type === 'checkbox'){ data[el.name] = el.checked ? 'Yes' : 'No'; return; }
         if(el.name && (el.value || '').trim()) data[el.name] = el.value.trim();
       });
       if(form.querySelector('[name="_honey"]') && form.querySelector('[name="_honey"]').value) return;
