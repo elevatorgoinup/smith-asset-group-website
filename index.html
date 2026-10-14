@@ -1,5 +1,11 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 <title>Sell Your House Fast for Cash in Augusta, GA | Smith Asset Group</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%2312140f'/%3E%3Ctext%20x='32'%20y='44'%20text-anchor='middle'%20font-family='Georgia,serif'%20font-size='36'%20font-weight='700'%20fill='%23c8f135'%3ES%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#12140f">
+<meta property="og:image" content="https://smithassetgrp.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://smithassetgrp.com/og-image.png">
 <meta name="description" content="Sell your Augusta, GA house fast for cash with no repairs, commissions, or showings. Off-market deals for sellers and cash buyers across the CSRA.">
 <link rel="canonical" href="https://smithassetgrp.com/">
 <meta property="og:type" content="website">
@@ -117,7 +123,10 @@
   .kicker-row .count{font-family:"IBM Plex Mono",monospace; color:var(--text-faint); font-size:.8rem;}
 
   /* fork cards */
-  .fork-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  .fork-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  .fork-card.agent{border-top:3px solid var(--gold);}
+  .btn-gold{background:var(--gold); color:var(--lime-ink); border:1px solid var(--gold);}
+  @media (max-width:980px) and (min-width:761px){ .fork-grid{grid-template-columns:1fr 1fr;} }
   .fork-card{background:var(--surface); border:1px solid var(--border); border-radius:2px; padding:34px; display:flex; flex-direction:column; gap:16px;}
   .fork-card.sell{border-top:3px solid var(--lime);}
   .fork-card.buy{border-top:3px solid var(--coral);}
@@ -495,7 +504,7 @@
   <span class="mono-tag">// site.choose_your_side</span>
   <div class="kicker-row">
     <h2>Which side are you on?</h2>
-    <span class="count">Two paths &middot; one team</span>
+    <span class="count">Three paths &middot; one team</span>
   </div>
   <div class="fork-grid">
     <div class="fork-card sell tech-frame">
@@ -509,6 +518,12 @@
       <h3>I'm a Buyer</h3>
       <p>Buy-and-hold, fix-and-flip, or another wholesaler looking for off-market inventory in Georgia? Tell us your buy box and get first look at deals before they're public.</p>
       <a class="btn btn-coral" href="#buy">Start Here</a>
+    </div>
+    <div class="fork-card agent tech-frame">
+      <span class="tag">Agents</span>
+      <h3>I'm an Agent</h3>
+      <p>Licensed in Georgia with a seller who needs speed, or cash buyers who want off-market deals? Refer a seller or work the buy side with us. Every arrangement is put in writing first.</p>
+      <a class="btn btn-gold" href="agents.html">Start Here</a>
     </div>
   </div>
 </section>
@@ -540,133 +555,6 @@
   <p class="parcel-source">Source: <a href="https://gismap.augustaga.gov/augustats/" target="_blank" rel="noopener">Augusta-Richmond County GIS</a>, live public record data. Imagery &copy; Esri; streets &copy; OpenStreetMap contributors. Not a warranty of title, value, or condition. Confirm details on the <a href="https://qpublic.schneidercorp.com/Application.aspx?App=RichmondCountyGA&amp;Layer=Parcels&amp;PageType=Search" target="_blank" rel="noopener">official qPublic record</a>.</p>
 </section>
 
-<section class="room-wrap" id="livingRoom">
-  <div class="room-glow" aria-hidden="true"></div>
-  <div class="idea-lamp" aria-hidden="true">
-    <svg viewBox="0 0 132 260" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="lampGlowGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#ffe08a" stop-opacity=".9"/>
-          <stop offset="45%" stop-color="#e3b34c" stop-opacity=".35"/>
-          <stop offset="100%" stop-color="#e3b34c" stop-opacity="0"/>
-        </radialGradient>
-        <linearGradient id="lampBeamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#f6d488" stop-opacity=".5"/>
-          <stop offset="100%" stop-color="#f6d488" stop-opacity="0"/>
-        </linearGradient>
-        <radialGradient id="lampBulbGrad" cx="42%" cy="38%" r="65%">
-          <stop offset="0%" stop-color="#fff7dd"/>
-          <stop offset="55%" stop-color="#ffe08a"/>
-          <stop offset="100%" stop-color="#e3b34c"/>
-        </radialGradient>
-      </defs>
-      <!-- cord -->
-      <line x1="66" y1="0" x2="66" y2="58" stroke="#3a3f2c" stroke-width="2"/>
-      <!-- socket cap -->
-      <rect x="58" y="56" width="16" height="12" rx="2" fill="#3a3f2c"/>
-      <!-- downward light cone -->
-      <path class="lamp-beam" d="M40 68 L92 68 L128 250 L4 250 Z" fill="url(#lampBeamGrad)"/>
-      <!-- ambient glow halo -->
-      <circle class="lamp-ray" cx="66" cy="96" r="70" fill="url(#lampGlowGrad)"/>
-      <!-- radiating idea rays -->
-      <g class="lamp-ray" stroke="#f6d488" stroke-width="2" stroke-linecap="round" opacity=".55">
-        <line x1="66" y1="48" x2="66" y2="34"/>
-        <line x1="30" y1="62" x2="18" y2="52"/>
-        <line x1="102" y1="62" x2="114" y2="52"/>
-        <line x1="18" y1="96" x2="4" y2="96"/>
-        <line x1="114" y1="96" x2="128" y2="96"/>
-      </g>
-      <!-- bulb (idea lightbulb shape) -->
-      <g class="lamp-bulb">
-        <circle cx="66" cy="96" r="30" fill="url(#lampBulbGrad)"/>
-        <path d="M56 122 L76 122 L74 132 L58 132 Z" fill="#3a3f2c"/>
-        <rect x="57" y="118" width="18" height="6" rx="1.5" fill="#20241a"/>
-        <path d="M58 90 Q66 78 74 90 M60 100 Q66 108 72 100" stroke="#c8862a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".65"/>
-      </g>
-    </svg>
-  </div>
-  <div class="wrap">
-    <span class="mono-tag">// community.the_living_room</span>
-    <div class="kicker-row">
-      <h2>The Living Room</h2>
-      <span class="count">Live now &middot; real accounts, real conversation</span>
-    </div>
-    <p class="room-lede">Where the network talks shop &mdash; deals, war stories, hot takes, and the kind of straight talk that doesn't make it into a listing description.</p>
-
-    <div class="room-cta-row">
-      <a class="btn btn-lime" href="https://smith-asset-group-living-room.onrender.com/register" target="_blank" rel="noopener">Enter the Living Room &rarr;</a>
-      <span class="room-cta-note">Free account &middot; real-time chat, live now</span>
-    </div>
-
-    <div class="room-window tech-frame">
-      <div class="room-titlebar">
-        <div class="room-titlebar-left">
-          <span class="room-live-dot"></span>
-          <span class="room-title">The Living Room</span>
-        </div>
-        <span class="room-count-badge">Live &middot; join now</span>
-      </div>
-
-      <div class="room-body" id="roomBody">
-        <div class="room-msg">
-          <div class="room-avatar" style="background:linear-gradient(135deg,var(--coral),#ffae95); color:var(--lime-ink)">DC</div>
-          <div class="room-bubble-wrap">
-            <div class="room-meta"><span class="room-handle">DealCloser_ATL</span><span class="room-time">2m</span></div>
-            <div class="room-bubble">Every "no" is just a "not yet" with better comps.</div>
-            <div class="room-reactions"><span>&#128293; 14</span><span>&#128170; 6</span></div>
-          </div>
-        </div>
-        <div class="room-msg">
-          <div class="room-avatar" style="background:linear-gradient(135deg,var(--gold),#f6d488); color:var(--lime-ink)">WW</div>
-          <div class="room-bubble-wrap">
-            <div class="room-meta"><span class="room-handle">WholesaleWiz</span><span class="room-time">6m</span></div>
-            <div class="room-bubble">Assignment fees don't lie. Excuses do.</div>
-            <div class="room-reactions"><span>&#128293; 22</span><span>&#128064; 9</span></div>
-          </div>
-        </div>
-        <div class="room-msg">
-          <div class="room-avatar" style="background:linear-gradient(135deg,var(--lime),#e6ff8f); color:var(--lime-ink)">RR</div>
-          <div class="room-bubble-wrap">
-            <div class="room-meta"><span class="room-handle">RichmondRunner</span><span class="room-time">11m</span></div>
-            <div class="room-bubble">Motivated seller energy: "I just want this gone." Motivated wholesaler energy: "Say less."</div>
-            <div class="room-reactions"><span>&#128514; 31</span><span>&#128293; 12</span></div>
-          </div>
-        </div>
-        <div class="room-msg">
-          <div class="room-avatar" style="background:linear-gradient(135deg,#4fd1c5,#8ce9de); color:var(--lime-ink)">OO</div>
-          <div class="room-bubble-wrap">
-            <div class="room-meta"><span class="room-handle">OffMarketOracle</span><span class="room-time">18m</span></div>
-            <div class="room-bubble">You're not selling a house. You're selling relief.</div>
-            <div class="room-reactions"><span>&#128170; 19</span><span>&#128064; 5</span></div>
-          </div>
-        </div>
-        <div class="room-msg">
-          <div class="room-avatar" style="background:linear-gradient(135deg,var(--coral),#ffcbb8); color:var(--lime-ink)">GQ</div>
-          <div class="room-bubble-wrap">
-            <div class="room-meta"><span class="room-handle">GAFlipQueen</span><span class="room-time">27m</span></div>
-            <div class="room-bubble">First one to the door gets the deal. First one to follow up gets the referral.</div>
-            <div class="room-reactions"><span>&#128293; 17</span><span>&#128170; 8</span></div>
-          </div>
-        </div>
-        <div class="room-msg">
-          <div class="room-avatar" style="background:linear-gradient(135deg,var(--gold),#fff0c2); color:var(--lime-ink)">CN</div>
-          <div class="room-bubble-wrap">
-            <div class="room-meta"><span class="room-handle">CloserNotWisher</span><span class="room-time">34m</span></div>
-            <div class="room-bubble">The best CRM is the one you actually open.</div>
-            <div class="room-reactions"><span>&#128514; 24</span><span>&#128064; 7</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="room-input-row">
-        <input type="text" id="roomHandle" placeholder="Your name or handle" maxlength="40">
-        <input type="text" id="roomMsg" placeholder="Say something to the room…" maxlength="240">
-        <button type="button" class="btn btn-lime" id="roomPostBtn">Post It</button>
-      </div>
-    </div>
-    <p class="room-note">The bubbles above are illustrative &mdash; a taste of the tone and energy the Living Room is built for. The real room is live now: create a free account above for real-time chat with wholesalers, agents, and investors on the network. Prefer to just leave a line for the wall instead? Type something above and "Post It" opens an email to Smith Asset Group with your name and message.</p>
-  </div>
-</section>
 
 <section class="wrap" id="credits" hidden>
   <span class="mono-tag">// members.credits</span>
@@ -812,6 +700,134 @@
         <p class="form-note" id="buyNote">Your buy box goes straight to Smith Asset Group LLC. We'll text or email you first-look deals that fit.</p>
       </div>
     </form>
+  </div>
+</section>
+
+<section class="room-wrap" id="livingRoom">
+  <div class="room-glow" aria-hidden="true"></div>
+  <div class="idea-lamp" aria-hidden="true">
+    <svg viewBox="0 0 132 260" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="lampGlowGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ffe08a" stop-opacity=".9"/>
+          <stop offset="45%" stop-color="#e3b34c" stop-opacity=".35"/>
+          <stop offset="100%" stop-color="#e3b34c" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="lampBeamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#f6d488" stop-opacity=".5"/>
+          <stop offset="100%" stop-color="#f6d488" stop-opacity="0"/>
+        </linearGradient>
+        <radialGradient id="lampBulbGrad" cx="42%" cy="38%" r="65%">
+          <stop offset="0%" stop-color="#fff7dd"/>
+          <stop offset="55%" stop-color="#ffe08a"/>
+          <stop offset="100%" stop-color="#e3b34c"/>
+        </radialGradient>
+      </defs>
+      <!-- cord -->
+      <line x1="66" y1="0" x2="66" y2="58" stroke="#3a3f2c" stroke-width="2"/>
+      <!-- socket cap -->
+      <rect x="58" y="56" width="16" height="12" rx="2" fill="#3a3f2c"/>
+      <!-- downward light cone -->
+      <path class="lamp-beam" d="M40 68 L92 68 L128 250 L4 250 Z" fill="url(#lampBeamGrad)"/>
+      <!-- ambient glow halo -->
+      <circle class="lamp-ray" cx="66" cy="96" r="70" fill="url(#lampGlowGrad)"/>
+      <!-- radiating idea rays -->
+      <g class="lamp-ray" stroke="#f6d488" stroke-width="2" stroke-linecap="round" opacity=".55">
+        <line x1="66" y1="48" x2="66" y2="34"/>
+        <line x1="30" y1="62" x2="18" y2="52"/>
+        <line x1="102" y1="62" x2="114" y2="52"/>
+        <line x1="18" y1="96" x2="4" y2="96"/>
+        <line x1="114" y1="96" x2="128" y2="96"/>
+      </g>
+      <!-- bulb (idea lightbulb shape) -->
+      <g class="lamp-bulb">
+        <circle cx="66" cy="96" r="30" fill="url(#lampBulbGrad)"/>
+        <path d="M56 122 L76 122 L74 132 L58 132 Z" fill="#3a3f2c"/>
+        <rect x="57" y="118" width="18" height="6" rx="1.5" fill="#20241a"/>
+        <path d="M58 90 Q66 78 74 90 M60 100 Q66 108 72 100" stroke="#c8862a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".65"/>
+      </g>
+    </svg>
+  </div>
+  <div class="wrap">
+    <span class="mono-tag">// community.the_living_room</span>
+    <div class="kicker-row">
+      <h2>The Living Room</h2>
+      <span class="count">Live now &middot; real accounts, real conversation</span>
+    </div>
+    <p class="room-lede">Where the network talks shop &mdash; deals, war stories, hot takes, and the kind of straight talk that doesn't make it into a listing description.</p>
+
+    <div class="room-cta-row">
+      <a class="btn btn-lime" href="https://smith-asset-group-living-room.onrender.com/register" target="_blank" rel="noopener">Enter the Living Room &rarr;</a>
+      <span class="room-cta-note">Free account &middot; real-time chat, live now</span>
+    </div>
+
+    <div class="room-window tech-frame">
+      <div class="room-titlebar">
+        <div class="room-titlebar-left">
+          <span class="room-live-dot"></span>
+          <span class="room-title">The Living Room</span>
+        </div>
+        <span class="room-count-badge">Live &middot; join now</span>
+      </div>
+
+      <div class="room-body" id="roomBody">
+        <div class="room-msg">
+          <div class="room-avatar" style="background:linear-gradient(135deg,var(--coral),#ffae95); color:var(--lime-ink)">DC</div>
+          <div class="room-bubble-wrap">
+            <div class="room-meta"><span class="room-handle">DealCloser_ATL</span><span class="room-time">2m</span></div>
+            <div class="room-bubble">Every "no" is just a "not yet" with better comps.</div>
+            <div class="room-reactions"><span>&#128293; 14</span><span>&#128170; 6</span></div>
+          </div>
+        </div>
+        <div class="room-msg">
+          <div class="room-avatar" style="background:linear-gradient(135deg,var(--gold),#f6d488); color:var(--lime-ink)">WW</div>
+          <div class="room-bubble-wrap">
+            <div class="room-meta"><span class="room-handle">WholesaleWiz</span><span class="room-time">6m</span></div>
+            <div class="room-bubble">Assignment fees don't lie. Excuses do.</div>
+            <div class="room-reactions"><span>&#128293; 22</span><span>&#128064; 9</span></div>
+          </div>
+        </div>
+        <div class="room-msg">
+          <div class="room-avatar" style="background:linear-gradient(135deg,var(--lime),#e6ff8f); color:var(--lime-ink)">RR</div>
+          <div class="room-bubble-wrap">
+            <div class="room-meta"><span class="room-handle">RichmondRunner</span><span class="room-time">11m</span></div>
+            <div class="room-bubble">Closed one off Wrightsboro this week. Seller got 30 days after closing to move. That's how it should go.</div>
+            <div class="room-reactions"><span>&#128514; 31</span><span>&#128293; 12</span></div>
+          </div>
+        </div>
+        <div class="room-msg">
+          <div class="room-avatar" style="background:linear-gradient(135deg,#4fd1c5,#8ce9de); color:var(--lime-ink)">OO</div>
+          <div class="room-bubble-wrap">
+            <div class="room-meta"><span class="room-handle">OffMarketOracle</span><span class="room-time">18m</span></div>
+            <div class="room-bubble">You're not selling a house. You're selling relief.</div>
+            <div class="room-reactions"><span>&#128170; 19</span><span>&#128064; 5</span></div>
+          </div>
+        </div>
+        <div class="room-msg">
+          <div class="room-avatar" style="background:linear-gradient(135deg,var(--coral),#ffcbb8); color:var(--lime-ink)">GQ</div>
+          <div class="room-bubble-wrap">
+            <div class="room-meta"><span class="room-handle">GAFlipQueen</span><span class="room-time">27m</span></div>
+            <div class="room-bubble">First one to the door gets the deal. First one to follow up gets the referral.</div>
+            <div class="room-reactions"><span>&#128293; 17</span><span>&#128170; 8</span></div>
+          </div>
+        </div>
+        <div class="room-msg">
+          <div class="room-avatar" style="background:linear-gradient(135deg,var(--gold),#fff0c2); color:var(--lime-ink)">CN</div>
+          <div class="room-bubble-wrap">
+            <div class="room-meta"><span class="room-handle">CloserNotWisher</span><span class="room-time">34m</span></div>
+            <div class="room-bubble">The best CRM is the one you actually open.</div>
+            <div class="room-reactions"><span>&#128514; 24</span><span>&#128064; 7</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="room-input-row">
+        <input type="text" id="roomHandle" placeholder="Your name or handle" maxlength="40">
+        <input type="text" id="roomMsg" placeholder="Say something to the room…" maxlength="240">
+        <button type="button" class="btn btn-lime" id="roomPostBtn">Post It</button>
+      </div>
+    </div>
+    <p class="room-note">The bubbles above are illustrative &mdash; a taste of the tone and energy the Living Room is built for. The real room is live now: create a free account above for real-time chat with wholesalers, agents, and investors on the network. Prefer to just leave a line for the wall instead? Type something above and "Post It" opens an email to Smith Asset Group with your name and message.</p>
   </div>
 </section>
 
@@ -2223,4 +2239,5 @@ input,select,textarea{font-size:16px !important;}
 .form-note{font-size:14px;}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--lime);outline-offset:2px;}
 </style>
+<script src="site.js" defer></script>
 </body></html>
