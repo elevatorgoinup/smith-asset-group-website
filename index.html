@@ -457,7 +457,7 @@
     .lb-map-col{height:360px;}
   }
 </style>
-<link rel="stylesheet" href="site.css?v=5">
+<link rel="stylesheet" href="site.css?v=6">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -476,7 +476,7 @@
       <a href="vault.html" class="hide-mobile">Vault</a>
       <a href="academy.html" class="hide-mobile">Academy</a>
       <a href="grade.html" class="hide-mobile">Grade</a>
-      <a href="#sell" class="btn-nav">Get Started</a>
+      <a href="#sell" class="btn-nav">Get Cash Offer</a>
     </nav>
   </div>
 </header>
@@ -493,10 +493,11 @@
       <span class="line">The wholesaler in between.</span>
     </div>
   </h1>
-  <p class="lede">Smith Asset Group LLC wholesales off-market residential real estate across Georgia &mdash; we find sellers who need a fast, no-hassle sale, and we connect them with a vetted network of cash buyers ready to close. Two sides, one deal, moved fast.</p>
+  <p class="lede">We buy houses for cash in Augusta and the CSRA, and we move off-market deals to a vetted network of cash buyers. Two sides, one deal, moved fast.</p>
   <div class="cta-row">
     <a class="btn btn-lime" href="#sell">Sell My House</a>
     <a class="btn btn-coral" href="#buy">I'm a Buyer</a>
+    <a class="btn btn-ghost" href="#deals">See Deals</a>
   </div>
 </section>
 </div>
@@ -505,102 +506,32 @@
   <span class="mono-tag">// site.choose_your_side</span>
   <div class="kicker-row">
     <h2>Which side are you on?</h2>
-    <span class="count">Three paths &middot; one team</span>
+    <span class="count">Pick one &middot; takes 2 minutes</span>
   </div>
   <div class="fork-grid">
     <div class="fork-card sell tech-frame">
       <span class="tag">Sellers</span>
       <h3>Sell Your House</h3>
-      <p>Own a property you need to move? Inherited it, tired of managing it, behind on payments, or just ready to sell without the showings, repairs, or commissions? Tell us about it and get a cash offer directly from Smith Asset Group LLC.</p>
+      <p>Cash offer, any condition. No repairs, no showings, no commissions.</p>
       <a class="btn btn-lime" href="#sell">Start Here</a>
     </div>
     <div class="fork-card buy tech-frame">
       <span class="tag">Investors</span>
       <h3>I'm a Buyer</h3>
-      <p>Buy-and-hold, fix-and-flip, or another wholesaler looking for off-market inventory in Georgia? Tell us your buy box and get first look at deals before they're public.</p>
+      <p>Tell us your buy box. Get off-market deals before they hit the board.</p>
       <a class="btn btn-coral" href="#buy">Start Here</a>
     </div>
     <div class="fork-card agent tech-frame">
       <span class="tag">Agents</span>
       <h3>I'm an Agent</h3>
-      <p>Licensed in Georgia with a seller who needs speed, or cash buyers who want off-market deals? Refer a seller or work the buy side with us. Every arrangement is put in writing first.</p>
+      <p>Bring a seller or a buyer. Every arrangement in writing first.</p>
       <a class="btn btn-gold" href="agents.html">Start Here</a>
     </div>
   </div>
 </section>
 
-<section class="wrap" id="parcelLookup">
-  <span class="mono-tag">// coverage.live_parcel_map</span>
-  <div class="map-section-head kicker-row">
-    <h2>Explore every Richmond County parcel, live</h2>
-    <span class="count">Live data &middot; straight from Augusta-Richmond County GIS</span>
-  </div>
-  <p class="parcel-lede">A real satellite map of Augusta-Richmond County with every parcel pulled live from the county's own GIS system. Zoom in on any neighborhood, tap a lot, and see the owner of record, assessed value, acreage, and zoning. Search any street or address below.</p>
-
-  <div class="lm-search-row">
-    <input id="lmSearch" type="text" placeholder="Search an address or street, e.g. 1548 Koger St" autocomplete="off" aria-label="Search an address or street">
-    <button id="lmSearchGo" class="btn btn-lime" type="button">Search</button>
-  </div>
-  <div id="lmStatus" class="lm-status" role="status" aria-live="polite"></div>
-  <div id="lmResults" class="lm-results"></div>
-
-  <div class="lm-wrap tech-frame">
-    <div id="lmMap" class="lm-map" aria-label="Live Richmond County parcel map"></div>
-    <div class="lm-layer-toggle" role="group" aria-label="Map style">
-      <button type="button" id="lmSat" class="is-active">Satellite</button>
-      <button type="button" id="lmStreet">Street</button>
-    </div>
-    <div class="lm-zoom-hint" id="lmHint">Zoom in to see parcel lines</div>
-  </div>
-
-  <p class="parcel-source">Source: <a href="https://gismap.augustaga.gov/augustats/" target="_blank" rel="noopener">Augusta-Richmond County GIS</a>, live public record data. Imagery &copy; Esri; streets &copy; OpenStreetMap contributors. Not a warranty of title, value, or condition. Confirm details on the <a href="https://qpublic.schneidercorp.com/Application.aspx?App=RichmondCountyGA&amp;Layer=Parcels&amp;PageType=Search" target="_blank" rel="noopener">official qPublic record</a>.</p>
-</section>
-
-
-<section class="wrap" id="credits" hidden>
-  <span class="mono-tag">// members.credits</span>
-  <div class="kicker-row">
-    <h2>Member Credits</h2>
-    <span class="count">Preview &middot; payments launching soon</span>
-  </div>
-  <p class="diff-lede">Credits unlock deeper access on Smith Asset Group &mdash; full Richmond County parcel coverage beyond the free preview corridors above, a real (not sample) cash-buyer list pull from the List Builder, and priority placement in the Living Room. This is a preview of the purchase flow below; live payments turn on once the backend is connected.</p>
-
-  <div class="credits-panel tech-frame">
-    <div class="credits-tiers" id="creditsTiers">
-      <button type="button" class="credit-tier" data-amount="1000"><span class="ct-price">$10</span><span class="ct-credits">10 credits</span></button>
-      <button type="button" class="credit-tier is-active" data-amount="2500"><span class="ct-price">$25</span><span class="ct-credits">25 credits</span></button>
-      <button type="button" class="credit-tier" data-amount="5000"><span class="ct-price">$50</span><span class="ct-credits">50 credits</span></button>
-    </div>
-    <div class="form-grid" style="margin-top:22px;">
-      <div class="field full"><label for="cr_email">Email</label><input id="cr_email" type="email" placeholder="you@example.com"></div>
-      <div class="field full">
-        <label>Card details</label>
-        <div class="credits-card-mock">&#8226;&#8226;&#8226;&#8226; &#8226;&#8226;&#8226;&#8226; &#8226;&#8226;&#8226;&#8226; &#8226;&#8226;&#8226;&#8226; &nbsp; MM/YY &nbsp; CVC</div>
-      </div>
-    </div>
-    <div class="submit-row">
-      <button type="button" class="btn btn-lime" id="creditsPayBtn" disabled>Pay &mdash; Coming Soon</button>
-      <p class="form-note">Payments aren&rsquo;t live yet &mdash; the backend just needs to be deployed and connected. <a class="inline-link" href="mailto:smithassetgrp@gmail.com?subject=Member%20Credits%20-%20Notify%20Me">Get notified when it launches &rarr;</a></p>
-    </div>
-  </div>
-</section>
-
 <section id="deals" class="snf" aria-label="SAG Deal Board"><div id="dealBoard"></div></section>
-<script src="deals-board.js?v=5" defer></script>
-
-<section class="wrap" id="how" style="padding-top:56px;">
-  <div class="kicker-row">
-    <h2>Selling to us is simple</h2>
-    <span class="count">Four steps &middot; your timeline</span>
-  </div>
-  <div class="sag-how">
-    <div><i>STEP 01</i><b>Tell us about the house</b><p>Two minutes online or one phone call. Any condition, any situation.</p></div>
-    <div><i>STEP 02</i><b>We run the numbers</b><p>We look at recent Augusta sales and call you back, usually within one business day.</p></div>
-    <div><i>STEP 03</i><b>Get a written offer</b><p>A quick walkthrough, then a written cash offer. No obligation, no pressure.</p></div>
-    <div><i>STEP 04</i><b>Close when you're ready</b><p>You pick the date. A Georgia closing attorney handles the paperwork.</p></div>
-  </div>
-  <div class="sag-trust"><span>Augusta-based, local team</span><span>No commissions or fees charged to you</span><span>Sell as-is, no repairs</span><span>Attorney closings</span><span>Your info stays private</span></div>
-</section>
+<script src="deals-board.js?v=6" defer></script>
 
 <section class="wrap" id="sell">
   <span class="mono-tag">// seller.intake_form</span>
@@ -648,26 +579,6 @@
         <p class="form-note" id="sellNote">Your info goes straight to Smith Asset Group LLC. We never sell your info.</p>
       </div>
     </form>
-  </div>
-</section>
-
-<section class="wrap" id="faq" style="padding-top:48px;">
-  <div class="kicker-row">
-    <h2>Seller questions, straight answers</h2>
-    <span class="count">Still unsure? Call or text (762) 215-4466</span>
-  </div>
-  <div class="sag-faq">
-    <details><summary>How do you come up with your offer?</summary><p>We look at what similar homes nearby have sold for, what the house needs, and what it costs us to buy, hold, and resell it. We walk you through the math so you can see how we got there.</p></details>
-    <details><summary>Will your offer be lower than listing with an agent?</summary><p>Usually, yes. A cash offer is typically below full retail value. In exchange you skip repairs, showings, commissions, and months of waiting, and you get a firm closing date. If listing makes more sense for you, we'll tell you.</p></details>
-    <details><summary>Do I have to make repairs or clean out the house?</summary><p>No. Sell it as-is. Take what you want and leave the rest.</p></details>
-    <details><summary>Are there any fees or commissions?</summary><p>We don't charge you fees or commissions. We'll go over who pays which closing costs in writing before you sign anything.</p></details>
-    <details><summary>How fast can you close? Can I pick a later date?</summary><p>Many deals can close in a few weeks once title is clear. If you need more time to move, you pick the date.</p></details>
-    <details><summary>Am I obligated to accept your offer?</summary><p>Never. Our offer is free and there's no obligation.</p></details>
-    <details><summary>Can I sell with tenants, liens, back taxes, or code violations?</summary><p>Often, yes. These situations are common, and the closing attorney sorts out payoffs and title. Tell us what's going on and we'll be straight with you about your options.</p></details>
-    <details><summary>What if I inherited the house or it's in probate?</summary><p>We work with inherited properties regularly. If probate isn't finished yet, we can still talk and plan around your attorney's timeline.</p></details>
-    <details><summary>Will you sell or assign the contract to another buyer?</summary><p>Sometimes. We may close on the house ourselves or assign our contract to one of our investor buyers. Either way your price and terms stay the same, and we'll tell you up front.</p></details>
-    <details><summary>Who handles the closing?</summary><p>A licensed Georgia closing attorney. That's standard in Georgia and it protects you.</p></details>
-    <details><summary>Will you share my information?</summary><p>No. We never sell your information. It's used only to work on your request.</p></details>
   </div>
 </section>
 
@@ -743,7 +654,79 @@
   </div>
 </section>
 
-<section class="room-wrap" id="livingRoom">
+<section class="wrap" id="faq" style="padding-top:48px;">
+  <div class="kicker-row">
+    <h2>Seller questions</h2>
+    <span class="count">Still unsure? Call or text (762) 215-4466</span>
+  </div>
+  <div class="sag-faq">
+    <details><summary>How do you come up with your offer?</summary><p>We look at what similar homes nearby have sold for, what the house needs, and what it costs us to buy, hold, and resell it. We walk you through the math so you can see how we got there.</p></details>
+    <details><summary>Will your offer be lower than listing with an agent?</summary><p>Usually, yes. A cash offer is typically below full retail value. In exchange you skip repairs, showings, commissions, and months of waiting, and you get a firm closing date. If listing makes more sense for you, we'll tell you.</p></details>
+    <details><summary>Do I have to make repairs or clean out the house?</summary><p>No. Sell it as-is. Take what you want and leave the rest.</p></details>
+    <details><summary>Are there any fees or commissions?</summary><p>We don't charge you fees or commissions. We'll go over who pays which closing costs in writing before you sign anything.</p></details>
+    <details><summary>How fast can you close? Can I pick a later date?</summary><p>Many deals can close in a few weeks once title is clear. If you need more time to move, you pick the date.</p></details>
+    <details><summary>Can I sell with tenants, liens, back taxes, or code violations?</summary><p>Often, yes. These situations are common, and the closing attorney sorts out payoffs and title. Tell us what's going on and we'll be straight with you about your options.</p></details>
+    <details><summary>What if I inherited the house or it's in probate?</summary><p>We work with inherited properties regularly. If probate isn't finished yet, we can still talk and plan around your attorney's timeline.</p></details>
+    <details><summary>Will you sell or assign the contract to another buyer?</summary><p>Sometimes. We may close on the house ourselves or assign our contract to one of our investor buyers. Either way your price and terms stay the same, and we'll tell you up front.</p></details>
+  </div>
+</section>
+
+<section class="wrap" id="parcelLookup">
+  <span class="mono-tag">// coverage.live_parcel_map</span>
+  <div class="map-section-head kicker-row">
+    <h2>Explore every Richmond County parcel, live</h2>
+    <span class="count">Live data &middot; straight from Augusta-Richmond County GIS</span>
+  </div>
+  <p class="parcel-lede">A real satellite map of Augusta-Richmond County with every parcel pulled live from the county's own GIS system. Zoom in on any neighborhood, tap a lot, and see the owner of record, assessed value, acreage, and zoning. Search any street or address below.</p>
+
+  <div class="lm-search-row">
+    <input id="lmSearch" type="text" placeholder="Search an address or street, e.g. 1548 Koger St" autocomplete="off" aria-label="Search an address or street">
+    <button id="lmSearchGo" class="btn btn-lime" type="button">Search</button>
+  </div>
+  <div id="lmStatus" class="lm-status" role="status" aria-live="polite"></div>
+  <div id="lmResults" class="lm-results"></div>
+
+  <div class="lm-wrap tech-frame">
+    <div id="lmMap" class="lm-map" aria-label="Live Richmond County parcel map"></div>
+    <div class="lm-layer-toggle" role="group" aria-label="Map style">
+      <button type="button" id="lmSat" class="is-active">Satellite</button>
+      <button type="button" id="lmStreet">Street</button>
+    </div>
+    <div class="lm-zoom-hint" id="lmHint">Zoom in to see parcel lines</div>
+  </div>
+
+  <p class="parcel-source">Source: <a href="https://gismap.augustaga.gov/augustats/" target="_blank" rel="noopener">Augusta-Richmond County GIS</a>, live public record data. Imagery &copy; Esri; streets &copy; OpenStreetMap contributors. Not a warranty of title, value, or condition. Confirm details on the <a href="https://qpublic.schneidercorp.com/Application.aspx?App=RichmondCountyGA&amp;Layer=Parcels&amp;PageType=Search" target="_blank" rel="noopener">official qPublic record</a>.</p>
+</section>
+
+<section class="wrap" id="credits" hidden>
+  <span class="mono-tag">// members.credits</span>
+  <div class="kicker-row">
+    <h2>Member Credits</h2>
+    <span class="count">Preview &middot; payments launching soon</span>
+  </div>
+  <p class="diff-lede">Credits unlock deeper access on Smith Asset Group &mdash; full Richmond County parcel coverage beyond the free preview corridors above, a real (not sample) cash-buyer list pull from the List Builder, and priority placement in the Living Room. This is a preview of the purchase flow below; live payments turn on once the backend is connected.</p>
+
+  <div class="credits-panel tech-frame">
+    <div class="credits-tiers" id="creditsTiers">
+      <button type="button" class="credit-tier" data-amount="1000"><span class="ct-price">$10</span><span class="ct-credits">10 credits</span></button>
+      <button type="button" class="credit-tier is-active" data-amount="2500"><span class="ct-price">$25</span><span class="ct-credits">25 credits</span></button>
+      <button type="button" class="credit-tier" data-amount="5000"><span class="ct-price">$50</span><span class="ct-credits">50 credits</span></button>
+    </div>
+    <div class="form-grid" style="margin-top:22px;">
+      <div class="field full"><label for="cr_email">Email</label><input id="cr_email" type="email" placeholder="you@example.com"></div>
+      <div class="field full">
+        <label>Card details</label>
+        <div class="credits-card-mock">&#8226;&#8226;&#8226;&#8226; &#8226;&#8226;&#8226;&#8226; &#8226;&#8226;&#8226;&#8226; &#8226;&#8226;&#8226;&#8226; &nbsp; MM/YY &nbsp; CVC</div>
+      </div>
+    </div>
+    <div class="submit-row">
+      <button type="button" class="btn btn-lime" id="creditsPayBtn" disabled>Pay &mdash; Coming Soon</button>
+      <p class="form-note">Payments aren&rsquo;t live yet &mdash; the backend just needs to be deployed and connected. <a class="inline-link" href="mailto:smithassetgrp@gmail.com?subject=Member%20Credits%20-%20Notify%20Me">Get notified when it launches &rarr;</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="room-wrap" id="livingRoom" hidden style="display:none">
   <div class="room-glow" aria-hidden="true"></div>
   <div class="idea-lamp" aria-hidden="true">
     <svg viewBox="0 0 132 260" xmlns="http://www.w3.org/2000/svg">
@@ -871,7 +854,7 @@
   </div>
 </section>
 
-<section class="wrap">
+<section class="wrap" id="listBuilder" hidden style="display:none">
   <span class="mono-tag">// coverage.list_builder</span>
   <div class="map-section-head kicker-row">
     <h2>Navigate Georgia &amp; build a lead list</h2>
@@ -1078,27 +1061,6 @@
 </script>
 
 <section class="wrap">
-  <div class="card tech-frame">
-    <span class="tag">Partners</span>
-    <h3>Agents &amp; vendors</h3>
-    <p>Referral relationships with agents, contractors, and title partners who bring deals or capacity to the table are always welcome &mdash; reach out at <a href="mailto:smithassetgrp@gmail.com">smithassetgrp@gmail.com</a>.</p>
-  </div>
-</section>
-
-<section class="wrap">
-  <div class="area-panel tech-frame">
-    <div>
-      <div class="label">Based In</div>
-      <div class="value">Augusta, Georgia<small>Richmond County &amp; the CSRA</small></div>
-    </div>
-    <div>
-      <div class="label">Service Area</div>
-      <div class="value">Expanding statewide<small>Growing into new markets as the buyer network scales</small></div>
-    </div>
-  </div>
-</section>
-
-<section class="wrap">
   <div class="contact-panel tech-frame">
     <h2>Prefer to just reach out directly?</h2>
     <p class="lede">Every inquiry gets a response from Smith Asset Group LLC, not a call center.</p>
@@ -1106,6 +1068,7 @@
       <a href="mailto:smithassetgrp@gmail.com">smithassetgrp@gmail.com<span class="sub">Email</span></a>
       <a href="tel:+17622154466">(762) 215-4466<span class="sub">Call or Text</span></a>
     </div>
+    <p style="margin-top:16px;">Investors and agents: talk deals with the network in <a href="https://smith-asset-group-living-room.onrender.com/register" target="_blank" rel="noopener">the Living Room &rarr;</a></p>
   </div>
 </section>
 
