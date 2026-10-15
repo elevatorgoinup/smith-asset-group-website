@@ -82,3 +82,7 @@ section:not(.snf):not(.hero) > .kicker-row h2::after,section:not(.snf):not(.hero
 .sag-consent{display:flex; gap:10px; align-items:flex-start; font-size:13.5px; color:var(--text-muted); margin:14px 0 0; line-height:1.5;}
 .sag-consent input{width:20px; height:20px; flex:none; margin-top:2px; accent-color:var(--forest);}
 footer.site{border-top:1px solid var(--border);}
+/* v6: hero "See Deals" button */
+.btn-ghost:not(.snf *):not(.sbd *){background:transparent !important; color:#fff !important; border:1px solid rgba(255,255,255,.65) !important;}
+.btn-ghost:not(.snf *):not(.sbd *):hover{background:rgba(255,255,255,.1) !important;}
+.hero-photo .btn-coral{border-color:#ff9b80 !important; color:#ffc2b1 !important; background:rgba(0,0,0,.25) !important;}
