@@ -12,10 +12,10 @@
   var H = onHome ? '' : 'index.html';
   var items = [
     ['Home', onHome ? '#top' : 'index.html'],
+    ['Property Map Lookup', H + '#parcelLookup'],
     ['Sell My House', H + '#sell'],
     ["I'm a Buyer", H + '#buy'],
     ["I'm an Agent", 'agents.html'],
-    ['Live Parcel Map', H + '#parcelLookup'],
     ['Seller FAQ', H + '#faq'],
     ['Deal Board', H + '#deals'],
     ['Contract Vault', 'vault.html'],
