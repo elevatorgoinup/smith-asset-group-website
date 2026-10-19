@@ -86,3 +86,15 @@ footer.site{border-top:1px solid var(--border);}
 .btn-ghost:not(.snf *):not(.sbd *){background:transparent !important; color:#fff !important; border:1px solid rgba(255,255,255,.65) !important;}
 .btn-ghost:not(.snf *):not(.sbd *):hover{background:rgba(255,255,255,.1) !important;}
 .hero-photo a.btn-coral:not(.snf *):not(.sbd *){border-color:#ff9b80 !important; color:#ffc2b1 !important; background:rgba(0,0,0,.25) !important;}
+
+/* v7: quick first-look buyer form */
+.fl-perks{list-style:none; margin:14px 0 18px; padding:0; display:grid; gap:8px;}
+.fl-perks li{position:relative; padding-left:24px; color:var(--text-muted);}
+.fl-perks li::before{content:"\2713"; position:absolute; left:0; top:0; color:#5f8a12; font-weight:700;}
+.fl-perks b{color:var(--text, inherit);}
+.more-box{margin:14px 0 4px; border:1px dashed var(--border); border-radius:12px; padding:0 14px;}
+.more-box summary{cursor:pointer; padding:12px 0; font-weight:600; list-style:none;}
+.more-box summary::-webkit-details-marker{display:none;}
+.more-box summary::before{content:"+ "; font-weight:700;}
+.more-box[open] summary::before{content:"\2013 ";}
+.more-box[open]{padding-bottom:14px;}
