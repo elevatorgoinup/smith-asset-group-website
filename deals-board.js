@@ -83,6 +83,8 @@
   .snf .priv h4{margin:0 0 10px; font:700 16px/1 "Barlow Condensed",sans-serif; letter-spacing:.08em; text-transform:uppercase; color:var(--gold);}
   .snf .note{font-size:14px; color:var(--mut); margin-top:10px;} .snf .note.ok{color:var(--lime); font-weight:600;}
   .snf .req{color:var(--gold);}
+  .snf .fl-wrap .formbox{max-width:620px; margin:0 auto; text-align:left;}
+  .snf .fl-wrap p{margin-bottom:18px;}
   .snf .hp{position:absolute; left:-9999px; width:1px; height:1px; opacity:0;}
   .snf .split{display:grid; grid-template-columns:.9fr 1.1fr; gap:24px; align-items:start;}
   @media (max-width:900px){ .snf .split{grid-template-columns:1fr;} }
@@ -139,6 +141,13 @@
   var HOUSE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg>';
   var onHome = /(^|\/)(index\.html)?$/.test(location.pathname);
   var BUY = onHome ? '#buy' : 'index.html#buy';
+  var FIRSTLOOK = '<form class="formbox fl-q" novalidate><input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true"><div class="g2">' +
+        '<div><label>Name <span class="req">*</span></label><input name="Full name" autocomplete="name" required></div>' +
+        '<div><label>Mobile <span class="req">*</span></label><input name="Phone" type="tel" autocomplete="tel" required></div>' +
+        '<div><label>Where you buy <span class="req">*</span></label><input name="Target areas or counties" placeholder="Richmond, Columbia, Aiken" required></div>' +
+        '<div><label>Max price</label><input name="Price range max" inputmode="numeric" placeholder="$"></div>' +
+        '<label class="ck full"><input type="checkbox" name="SMS consent" value="Yes"> Text me new deals. Smith Asset Group LLC may call or text me at this number about deals, including by automated means. Consent is not a condition of purchase. Msg &amp; data rates may apply. Reply STOP to opt out.</label>' +
+      '</div><button class="btn btn-lime" type="submit" style="width:100%;margin-top:14px;">Get First Look</button><p class="note">No account, no fees. Your info is never shared.</p></form>';
 
   mount.innerHTML =
     '<div class="sb-wrap">' +
@@ -201,7 +210,7 @@
       '<div class="pane" data-pane="alerts"><div class="kick" style="text-align:left;">' +
         '<div class="cond">Get the first look.</div>' +
         '<p style="margin-left:0;">Our buyer list sees new contracts before they ever hit the board. Tell us your buy box once and we\'ll text or email you the deals that fit.</p>' +
-        '<a class="btn btn-lime" href="' + BUY + '">Join the buyer list</a>' +
+        FIRSTLOOK +
       '</div></div>' +
       '<p class="fine">Smith Asset Group LLC markets its contract interests and coordinates inquiries for partner deals; it is not acting as a real estate broker. Details come from county records and the deal source and must be verified by the buyer. Full addresses and access are released only to verified buyers who agree not to contact owners, sellers, or deal sources directly. Not an offer where prohibited.</p>' +
     '</div>';
@@ -243,12 +252,14 @@
       return String(b.posted || '').localeCompare(String(a.posted || ''));
     });
     var c = function(fn){ return deals.filter(fn).length; };
+    var sc = mount.querySelector('.scores'); if(sc) sc.style.display = deals.length ? '' : 'none'; var flt = mount.querySelector('.filters'); if(flt) flt.style.display = deals.length ? '' : 'none';
     countUp($('sbAv'), c(function(d){ return d.status === 'Available'; }));
     countUp($('sbUc'), c(function(d){ return /contract/i.test(d.status || ''); }));
     countUp($('sbCl'), c(function(d){ return /closed|sold/i.test(d.status || ''); }));
     $('sbCnt').textContent = deals.length ? (list.length + ' of ' + deals.length + ' deals shown') : '';
     if(!deals.length){
-      $('sbGrid').innerHTML = '<div class="kick"><div class="cond">Kickoff soon.</div><p>No public deals on the board right now. New contracts go to our buyer list first, then land here. Get on the list so you don\'t miss the next one.</p><a class="btn btn-lime" href="' + BUY + '">Get first look</a> <button class="btn btn-ghost" type="button" data-go="post">Post a deal</button></div>';
+      $('sbGrid').innerHTML = '<div class="kick fl-wrap"><div class="cond">Next deal drops to the list first.</div><p>Every new contract goes to our first-look buyers before it is posted here. Four fields, 30 seconds.</p>' + FIRSTLOOK + '</div>';
+      wireFirst();
     } else {
       $('sbGrid').innerHTML = list.length ? list.map(card).join('') : '<div class="kick"><div class="cond">No matches.</div><p>Nothing fits those filters right now. Join the buyer list and we\'ll send the next one that does.</p><a class="btn btn-lime" href="' + BUY + '">Get first look</a></div>';
     }
@@ -357,7 +368,14 @@
   $('sbPost').addEventListener('submit', function(e){ e.preventDefault(); send(this, 'NEW DEAL SUBMISSION: ' + (this.querySelector('[name="Street and area (public)"]').value || ''), {'Submission type': 'Deal for the board'}, 'Thanks! We review every deal and reach out before anything posts.'); });
   if(location.hash === '#post-a-deal'){ showPane('post'); }
 
+  function wireFirst(){
+    mount.querySelectorAll('form.fl-q').forEach(function(fm){
+      if(fm._w) return; fm._w = 1;
+      fm.addEventListener('submit', function(e){ e.preventDefault(); send(fm, 'FIRST LOOK Buyer: ' + ((fm.querySelector('[name="Full name"]') || {}).value || ''), {'Signup': 'Deal Board first look'}, "You're on the list. The next deal that fits goes to your phone first."); });
+    });
+  }
   render();
+  wireFirst();
   fetch('deals.json?v=' + Date.now()).then(function(r){ return r.json(); }).then(function(j){
     deals = ((j && j.deals) || []).filter(function(d){ return d && d.id && d.status; });
     deals.forEach(function(d){ byId[d.id] = d; });
