@@ -986,6 +986,7 @@
   var hint = document.getElementById('lmHint');
 
   var map = L.map(el, {center:[33.44,-82.04], zoom:12, minZoom:10, maxZoom:20, scrollWheelZoom:false});
+  map.zoomControl.setPosition('bottomright');
   var sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {maxZoom:20, maxNativeZoom:19, attribution:'Imagery &copy; Esri'});
   var labels = L.layerGroup([
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {maxZoom:20, maxNativeZoom:19, opacity:.45}),
