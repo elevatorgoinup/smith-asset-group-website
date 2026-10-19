@@ -1,0 +1,25 @@
+{
+  "name": "Smith Asset Group",
+  "short_name": "Smith Asset",
+  "description": "Buy and sell houses fast in Augusta, GA. Cash offers for sellers and off-market deals for investors.",
+  "id": "/",
+  "start_url": "/?source=app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#12140f",
+  "theme_color": "#12140f",
+  "lang": "en-US",
+  "dir": "ltr",
+  "categories": ["business", "finance", "lifestyle"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Get a cash offer", "url": "/?source=app#sell", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Deal Board", "url": "/?source=app#deals", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Join the buyer list", "url": "/?source=app#buy", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
