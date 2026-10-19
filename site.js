@@ -42,3 +42,7 @@
   panel.addEventListener('click', function(e){ if(e.target === panel || e.target.closest('.mnav-close') || e.target.closest('a')) close(); });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close(); });
 })();
+/* Installable app: register the service worker (works on https only). */
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  window.addEventListener('load', function () { navigator.serviceWorker.register('/sw.js').catch(function () {}); });
+}
