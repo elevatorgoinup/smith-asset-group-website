@@ -1,0 +1,15 @@
+# Keeps the Living Room app (free Render plan) awake so members don't wait ~40s for it to start.
+# Free: runs on GitHub Actions every 10 minutes and just loads the health check page.
+name: Keep Living Room awake
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+permissions: {}
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Ping health check
+        run: curl -fsS --retry 3 --retry-delay 20 --max-time 90 https://smith-asset-group-living-room.onrender.com/healthz
