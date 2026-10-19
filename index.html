@@ -1,4 +1,12 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<!doctype html><html><head><meta charset=utf8>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://cdnjs.cloudflare.com https://*.arcgisonline.com https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://gismap.augustaga.gov; connect-src 'self' https://formsubmit.co https://gismap.augustaga.gov; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://formsubmit.co mailto:; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Smith Asset">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 <title>Smith Asset Group LLC | Buy &amp; Sell Houses Fast in Augusta, GA</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%2312140f'/%3E%3Ctext%20x='32'%20y='44'%20text-anchor='middle'%20font-family='Georgia,serif'%20font-size='36'%20font-weight='700'%20fill='%23c8f135'%3ES%3C/text%3E%3C/svg%3E">
 <meta name="theme-color" content="#f7f3ea">
@@ -458,7 +466,7 @@
     .lb-map-col{height:360px;}
   }
 </style>
-<link rel="stylesheet" href="site.css?v=6">
+<link rel="stylesheet" href="site.css?v=7">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -519,8 +527,8 @@
     <div class="fork-card buy tech-frame">
       <span class="tag">Investors</span>
       <h3>I'm a Buyer</h3>
-      <p>Tell us your buy box. Get off-market deals before they hit the board.</p>
-      <a class="btn btn-coral" href="#buy">Start Here</a>
+      <p>Get first look at off-market deals by text. 30-second sign-up, no account, no fees.</p>
+      <a class="btn btn-coral" href="#buy">Get First Look</a>
     </div>
     <div class="fork-card agent tech-frame">
       <span class="tag">Agents</span>
@@ -532,7 +540,7 @@
 </section>
 
 <section id="deals" class="snf" aria-label="SAG Deal Board"><div id="dealBoard"></div></section>
-<script src="deals-board.js?v=6" defer></script>
+<script src="deals-board.js?v=7" defer></script>
 
 <section class="wrap" id="sell">
   <span class="mono-tag">// seller.intake_form</span>
@@ -587,69 +595,79 @@
   <span class="mono-tag">// buyer.intake_form</span>
   <div class="form-panel buy tech-frame">
     <span class="tag">I'm a Buyer</span>
-    <h2>Tell us your buy box</h2>
-    <p class="sub">We'll match you against off-market deals as they come through &mdash; buy-and-hold, fix-and-flip, and fellow wholesalers all welcome.</p>
+    <h2>Get first look at off-market deals</h2>
+    <p class="sub">Four quick fields. New contracts go to this list before they're posted on the board. No account, no fees, no spam.</p>
+    <ul class="fl-perks">
+      <li><b>Numbers up front.</b> Price, ARV, and repairs on every deal.</li>
+      <li><b>Only what fits.</b> We send deals that match your areas and price.</li>
+      <li><b>Private.</b> Your info is never sold or shared.</li>
+    </ul>
 
     <form id="buyForm" novalidate>
       <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <div class="form-grid">
-        <div class="field"><label for="b_name">Full name <span class="req">*</span></label><input id="b_name" name="Full name" type="text" required></div>
-        <div class="field"><label for="b_phone">Phone <span class="req">*</span></label><input id="b_phone" name="Phone" type="tel" required></div>
-        <div class="field"><label for="b_email">Email</label><input id="b_email" name="Email" type="email"></div>
-        <div class="field"><label for="b_type">Investor type <span class="req">*</span></label>
-          <select id="b_type" name="Investor type" required>
-            <option value="" disabled selected>Select one</option>
-            <option>Buy-and-hold</option>
-            <option>Fix-and-flip</option>
-            <option>Wholesaler</option>
-            <option>Agent</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="field full"><label for="b_areas">Target areas / counties <span class="req">*</span></label><input id="b_areas" name="Target areas or counties" type="text" placeholder="e.g. Richmond County, Columbia County, statewide GA" required></div>
-        <div class="field"><label for="b_ptype">Property type</label>
-          <select id="b_ptype" name="Property type">
-            <option value="" disabled selected>Select one</option>
-            <option>Single family</option>
-            <option>Multi-family</option>
-            <option>Land</option>
-            <option>Any</option>
-          </select>
-        </div>
-        <div class="field"><label for="b_condition">Condition tolerance</label>
-          <select id="b_condition" name="Condition tolerance">
-            <option value="" disabled selected>Select one</option>
-            <option>Turnkey only</option>
-            <option>Light rehab OK</option>
-            <option>Heavy rehab OK</option>
-            <option>Any condition</option>
-          </select>
-        </div>
-        <div class="field"><label for="b_min">Price range &mdash; min</label><input id="b_min" name="Price range min" type="text" placeholder="$"></div>
-        <div class="field"><label for="b_max">Price range &mdash; max</label><input id="b_max" name="Price range max" type="text" placeholder="$"></div>
-        <div class="field"><label for="b_beds">Min beds / baths</label><input id="b_beds" name="Min beds or baths" type="text" placeholder="e.g. 3bd / 2ba"></div>
-        <div class="field"><label for="b_volume">Deals looking to close per month</label>
-          <select id="b_volume" name="Deals per month">
-            <option value="" disabled selected>Select one</option>
-            <option>1</option>
-            <option>2&ndash;5</option>
-            <option>6&ndash;10</option>
-            <option>10+</option>
-          </select>
-        </div>
-        <div class="field"><label for="b_contact">Preferred contact method</label>
-          <select id="b_contact" name="Preferred contact method">
-            <option value="" disabled selected>Select one</option>
-            <option>Phone call</option>
-            <option>Text</option>
-            <option>Email</option>
-          </select>
-        </div>
+        <div class="field"><label for="b_name">Name <span class="req">*</span></label><input id="b_name" name="Full name" type="text" autocomplete="name" required></div>
+        <div class="field"><label for="b_phone">Mobile <span class="req">*</span></label><input id="b_phone" name="Phone" type="tel" autocomplete="tel" required></div>
+        <div class="field"><label for="b_areas">Where you buy <span class="req">*</span></label><input id="b_areas" name="Target areas or counties" type="text" placeholder="e.g. Richmond, Columbia, Aiken" required></div>
+        <div class="field"><label for="b_max">Max price</label><input id="b_max" name="Price range max" type="text" inputmode="numeric" placeholder="$"></div>
       </div>
-      <label class="sag-consent"><input type="checkbox" name="SMS consent" value="Yes"> (Optional) Smith Asset Group LLC may call or text me at the number above about my inquiry, including by automated means. Consent is not a condition of any purchase or sale. Msg frequency varies; msg &amp; data rates may apply. Reply STOP to opt out, HELP for help.</label>
+      <label class="sag-consent"><input type="checkbox" name="SMS consent" value="Yes"> Text me new deals. Smith Asset Group LLC may call or text me at the number above about deals, including by automated means. Consent is not a condition of any purchase or sale. Msg frequency varies; msg &amp; data rates may apply. Reply STOP to opt out, HELP for help.</label>
+      <details class="more-box">
+        <summary>Add more to your buy box (optional)</summary>
+        <div class="form-grid">
+          <div class="field"><label for="b_email">Email</label><input id="b_email" name="Email" type="email" autocomplete="email"></div>
+          <div class="field"><label for="b_type">Investor type</label>
+            <select id="b_type" name="Investor type">
+              <option value="" selected>Select one</option>
+              <option>Buy-and-hold</option>
+              <option>Fix-and-flip</option>
+              <option>Wholesaler</option>
+              <option>Agent</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field"><label for="b_ptype">Property type</label>
+            <select id="b_ptype" name="Property type">
+              <option value="" selected>Select one</option>
+              <option>Single family</option>
+              <option>Multi-family</option>
+              <option>Land</option>
+              <option>Any</option>
+            </select>
+          </div>
+          <div class="field"><label for="b_condition">Condition tolerance</label>
+            <select id="b_condition" name="Condition tolerance">
+              <option value="" selected>Select one</option>
+              <option>Turnkey only</option>
+              <option>Light rehab OK</option>
+              <option>Heavy rehab OK</option>
+              <option>Any condition</option>
+            </select>
+          </div>
+          <div class="field"><label for="b_min">Min price</label><input id="b_min" name="Price range min" type="text" inputmode="numeric" placeholder="$"></div>
+          <div class="field"><label for="b_beds">Min beds / baths</label><input id="b_beds" name="Min beds or baths" type="text" placeholder="e.g. 3bd / 2ba"></div>
+          <div class="field"><label for="b_volume">Deals per month</label>
+            <select id="b_volume" name="Deals per month">
+              <option value="" selected>Select one</option>
+              <option>1</option>
+              <option>2&ndash;5</option>
+              <option>6&ndash;10</option>
+              <option>10+</option>
+            </select>
+          </div>
+          <div class="field"><label for="b_pof">Proof of funds</label>
+            <select id="b_pof" name="Proof of funds">
+              <option value="" selected>Select one</option>
+              <option>Can send POF now</option>
+              <option>Hard money / lender letter</option>
+              <option>Not yet</option>
+            </select>
+          </div>
+        </div>
+      </details>
       <div class="submit-row">
-        <button type="submit" class="btn btn-coral">Join the Buyer List</button>
-        <p class="form-note" id="buyNote">Your buy box goes straight to Smith Asset Group LLC. We'll text or email you first-look deals that fit.</p>
+        <button type="submit" class="btn btn-coral">Get First Look</button>
+        <p class="form-note" id="buyNote">Goes straight to Smith Asset Group LLC. We text the deals that fit, usually before anyone else sees them.</p>
       </div>
     </form>
   </div>
@@ -1151,7 +1169,7 @@
     });
   }
   wireForm('sellForm', 'New Seller Lead', 'sellNote');
-  wireForm('buyForm', 'New Buyer Lead', 'buyNote');
+  wireForm('buyForm', 'FIRST LOOK Buyer', 'buyNote');
 
   // Member Credits tier selector — cosmetic only until the backend is deployed
   (function(){
