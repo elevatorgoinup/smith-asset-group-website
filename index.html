@@ -518,11 +518,23 @@
     <h2>Look up any property in Richmond County</h2>
     <span class="count">Live data &middot; straight from Augusta-Richmond County GIS</span>
   </div>
-  <p class="parcel-lede">Free, live from the county's GIS. Search an address or tap any lot to see the owner of record, assessed value, acreage, zoning, and flood zone. No sign-up.</p>
+  <p class="parcel-lede">Search an address, owner, or parcel number, or jump to an area. Tap any lot for the owner, beds and baths, square feet, year built, value, zoning, and flood zone. Free, live from county records, no sign-up.</p>
 
   <div class="lm-search-row">
-    <input id="lmSearch" type="text" placeholder="Search an address or street, e.g. 1548 Koger St" autocomplete="off" aria-label="Search an address or street">
+    <input id="lmSearch" type="search" placeholder="Address, street, owner name, or parcel #" autocomplete="off" aria-label="Search by address, street, owner name, or parcel number" enterkeyhint="search">
     <button id="lmSearchGo" class="btn btn-lime" type="button">Search</button>
+  </div>
+  <div class="lm-jump" role="group" aria-label="Jump to an area">
+    <span>Jump to:</span>
+    <button type="button" id="lmNear" class="lm-chip near">&#9737; Near me</button>
+    <button type="button" class="lm-chip" data-go="33.4740,-81.9665">Downtown</button>
+    <button type="button" class="lm-chip" data-go="33.4648,-81.9764">Laney-Walker</button>
+    <button type="button" class="lm-chip" data-go="33.4785,-81.9905">Harrisburg</button>
+    <button type="button" class="lm-chip" data-go="33.4660,-82.0005">Midtown</button>
+    <button type="button" class="lm-chip" data-go="33.4795,-82.0300">Summerville</button>
+    <button type="button" class="lm-chip" data-go="33.4690,-82.0700">West Augusta</button>
+    <button type="button" class="lm-chip" data-go="33.4000,-82.0280">South Augusta</button>
+    <button type="button" class="lm-chip" data-go="33.3140,-82.0970">Hephzibah</button>
   </div>
   <div id="lmStatus" class="lm-status" role="status" aria-live="polite"></div>
   <div id="lmResults" class="lm-results"></div>
@@ -961,6 +973,23 @@
   .leaflet-container a.leaflet-popup-close-button{color:var(--text-muted);}
   .lm-info{position:absolute; top:10px; left:10px; z-index:600; width:300px; max-height:calc(100% - 20px); overflow:auto; background:#fff; color:#1d1f19; border-radius:12px; box-shadow:0 12px 34px rgba(0,0,0,.35); padding:16px 18px; font-size:14px; line-height:1.5;}
   .lm-info[hidden]{display:none;}
+  .lm-facts{display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin:4px 0 10px;}
+  .lm-facts div{background:#f4f1e8; border-radius:8px; padding:7px 4px; text-align:center;}
+  .lm-facts b{display:block; font-size:14px; color:#1d1f19;} .lm-facts span{display:block; font-size:10.5px; letter-spacing:.04em; text-transform:uppercase; color:#6b6f62;}
+  .lm-actions{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:4px 0 8px;}
+  .lm-btn{all:unset; box-sizing:border-box; cursor:pointer; text-align:center; padding:10px 8px; border-radius:8px; background:#2f4a1f; color:#fff; font-weight:600; font-size:13.5px; line-height:1.2;}
+  .lm-btn.alt{background:#fff; color:#2f4a1f; box-shadow:inset 0 0 0 1.5px #2f4a1f;}
+  .lm-btn:hover,.lm-btn:focus-visible{filter:brightness(1.12); outline:2px solid #ffe14d; outline-offset:1px;}
+  .lm-askform{display:grid; gap:6px; margin:4px 0 8px;} .lm-askform[hidden]{display:none;}
+  .lm-askform input,.lm-askform select,.lm-askform textarea{width:100%; box-sizing:border-box; padding:9px 10px; font:14px/1.3 inherit; border:1px solid #d6d1c2; border-radius:8px; background:#fff; color:#1d1f19;}
+  .lm-note{margin:0; font-size:13px; color:#2f4a1f; font-weight:600;}
+  .lm-links{margin:6px 0 0; font-size:13.5px;}
+  .lm-jump{display:flex; gap:8px; align-items:center; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding:2px 0 8px;}
+  .lm-jump::-webkit-scrollbar{display:none;}
+  .lm-jump span{flex:none; font-size:13px; color:var(--text-muted);}
+  .lm-chip{all:unset; flex:none; cursor:pointer; padding:8px 13px; border-radius:999px; border:1px solid var(--border); background:var(--surface); font-size:14px; color:var(--text);}
+  .lm-chip:hover,.lm-chip:focus-visible{border-color:var(--forest, #2f4a1f); outline:none;}
+  .lm-chip.near{background:var(--forest, #2f4a1f); color:#fff; border-color:transparent; font-weight:600;}
   .lm-info-kick{margin:0 0 4px; font:600 11px/1 "IBM Plex Mono",monospace; letter-spacing:.12em; text-transform:uppercase; color:#8a6d1f;}
   .lm-info h4{margin:0 0 8px; padding-right:24px; font:600 17px/1.25 "IBM Plex Sans",system-ui,sans-serif; color:#1d1f19;}
   .lm-info dl{display:grid; grid-template-columns:auto 1fr; gap:4px 12px; margin:6px 0 12px;}
@@ -979,7 +1008,7 @@
   var el = document.getElementById('lmMap');
   if(!el || !window.L) return;
   var LAYER = 'https://gismap.augustaga.gov/arcgis/rest/services/AGOL/AGSGeneralFeatures/MapServer/32';
-  var FIELDS = 'pin,siteaddress,site_citystzip,own1,curr_val,totalacres,zoningcode,propdesc,vacant,flood_zone';
+  var FIELDS = 'pin,siteaddress,site_citystzip,own1,curr_val,totalacres,zoningcode,propdesc,vacant,flood_zone,yr_built,no_bedrooms,fullbaths,halfbaths,structsize,neighbhood_desc,homeexempt,owner_city,owner_state,lat,lon';
   var MIN_ZOOM = 16;
   var statusEl = document.getElementById('lmStatus');
   var resultsEl = document.getElementById('lmResults');
@@ -1003,22 +1032,41 @@
   function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function money(v){ return (v || v === 0) ? '$' + Number(v).toLocaleString('en-US') : 'n/a'; }
   function title(s){ return String(s || '').toLowerCase().replace(/\b\w/g, function(c){ return c.toUpperCase(); }); }
+  function num(v){ return (v || v === 0) ? Number(v).toLocaleString('en-US') : null; }
   function popupHtml(p){
     var addr = p.siteaddress ? esc(p.siteaddress) : 'No site address';
     var q = encodeURIComponent((p.siteaddress || '') + ' Augusta GA');
+    var baths = (p.fullbaths || p.halfbaths) ? ((p.fullbaths || 0) + (p.halfbaths ? p.halfbaths * 0.5 : 0)) : null;
+    var facts = [
+      ['Beds / baths', (p.no_bedrooms || baths) ? ((p.no_bedrooms || '?') + ' / ' + (baths || '?')) : null],
+      ['Sq ft', num(p.structsize)],
+      ['Built', p.yr_built || null],
+      ['Lot', p.totalacres != null ? p.totalacres + ' ac' : null]
+    ];
+    var mail = [title(p.owner_city), (p.owner_state || '').trim()].filter(Boolean).join(', ');
+    var hood = String(p.neighbhood_desc || '').replace(/^\S+\s+/, '');
+    var sv = (p.lat && p.lon) ? 'https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=' + p.lat + ',' + p.lon : 'https://www.google.com/maps/search/?api=1&query=' + q;
     return '<h4>' + addr + '</h4>' +
+      '<div class="lm-facts">' + facts.map(function(f){ return '<div><b>' + esc(f[1] == null ? '—' : f[1]) + '</b><span>' + f[0] + '</span></div>'; }).join('') + '</div>' +
       '<dl>' +
       '<dt>Owner</dt><dd>' + esc(title(p.own1) || 'n/a') + '</dd>' +
+      (mail ? '<dt>Owner mails to</dt><dd>' + esc(mail) + '</dd>' : '') +
+      '<dt>Homestead</dt><dd>' + esc(p.homeexempt === 'Yes' ? 'Yes (owner lives here)' : (p.homeexempt === 'No' ? 'No' : 'n/a')) + '</dd>' +
       '<dt>Assessed</dt><dd>' + money(p.curr_val) + '</dd>' +
-      '<dt>Acres</dt><dd>' + esc(p.totalacres != null ? p.totalacres : 'n/a') + '</dd>' +
       '<dt>Zoning</dt><dd>' + esc((p.zoningcode || '').trim() || 'n/a') + '</dd>' +
-      '<dt>Type</dt><dd>' + esc(p.propdesc || 'n/a') + '</dd>' +
+      '<dt>Type</dt><dd>' + esc(p.propdesc || 'n/a') + (p.vacant === 'Yes' ? ' &middot; vacant lot' : '') + '</dd>' +
       '<dt>Flood zone</dt><dd>' + esc(p.flood_zone || 'n/a') + '</dd>' +
+      (hood ? '<dt>Area</dt><dd>' + esc(title(hood)) + '</dd>' : '') +
       '<dt>Parcel #</dt><dd>' + esc(p.pin || 'n/a') + '</dd>' +
       '</dl>' +
-      '<a href="https://qpublic.schneidercorp.com/Application.aspx?App=RichmondCountyGA&Layer=Parcels&PageType=Search" target="_blank" rel="noopener">County record</a> &middot; ' +
-      '<a href="https://www.google.com/maps/search/?api=1&query=' + q + '" target="_blank" rel="noopener">Google Maps</a> &middot; ' +
-      '<a href="#sell">Own it? Get a cash offer</a>';
+      '<div class="lm-actions"><button type="button" class="lm-btn lm-ask">Ask about this property</button><button type="button" class="lm-btn alt lm-own">I own it: cash offer</button></div>' +
+      '<form class="lm-askform" hidden novalidate><input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">' +
+        '<input name="Name" placeholder="Your name" autocomplete="name" required aria-label="Your name">' +
+        '<input name="Phone" type="tel" placeholder="Mobile" autocomplete="tel" required aria-label="Mobile">' +
+        '<select name="I am" aria-label="I am"><option>Investor / buyer</option><option>Agent</option><option>Wholesaler</option><option>Neighbor / other</option></select>' +
+        '<textarea name="Question" rows="2" placeholder="What do you want to know? (optional)" aria-label="Question"></textarea>' +
+        '<button type="submit" class="lm-btn">Send to Smith Asset Group</button><p class="lm-note"></p></form>' +
+      '<p class="lm-links"><a href="' + sv + '" target="_blank" rel="noopener">Street View</a> &middot; <a href="https://www.google.com/maps/search/?api=1&query=' + q + '" target="_blank" rel="noopener">Google Maps</a> &middot; <a href="https://qpublic.schneidercorp.com/Application.aspx?App=RichmondCountyGA&Layer=Parcels&PageType=Search" target="_blank" rel="noopener">County record</a></p>';
   }
   var style = {color:'#ffe14d', weight:1.8, opacity:1, fillColor:'#ffe14d', fillOpacity:.05};
   var hoverStyle = {color:'#ffffff', weight:3, opacity:1, fillColor:'#ffffff', fillOpacity:.14};
@@ -1029,12 +1077,37 @@
     if(hiLayer && hiLayer !== layer) hiLayer.setStyle(style);
     hiLayer = layer || null; selectedPin = p.pin || null;
     if(layer){ layer.setStyle(hiStyle); layer.bringToFront(); }
-    infoBody.innerHTML = popupHtml(p);
+    current = p; infoBody.innerHTML = popupHtml(p);
     info.hidden = false;
     if(window.matchMedia('(max-width:760px)').matches) info.scrollIntoView({behavior:'smooth', block:'nearest'});
   }
   function hideInfo(){ info.hidden = true; selectedPin = null; if(hiLayer) hiLayer.setStyle(style); hiLayer = null; }
   document.getElementById('lmInfoClose').addEventListener('click', hideInfo);
+  var current = null;
+  infoBody.addEventListener('click', function(e){
+    if(e.target.closest('.lm-ask')){ var fm = infoBody.querySelector('.lm-askform'); fm.hidden = !fm.hidden; if(!fm.hidden) fm.querySelector('input[name=Name]').focus(); }
+    if(e.target.closest('.lm-own') && current){
+      var set = function(id, v){ var x = document.getElementById(id); if(x && v != null && v !== '') x.value = v; };
+      set('s_address', [current.siteaddress, current.site_citystzip].filter(Boolean).join(', '));
+      set('s_sqft', num(current.structsize)); set('s_year', current.yr_built); set('s_beds', current.no_bedrooms);
+      set('s_baths', (current.fullbaths || 0) + (current.halfbaths ? current.halfbaths * 0.5 : 0) || '');
+      var sell = document.getElementById('sell'); if(sell) sell.scrollIntoView({behavior:'smooth'});
+      setTimeout(function(){ var n = document.getElementById('s_name'); if(n) n.focus({preventScroll:true}); }, 600);
+    }
+  });
+  infoBody.addEventListener('submit', function(e){
+    e.preventDefault(); var fm = e.target, note = fm.querySelector('.lm-note'), btn = fm.querySelector('button[type=submit]');
+    if(!fm.checkValidity()){ fm.reportValidity(); return; }
+    if(fm.querySelector('[name=_honey]').value) return;
+    var data = {}; Array.prototype.forEach.call(fm.elements, function(el){ if(el.name && el.name !== '_honey' && (el.value || '').trim()) data[el.name] = el.value.trim(); });
+    var p = current || {};
+    data['Property'] = (p.siteaddress || '') + ' (' + (p.pin || '') + ')'; data['Owner of record'] = title(p.own1); data['Assessed'] = money(p.curr_val);
+    data._subject = 'Property inquiry: ' + (p.siteaddress || p.pin || 'parcel map'); data._template = 'table'; data._captcha = 'false'; data['Submitted from'] = location.href;
+    btn.disabled = true; btn.textContent = 'Sending...';
+    fetch('https://formsubmit.co/ajax/smithassetgrp@gmail.com', {method:'POST', headers:{'Content-Type':'application/json', 'Accept':'application/json'}, body:JSON.stringify(data)})
+      .then(function(r){ return r.json(); }).then(function(res){ if(res && String(res.success) === 'true'){ fm.reset(); btn.textContent = 'Sent!'; note.textContent = 'Got it. We will text or call you shortly.'; } else throw 0; })
+      .catch(function(){ btn.disabled = false; btn.textContent = 'Send to Smith Asset Group'; note.innerHTML = 'Could not send. Call or text <a href="tel:+17622154466">(762) 215-4466</a>.'; });
+  });
   var parcels = L.geoJSON(null, {style:function(f){ return (selectedPin && f.properties && f.properties.pin === selectedPin) ? hiStyle : style; }, onEachFeature:function(f, layer){
     if(selectedPin && f.properties && f.properties.pin === selectedPin) hiLayer = layer;
     layer.on('click', function(e){ L.DomEvent.stopPropagation(e); showInfo(f.properties || {}, layer); });
@@ -1054,7 +1127,7 @@
   var reqId = 0, timer = null, loadedKey = '';
   function load(){
     var z = map.getZoom();
-    if(z < MIN_ZOOM){ parcels.clearLayers(); hiLayer = null; loadedKey = ''; hint.hidden = false; hint.textContent = 'Zoom in to see parcel lines'; return; }
+    if(z < MIN_ZOOM){ parcels.clearLayers(); hiLayer = null; loadedKey = ''; hint.hidden = false; hint.textContent = 'Zoom in or pick an area to see parcel lines'; return; }
     var b = map.getBounds().pad(0.15);
     var key = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()].map(function(n){ return n.toFixed(4); }).join(',');
     if(key === loadedKey) return;
@@ -1089,15 +1162,17 @@
 
   var input = document.getElementById('lmSearch'), go = document.getElementById('lmSearchGo');
   function search(){
-    var q = input.value.trim().toUpperCase().replace(/[^A-Z0-9 .-]/g, '').replace(/\s+/g, ' ');
+    var q = input.value.trim().toUpperCase().replace(/[^A-Z0-9 .&-]/g, '').replace(/\s+/g, ' ');
     resultsEl.innerHTML = '';
-    if(q.length < 3){ statusEl.textContent = 'Type at least 3 characters of an address or street.'; return; }
+    if(q.length < 3){ statusEl.textContent = 'Type at least 3 characters: an address, street, owner name, or parcel number.'; return; }
     statusEl.textContent = 'Searching the county records...';
-    var where = "UPPER(siteaddress) LIKE '%" + q.replace(/'/g, "''") + "%'";
+    var digits = q.replace(/[^0-9]/g, ''), safe = q.replace(/'/g, "''"), where;
+    if(/^[0-9 -]+$/.test(q) && digits.length >= 9){ where = "parcel_no LIKE '" + digits + "%'"; }
+    else { where = "UPPER(siteaddress) LIKE '%" + safe + "%' OR UPPER(own1) LIKE '%" + safe + "%'"; }
     var url = LAYER + '/query?where=' + encodeURIComponent(where) + '&outFields=pin,siteaddress,own1,curr_val&returnGeometry=false&orderByFields=siteaddress&resultRecordCount=25&f=json';
     fetch(url).then(function(r){ return r.json(); }).then(function(j){
       var feats = (j && j.features) || [];
-      if(!feats.length){ statusEl.textContent = 'No parcels found for "' + input.value.trim() + '". Try just the street name, like "Koger".'; return; }
+      if(!feats.length){ statusEl.textContent = 'No parcels found for "' + input.value.trim() + '". Try just the street name, like "Koger", or an owner last name.'; return; }
       if(feats.length === 1){ flyToParcel(feats[0].attributes); return; }
       statusEl.textContent = feats.length + (feats.length === 25 ? '+' : '') + ' matches. Tap one to see it on the map.';
       feats.forEach(function(f){
@@ -1110,6 +1185,22 @@
     }).catch(function(){ statusEl.textContent = 'Could not reach the county records. Try again in a moment.'; });
   }
   go.addEventListener('click', search);
+  document.querySelectorAll('.lm-jump [data-go]').forEach(function(b){ b.addEventListener('click', function(){
+    var c = b.getAttribute('data-go').split(',').map(Number);
+    statusEl.textContent = b.textContent + '. Tap any lot for its details.';
+    el.scrollIntoView({behavior:'smooth', block:'center'}); map.flyTo(c, 16, {duration:.8});
+  }); });
+  var near = document.getElementById('lmNear');
+  near.addEventListener('click', function(){
+    if(!navigator.geolocation){ statusEl.textContent = 'Your browser does not share location. Search an address instead.'; return; }
+    statusEl.textContent = 'Finding you...';
+    navigator.geolocation.getCurrentPosition(function(pos){
+      var c = [pos.coords.latitude, pos.coords.longitude];
+      if(c[0] < 33.15 || c[0] > 33.65 || c[1] < -82.40 || c[1] > -81.80){ statusEl.textContent = 'You look to be outside Richmond County. Pick an area or search an address.'; return; }
+      statusEl.textContent = 'Showing lots near you. Tap any lot for its details.';
+      el.scrollIntoView({behavior:'smooth', block:'center'}); map.flyTo(c, 17, {duration:.8});
+    }, function(){ statusEl.textContent = 'Location is off. Pick an area or search an address.'; }, {enableHighAccuracy:true, timeout:10000});
+  });
   input.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); search(); } });
 })();
 </script>
