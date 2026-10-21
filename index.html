@@ -975,6 +975,14 @@
   .leaflet-container a.leaflet-popup-close-button{color:var(--text-muted);}
   .lm-info{position:absolute; top:10px; left:10px; z-index:600; width:300px; max-height:calc(100% - 20px); overflow:auto; background:#fff; color:#1d1f19; border-radius:12px; box-shadow:0 12px 34px rgba(0,0,0,.35); padding:16px 18px; font-size:14px; line-height:1.5;}
   .lm-info[hidden]{display:none;}
+  .lm-pin{background:none;border:0;}
+  .lm-pin span{position:absolute;left:3px;top:0;width:24px;height:24px;border-radius:50% 50% 50% 0;background:#e3262b;border:3px solid #fff;transform:rotate(-45deg);box-shadow:0 3px 10px rgba(0,0,0,.55);}
+  .lm-pin span::after{content:"";position:absolute;left:7px;top:7px;width:7px;height:7px;border-radius:50%;background:#fff;}
+  .leaflet-tooltip.lm-pin-tip{background:#e3262b;color:#fff;border:0;border-radius:8px;font:700 13px/1.2 "IBM Plex Sans",system-ui,sans-serif;padding:6px 10px;box-shadow:0 3px 10px rgba(0,0,0,.45);white-space:nowrap;}
+  .leaflet-tooltip.lm-pin-tip::before{border-top-color:#e3262b;}
+  .leaflet-tooltip.lm-hn{display:none;background:rgba(0,0,0,.55);color:#fff;border:0;box-shadow:none;border-radius:4px;padding:1px 5px;font:700 11px/1.3 "IBM Plex Mono",monospace;}
+  .leaflet-tooltip.lm-hn::before{display:none;}
+  .show-hn .leaflet-tooltip.lm-hn{display:block;}
   .lm-facts{display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin:4px 0 10px;}
   .lm-facts div{background:#f4f1e8; border-radius:8px; padding:7px 4px; text-align:center;}
   .lm-facts b{display:block; font-size:14px; color:#1d1f19;} .lm-facts span{display:block; font-size:10.5px; letter-spacing:.04em; text-transform:uppercase; color:#6b6f62;}
@@ -1016,20 +1024,36 @@
   var resultsEl = document.getElementById('lmResults');
   var hint = document.getElementById('lmHint');
 
-  var map = L.map(el, {center:[33.44,-82.04], zoom:12, minZoom:10, maxZoom:20, scrollWheelZoom:false});
+  var map = L.map(el, {center:[33.44,-82.04], zoom:12, minZoom:10, maxZoom:21, scrollWheelZoom:false});
   map.zoomControl.setPosition('bottomright');
-  var sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {maxZoom:20, maxNativeZoom:19, attribution:'Imagery &copy; Esri'});
-  var labels = L.layerGroup([
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {maxZoom:20, maxNativeZoom:19, opacity:.45}),
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {maxZoom:20, maxNativeZoom:19})
-  ]);
-  var street = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {maxZoom:20, maxNativeZoom:19, attribution:'Map &copy; Esri, HERE, Garmin, OpenStreetMap contributors'});
+  var esriSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {maxZoom:21, maxNativeZoom:19, attribution:'Imagery &copy; Esri'});
+  // Richmond County's own 2025 aerial photos (about 1.5 inches per pixel), drawn on top of Esri inside the county.
+  var COUNTY_IMG = 'https://gismap.augustaga.gov/arcgis/rest/services/Imagery/2025_Aerial_Photos/MapServer/export';
+  var CountyLayer = L.TileLayer.extend({ getTileUrl: function(c){
+    var ts = this.getTileSize(), m = this._map;
+    var a = L.CRS.EPSG3857.project(m.unproject([c.x * ts.x, c.y * ts.y], c.z)), b = L.CRS.EPSG3857.project(m.unproject([(c.x + 1) * ts.x, (c.y + 1) * ts.y], c.z));
+    var px = ts.x * ((window.devicePixelRatio || 1) > 1 ? 2 : 1);
+    return COUNTY_IMG + '?bbox=' + [a.x, b.y, b.x, a.y].map(function(n){ return n.toFixed(2); }).join(',') + '&bboxSR=3857&imageSR=3857&size=' + px + ',' + px + '&format=jpg&transparent=false&f=image';
+  }});
+  var county = new CountyLayer('', {minZoom:14, maxZoom:21, bounds:L.latLngBounds([33.18,-82.36],[33.56,-81.82]), attribution:'2025 aerials &copy; Augusta GIS'});
+  var roads = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {maxZoom:21, maxNativeZoom:19, opacity:.7});
+  var places = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {maxZoom:21, maxNativeZoom:19});
+  var sat = L.layerGroup([esriSat, county]);
+  var labels = L.layerGroup([places]);
+  var street = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {maxZoom:21, maxNativeZoom:19, attribution:'Map &copy; Esri, HERE, Garmin, OpenStreetMap contributors'});
   sat.addTo(map); labels.addTo(map);
+  // Road overlay helps zoomed out but hazes the photo up close, so it only shows below street level.
+  function syncOverlays(){
+    var z = map.getZoom(), onSat = map.hasLayer(esriSat);
+    if(onSat && z < 17){ if(!map.hasLayer(roads)) roads.addTo(map); } else if(map.hasLayer(roads)) map.removeLayer(roads);
+    el.classList.toggle('show-hn', z >= 18);
+  }
+  map.on('zoomend', syncOverlays); syncOverlays();
   el.addEventListener('click', function(){ map.scrollWheelZoom.enable(); }, {once:true});
 
   var satBtn = document.getElementById('lmSat'), stBtn = document.getElementById('lmStreet');
-  satBtn.addEventListener('click', function(){ map.removeLayer(street); sat.addTo(map); labels.addTo(map); satBtn.classList.add('is-active'); stBtn.classList.remove('is-active'); });
-  stBtn.addEventListener('click', function(){ map.removeLayer(sat); map.removeLayer(labels); street.addTo(map); stBtn.classList.add('is-active'); satBtn.classList.remove('is-active'); });
+  satBtn.addEventListener('click', function(){ map.removeLayer(street); sat.addTo(map); labels.addTo(map); syncOverlays(); satBtn.classList.add('is-active'); stBtn.classList.remove('is-active'); });
+  stBtn.addEventListener('click', function(){ map.removeLayer(sat); map.removeLayer(labels); street.addTo(map); syncOverlays(); stBtn.classList.add('is-active'); satBtn.classList.remove('is-active'); });
 
   function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function money(v){ return (v || v === 0) ? '$' + Number(v).toLocaleString('en-US') : 'n/a'; }
@@ -1083,7 +1107,15 @@
     info.hidden = false;
     if(window.matchMedia('(max-width:760px)').matches) info.scrollIntoView({behavior:'smooth', block:'nearest'});
   }
-  function hideInfo(){ info.hidden = true; selectedPin = null; if(hiLayer) hiLayer.setStyle(style); hiLayer = null; }
+  function hideInfo(){ info.hidden = true; selectedPin = null; if(hiLayer) hiLayer.setStyle(style); hiLayer = null; clearPin(); }
+  var pinMarker = null;
+  function clearPin(){ if(pinMarker){ map.removeLayer(pinMarker); pinMarker = null; } }
+  function dropPin(lat, lon, label){
+    clearPin();
+    if(lat == null || lon == null || isNaN(lat) || isNaN(lon)) return;
+    pinMarker = L.marker([lat, lon], {icon:L.divIcon({className:'lm-pin', html:'<span></span>', iconSize:[30,42], iconAnchor:[15,40]}), zIndexOffset:1000, keyboard:false, interactive:false}).addTo(map);
+    if(label) pinMarker.bindTooltip(esc(label), {permanent:true, direction:'top', offset:[0,-40], className:'lm-pin-tip'}).openTooltip();
+  }
   document.getElementById('lmInfoClose').addEventListener('click', hideInfo);
   var current = null;
   infoBody.addEventListener('click', function(e){
@@ -1112,6 +1144,8 @@
   });
   var parcels = L.geoJSON(null, {style:function(f){ return (selectedPin && f.properties && f.properties.pin === selectedPin) ? hiStyle : style; }, onEachFeature:function(f, layer){
     if(selectedPin && f.properties && f.properties.pin === selectedPin) hiLayer = layer;
+    var hn = String((f.properties && f.properties.siteaddress) || '').match(/^\d+[A-Z]?\b/);
+    if(hn) layer.bindTooltip(hn[0], {permanent:true, direction:'center', className:'lm-hn', interactive:false});
     layer.on('click', function(e){ L.DomEvent.stopPropagation(e); showInfo(f.properties || {}, layer); });
     layer.on('mouseover', function(){ if(layer !== hiLayer) layer.setStyle(hoverStyle); });
     layer.on('mouseout', function(){ if(layer !== hiLayer) layer.setStyle(style); });
@@ -1147,26 +1181,58 @@
   map.on('moveend', function(){ clearTimeout(timer); timer = setTimeout(load, 250); });
   load();
 
-  function flyToParcel(attrs){
+  function flyToParcel(attrs, at){
     var url = LAYER + "/query?where=" + encodeURIComponent("pin='" + String(attrs.pin).replace(/'/g, "''") + "'") +
       '&outFields=' + FIELDS + '&returnGeometry=true&outSR=4326&f=geojson';
     statusEl.textContent = 'Finding ' + (attrs.siteaddress || attrs.pin) + '...';
     fetch(url).then(function(r){ return r.json(); }).then(function(gj){
       if(!gj.features || !gj.features.length){ statusEl.textContent = 'Could not find that parcel on the map.'; return; }
-      var bounds = L.geoJSON(gj).getBounds();
+      var bounds = L.geoJSON(gj).getBounds(), pp = gj.features[0].properties || {};
       pending = {pin: attrs.pin, gj: gj};
-      statusEl.textContent = 'Showing ' + (attrs.siteaddress || attrs.pin) + '. Tap any other lot for its details.';
+      var plat = at && at.lat != null ? at.lat : (pp.lat != null ? Number(pp.lat) : bounds.getCenter().lat);
+      var plon = at && at.lon != null ? at.lon : (pp.lon != null ? Number(pp.lon) : bounds.getCenter().lng);
+      dropPin(plat, plon, title(attrs.siteaddress || pp.siteaddress || attrs.pin));
+      statusEl.textContent = 'Showing ' + title(attrs.siteaddress || pp.siteaddress || attrs.pin) + '. Tap any other lot for its details.';
       el.scrollIntoView({behavior:'smooth', block:'center'});
-      map.flyToBounds(bounds, {maxZoom:18, duration:.8});
+      if(at) map.flyTo([plat, plon], 20, {duration:.8}); else map.flyToBounds(bounds, {maxZoom:20, duration:.8});
       setTimeout(function(){ if(pending && loadedKey) highlightPending(); }, 2500);
     }).catch(function(){ statusEl.textContent = 'Could not reach the county map. Try again in a moment.'; });
   }
 
   var input = document.getElementById('lmSearch'), go = document.getElementById('lmSearchGo');
+  var GEO = 'https://gismap.augustaga.gov/arcgis/rest/services/AGS_AddressComposite/GeocodeServer/findAddressCandidates';
+  var TYPE_RANK = {PointAddress:0, SubAddress:0, Address:1, StreetAddress:2};
+  function pinAddress(lat, lon, label){
+    var url = LAYER + '/query?geometry=' + lon + ',' + lat + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects' +
+      '&outFields=' + FIELDS + '&returnGeometry=true&outSR=4326&f=geojson';
+    fetch(url).then(function(r){ return r.json(); }).then(function(gj){
+      if(gj && gj.features && gj.features.length){ var pr = gj.features[0].properties || {}; flyToParcel({pin: pr.pin, siteaddress: pr.siteaddress || label}, {lat: lat, lon: lon}); return; }
+      dropPin(lat, lon, label); el.scrollIntoView({behavior:'smooth', block:'center'}); map.flyTo([lat, lon], 20, {duration:.8});
+      statusEl.textContent = 'Pinned ' + label + '. Tap the lot under the pin for its details.';
+    }).catch(function(){ dropPin(lat, lon, label); map.flyTo([lat, lon], 20, {duration:.8}); statusEl.textContent = 'Pinned ' + label + '.'; });
+  }
   function search(){
-    var q = input.value.trim().toUpperCase().replace(/[^A-Z0-9 .&-]/g, '').replace(/\s+/g, ' ');
+    var raw = input.value.trim();
     resultsEl.innerHTML = '';
-    if(q.length < 3){ statusEl.textContent = 'Type at least 3 characters: an address, street, owner name, or parcel number.'; return; }
+    if(raw.length < 3){ statusEl.textContent = 'Type at least 3 characters: an address, street, owner name, or parcel number.'; return; }
+    if(/^\d+[A-Za-z]?\s+[A-Za-z]/.test(raw)){
+      statusEl.textContent = 'Finding ' + raw + '...';
+      var single = /augusta|hephzibah|blythe|\bga\b|\d{5}/i.test(raw) ? raw : raw + ', Augusta, GA';
+      fetch(GEO + '?SingleLine=' + encodeURIComponent(single) + '&outSR=4326&maxLocations=6&outFields=Addr_type&f=json')
+        .then(function(r){ return r.json(); }).then(function(j){
+          var c = ((j && j.candidates) || []).filter(function(x){ return x.score >= 85 && x.location; });
+          c.sort(function(a, b){ return (b.score - a.score) || ((TYPE_RANK[(a.attributes || {}).Addr_type] || 3) - (TYPE_RANK[(b.attributes || {}).Addr_type] || 3)); });
+          if(!c.length) return recordSearch(raw);
+          pinAddress(c[0].location.y, c[0].location.x, c[0].address.replace(/,\s*\d{5}$/, ''));
+        }).catch(function(){ recordSearch(raw); });
+      return;
+    }
+    recordSearch(raw);
+  }
+  var ABBR = {STREET:'ST', AVENUE:'AVE', DRIVE:'DR', ROAD:'RD', LANE:'LN', COURT:'CT', CIRCLE:'CIR', PLACE:'PL', BOULEVARD:'BLVD', TERRACE:'TER', PARKWAY:'PKWY', HIGHWAY:'HWY', NORTH:'N', SOUTH:'S', EAST:'E', WEST:'W'};
+  function recordSearch(raw){
+    var q = raw.split(',')[0].trim().toUpperCase().replace(/[^A-Z0-9 .&-]/g, '').replace(/\s+/g, ' ')
+      .split(' ').map(function(w){ return ABBR[w] || w; }).join(' ');
     statusEl.textContent = 'Searching the county records...';
     var digits = q.replace(/[^0-9]/g, ''), safe = q.replace(/'/g, "''"), where;
     if(/^[0-9 -]+$/.test(q) && digits.length >= 9){ where = "parcel_no LIKE '" + digits + "%'"; }
@@ -1174,7 +1240,7 @@
     var url = LAYER + '/query?where=' + encodeURIComponent(where) + '&outFields=pin,siteaddress,own1,curr_val&returnGeometry=false&orderByFields=siteaddress&resultRecordCount=25&f=json';
     fetch(url).then(function(r){ return r.json(); }).then(function(j){
       var feats = (j && j.features) || [];
-      if(!feats.length){ statusEl.textContent = 'No parcels found for "' + input.value.trim() + '". Try just the street name, like "Koger", or an owner last name.'; return; }
+      if(!feats.length){ statusEl.textContent = 'No parcels found for "' + raw + '". Try just the street name, like "Koger", or an owner last name.'; return; }
       if(feats.length === 1){ flyToParcel(feats[0].attributes); return; }
       statusEl.textContent = feats.length + (feats.length === 25 ? '+' : '') + ' matches. Tap one to see it on the map.';
       feats.forEach(function(f){
