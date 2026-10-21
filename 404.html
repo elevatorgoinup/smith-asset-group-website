@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://us-assets.i.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://cdnjs.cloudflare.com https://*.arcgisonline.com https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://gismap.augustaga.gov; connect-src 'self' https://formsubmit.co https://gismap.augustaga.gov https://us.i.posthog.com https://us-assets.i.posthog.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://formsubmit.co mailto:; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Smith Asset">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page Not Found | Smith Asset Group</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%2312140f'/%3E%3Ctext%20x='32'%20y='44'%20text-anchor='middle'%20font-family='Georgia,serif'%20font-size='36'%20font-weight='700'%20fill='%23c8f135'%3ES%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#f7f3ea">
+<meta name="twitter:image" content="https://smithassetgrp.com/og-image.png">
+<meta name="robots" content="noindex">
+<meta name="twitter:card" content="summary">
+<style>
+  :root{
+    --bg:#12140f; --surface:#1a1d15; --surface-2:#20241a; --border:#2c3122;
+    --text:#f3f4ee; --text-muted:#a7ab9b; --text-faint:#6f7362;
+    --lime:#c8f135; --lime-ink:#1c2408; --coral:#ff6b4a; --gold:#e3b34c;
+  }
+  *{box-sizing:border-box;}
+  body{background:var(--bg); color:var(--text); margin:0; padding-inline:0;}
+  .wrap{max-width:760px; margin:0 auto; padding-inline:24px;}
+  h1,h2,h3{font-family:"Fraunces",Georgia,"Times New Roman",serif; text-wrap:balance; margin:0;}
+  p,li,a,button,span,label{font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;}
+  a{color:var(--lime); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  header.site{
+    position:sticky; top:env(safe-area-inset-top,0px); z-index:20;
+    background:rgba(18,20,15,.88); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav{display:flex; align-items:center; justify-content:space-between; padding-block:16px; max-width:1100px; margin:0 auto; padding-inline:24px;}
+  .logo{font-family:"Fraunces",serif; font-weight:700; font-size:1.15rem; letter-spacing:.01em; color:var(--text);}
+  .logo em{color:var(--lime); font-style:normal;}
+  nav.links{display:flex; gap:28px; align-items:center;}
+  nav.links a{color:var(--text-muted); font-size:.92rem;}
+  nav.links a:hover{color:var(--text);}
+
+  .legal-head{padding-block:56px 32px; border-bottom:1px solid var(--border);}
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace; text-transform:uppercase; letter-spacing:.14em;
+    font-size:.76rem; color:var(--lime); border-left:2px solid var(--lime); padding-left:10px;
+  }
+  .legal-head h1{font-size:clamp(1.9rem,4vw,2.6rem); font-weight:600; margin-top:18px;}
+  .legal-head .updated{color:var(--text-faint); font-family:"IBM Plex Mono",monospace; font-size:.8rem; margin-top:14px;}
+
+  main{padding-block:44px 80px;}
+  main section{margin-bottom:38px;}
+  main h2{font-size:1.25rem; font-weight:600; margin-bottom:12px; color:var(--text);}
+  main p{color:var(--text-muted); font-size:.97rem; line-height:1.7; margin:0 0 12px 0;}
+  main ul{color:var(--text-muted); font-size:.97rem; line-height:1.7; margin:0 0 12px 0; padding-left:22px;}
+  main li{margin-bottom:6px;}
+  main a.inline{color:var(--lime); border-bottom:1px solid transparent;}
+  main a.inline:hover{border-color:var(--lime);}
+  .num{font-family:"IBM Plex Mono",monospace; font-weight:600; color:var(--gold); font-size:.85rem; margin-right:8px;}
+  .highlight{background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--lime); border-radius:2px; padding:18px 20px; margin:0 0 12px 0;}
+  .highlight p{margin:0; color:var(--text);}
+
+  footer.site{padding-block:40px; border-top:1px solid var(--border);}
+  .foot-row{display:flex; justify-content:space-between; align-items:flex-start; gap:24px; flex-wrap:wrap; max-width:1100px; margin:0 auto; padding-inline:24px;}
+  .foot-links{display:flex; gap:20px; flex-wrap:wrap;}
+  .foot-links a{color:var(--text-muted); font-size:.85rem;}
+  .foot-links a:hover{color:var(--text);}
+  .copyright{color:var(--text-faint); font-size:.8rem; font-family:"IBM Plex Mono",monospace;}
+
+  @media (max-width:600px){
+    nav.links{gap:16px;}
+    .legal-head{padding-block:40px 24px;}
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,500..600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,500..600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,500..600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+<style id="readability">
+:root{--text-faint:#9da190;--text-muted:#c4c7b9;}
+p,li{line-height:1.65;}
+.eyebrow,.legal-head .updated,.copyright{font-size:13.5px !important;}
+input,select,textarea{font-size:16px !important;}
+.field label{font-size:14.5px !important;}
+.form-note{font-size:14px;}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--lime);outline-offset:2px;}
+</style>
+<link rel="stylesheet" href="/site.css?v=5">
+<script src="/sag-analytics.js?v=2" defer></script>
+</head>
+<body>
+<header class="site"><div class="nav"><a class="logo" href="/">Smith Asset <em>Group</em></a><nav class="links"><a href="/#parcelLookup">Map</a><a href="/#sell">Sell</a><a href="/#buy">Buy</a></nav></div></header>
+<div class="wrap">
+  <div class="legal-head">
+    <p class="eyebrow">404 &middot; Page not found</p>
+    <h1>That page isn&rsquo;t here.</h1>
+    <p class="updated">The link may be old, or the address may have a typo.</p>
+  </div>
+  <main>
+    <section>
+      <h2>Where to go instead</h2>
+      <ul>
+        <li><a class="inline" href="/#parcelLookup">Look up any Richmond County property</a> on the live map</li>
+        <li><a class="inline" href="/#sell">Get a cash offer on your house</a></li>
+        <li><a class="inline" href="/#buy">Join the First Look buyer list</a></li>
+        <li><a class="inline" href="/sell-my-house-fast-augusta-ga.html">Sell your house fast in Augusta</a></li>
+      </ul>
+      <p>Or call or text <a class="inline" href="tel:+17622154466">(762) 215-4466</a>. A real person answers.</p>
+    </section>
+  </main>
+</div>
+<script src="/site.js?v=9" defer></script>
+</body>
+</html>
