@@ -546,6 +546,7 @@
     <div class="lm-layer-toggle" role="group" aria-label="Map style">
       <button type="button" id="lmSat" class="is-active">Satellite</button>
       <button type="button" id="lmStreet">Street</button>
+      <button type="button" id="lmSold" class="lm-sold-btn" aria-pressed="false" title="Show houses that sold in the last 12 months">Recent sales</button>
     </div>
     <div class="lm-zoom-hint" id="lmHint">Zoom in to see parcel lines</div>
     <aside class="lm-info" id="lmInfo" hidden aria-live="polite">
@@ -963,6 +964,20 @@
   .lm-layer-toggle{position:absolute; top:10px; right:10px; z-index:500; display:flex; background:var(--surface); border:1px solid var(--border); border-radius:2px; overflow:hidden;}
   .lm-layer-toggle button{all:unset; cursor:pointer; padding:8px 12px; font-size:13.5px; color:var(--text-muted);}
   .lm-layer-toggle button.is-active{background:var(--lime); color:var(--lime-ink); font-weight:600;}
+  .lm-layer-toggle .lm-sold-btn{border-left:1px solid var(--border);}
+  .lm-layer-toggle .lm-sold-btn[aria-pressed=true]{background:#1f6f43; color:#fff; font-weight:600;}
+  .lm-sale{background:none;border:0;}
+  .lm-sale b{display:inline-block;transform:translate(-50%,-50%);background:#1f6f43;color:#fff;border:2px solid #fff;border-radius:999px;padding:2px 7px;font:700 11.5px/1.25 "IBM Plex Sans",system-ui,sans-serif;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.45);cursor:pointer;}
+  .lm-sale.cmp b{background:#1d4ed8;}
+  .lm-comps{margin:2px 0 12px;border-top:1px solid #e7e2d4;padding-top:10px;}
+  .lm-comps h5{margin:0 0 4px;font:700 13px/1.3 "IBM Plex Sans",system-ui,sans-serif;color:#1d1f19;}
+  .lm-comps .sum{margin:0 0 8px;font-size:12.5px;color:#4b4f44;}
+  .lm-comps ol{margin:0;padding:0;list-style:none;display:grid;gap:6px;}
+  .lm-comps li{display:grid;grid-template-columns:20px 1fr auto;gap:2px 8px;align-items:baseline;font-size:12.5px;line-height:1.35;}
+  .lm-comps li i{font-style:normal;background:#1d4ed8;color:#fff;border-radius:50%;width:18px;height:18px;display:inline-grid;place-items:center;font-size:10.5px;font-weight:700;}
+  .lm-comps li b{font-size:13px;color:#1d1f19;}
+  .lm-comps li small{grid-column:2 / 4;color:#6b6f62;}
+  .lm-comps .fine{margin:8px 0 0;font-size:11px;color:#8a8d80;}
   .lm-zoom-hint{position:absolute; left:50%; bottom:14px; transform:translateX(-50%); z-index:500; background:rgba(18,20,15,.9); border:1px solid var(--border); color:var(--text); font-size:13.5px; padding:6px 12px; border-radius:2px; pointer-events:none; white-space:nowrap;}
   .lm-zoom-hint[hidden]{display:none;}
   .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--surface); color:var(--text); border:1px solid var(--border); border-radius:2px;}
@@ -983,6 +998,9 @@
   .leaflet-tooltip.lm-hn{display:none;background:rgba(0,0,0,.55);color:#fff;border:0;box-shadow:none;border-radius:4px;padding:1px 5px;font:700 11px/1.3 "IBM Plex Mono",monospace;}
   .leaflet-tooltip.lm-hn::before{display:none;}
   .show-hn .leaflet-tooltip.lm-hn{display:block;}
+  .leaflet-tooltip.lm-hn .st{display:none;}
+  .show-st .leaflet-tooltip.lm-hn .st{display:inline;}
+  .show-st .leaflet-tooltip.lm-hn{background:rgba(0,0,0,.68);font-size:12px;}
   .lm-facts{display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin:4px 0 10px;}
   .lm-facts div{background:#f4f1e8; border-radius:8px; padding:7px 4px; text-align:center;}
   .lm-facts b{display:block; font-size:14px; color:#1d1f19;} .lm-facts span{display:block; font-size:10.5px; letter-spacing:.04em; text-transform:uppercase; color:#6b6f62;}
@@ -1046,7 +1064,8 @@
   function syncOverlays(){
     var z = map.getZoom(), onSat = map.hasLayer(esriSat);
     if(onSat && z < 17){ if(!map.hasLayer(roads)) roads.addTo(map); } else if(map.hasLayer(roads)) map.removeLayer(roads);
-    el.classList.toggle('show-hn', z >= 18);
+    el.classList.toggle('show-hn', z >= 17);
+    el.classList.toggle('show-st', z >= 19);
   }
   map.on('zoomend', syncOverlays); syncOverlays();
   el.addEventListener('click', function(){ map.scrollWheelZoom.enable(); }, {once:true});
@@ -1084,7 +1103,9 @@
       '<dt>Flood zone</dt><dd>' + esc(p.flood_zone || 'n/a') + '</dd>' +
       (hood ? '<dt>Area</dt><dd>' + esc(title(hood)) + '</dd>' : '') +
       '<dt>Parcel #</dt><dd>' + esc(p.pin || 'n/a') + '</dd>' +
+      '<dt>Last sale</dt><dd class="lm-last">Checking...</dd>' +
       '</dl>' +
+      '<div class="lm-comps" aria-live="polite"><h5>Recent sales nearby</h5><p class="sum">Loading county sales...</p></div>' +
       '<div class="lm-actions"><button type="button" class="lm-btn lm-ask">Ask about this property</button><button type="button" class="lm-btn alt lm-own">I own it: cash offer</button></div>' +
       '<form class="lm-askform" hidden novalidate><input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">' +
         '<input name="Name" placeholder="Your name" autocomplete="name" required aria-label="Your name">' +
@@ -1105,11 +1126,12 @@
     if(layer){ layer.setStyle(hiStyle); layer.bringToFront(); }
     current = p; infoBody.innerHTML = popupHtml(p);
     info.hidden = false;
+    loadComps(p, layer); loadLastSale(p);
     if(window.matchMedia('(max-width:760px)').matches) info.scrollIntoView({behavior:'smooth', block:'nearest'});
   }
   function hideInfo(){ info.hidden = true; selectedPin = null; if(hiLayer) hiLayer.setStyle(style); hiLayer = null; clearPin(); }
   var pinMarker = null;
-  function clearPin(){ if(pinMarker){ map.removeLayer(pinMarker); pinMarker = null; } }
+  function clearPin(){ if(pinMarker){ map.removeLayer(pinMarker); pinMarker = null; } if(typeof compsLayer !== 'undefined') compsLayer.clearLayers(); }
   function dropPin(lat, lon, label){
     clearPin();
     if(lat == null || lon == null || isNaN(lat) || isNaN(lon)) return;
@@ -1142,10 +1164,121 @@
       .then(function(r){ return r.json(); }).then(function(res){ if(res && String(res.success) === 'true'){ fm.reset(); btn.textContent = 'Sent!'; note.textContent = 'Got it. We will text or call you shortly.'; } else throw 0; })
       .catch(function(){ btn.disabled = false; btn.textContent = 'Send to Smith Asset Group'; note.innerHTML = 'Could not send. Call or text <a href="tel:+17622154466">(762) 215-4466</a>.'; });
   });
+  // ---- Recorded county sales (qualified, last 12 months). Buyer and seller names are never shown here.
+  var SALES = 'https://gismap.augustaga.gov/arcgis/rest/services/Map_LayersTS/MapServer/403/query';
+  var SALE_FIELDS = 'pin,siteaddress,saledate,saleprice,structsize,no_bedrms,fullbaths,halfbaths,yr_built';
+  function daysAgo(n){ return new Date(Date.now() - n * 864e5).toISOString().slice(0, 10); }
+  function kfmt(p){ return p >= 1e6 ? '$' + (p / 1e6).toFixed(p >= 1e7 ? 0 : 1) + 'M' : '$' + Math.round(p / 1000) + 'K'; }
+  function mon(t){ var d = new Date(t); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getUTCMonth()] + ' ' + d.getUTCFullYear(); }
+  function miles(a, b, c, d){ var r = Math.PI / 180, x = (d - b) * r * Math.cos((a + c) / 2 * r), y = (c - a) * r; return Math.sqrt(x * x + y * y) * 3958.8; }
+  function bb(a){ var ba = (a.fullbaths || 0) + (a.halfbaths ? a.halfbaths * 0.5 : 0); return (a.no_bedrms || '?') + ' bd / ' + (ba || '?') + ' ba'; }
+  function saleWhere(days){ return "saledate >= DATE '" + daysAgo(days) + "' AND saleprice >= 10000 AND salequal = 'Qualified'"; }
+  function saleMarker(f, label, cls){
+    var a = f.attributes, g = f.geometry;
+    var mk = L.marker([g.y, g.x], {icon:L.divIcon({className:'lm-sale' + (cls ? ' ' + cls : ''), html:'<b>' + label + '</b>', iconSize:[0,0]}), zIndexOffset:500, keyboard:false, title:title(a.siteaddress || '') + ', sold ' + mon(a.saledate) + ' for ' + money(a.saleprice)});
+    mk.on('click', function(e){ L.DomEvent.stopPropagation(e); openParcel(a.pin, g.y, g.x); });
+    return mk;
+  }
+  function openParcel(pin, lat, lon){
+    if(!pin) return;
+    var found = null;
+    parcels.eachLayer(function(l){ if(l.feature && l.feature.properties.pin === pin) found = l; });
+    if(found){ showInfo(found.feature.properties || {}, found); return; }
+    fetch(LAYER + '/query?where=' + encodeURIComponent("pin='" + String(pin).replace(/'/g, "''") + "'") + '&outFields=' + FIELDS + '&returnGeometry=true&outSR=4326&f=geojson')
+      .then(function(r){ return r.json(); }).then(function(gj){
+        if(!gj || !gj.features || !gj.features.length) return;
+        parcels.addData(gj);
+        parcels.eachLayer(function(l){ if(l.feature && l.feature.properties.pin === pin) found = l; });
+        showInfo(gj.features[0].properties || {}, found);
+      }).catch(function(){});
+  }
+  var salesLayer = L.layerGroup().addTo(map), compsLayer = L.layerGroup().addTo(map);
+  var salesOn = false, salesKey = '', salesReq = 0;
+  var soldBtn = document.getElementById('lmSold');
+  function loadSales(){
+    if(!salesOn){ salesLayer.clearLayers(); salesKey = ''; return; }
+    if(map.getZoom() < 15){ salesLayer.clearLayers(); salesKey = ''; statusEl.textContent = 'Zoom in a little to see recent sales.'; return; }
+    var b = map.getBounds();
+    var key = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()].map(function(n){ return n.toFixed(4); }).join(',');
+    if(key === salesKey) return;
+    var my = ++salesReq;
+    fetch(SALES + '?geometry=' + key + '&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&where=' + encodeURIComponent(saleWhere(365)) +
+      '&outFields=' + SALE_FIELDS + '&returnGeometry=true&outSR=4326&orderByFields=saledate%20DESC&resultRecordCount=400&f=json')
+      .then(function(r){ return r.json(); }).then(function(j){
+        if(my !== salesReq) return;
+        salesLayer.clearLayers(); salesKey = key;
+        var seen = {}, n = 0;
+        ((j && j.features) || []).forEach(function(f){ if(!f.geometry || seen[f.attributes.pin]) return; seen[f.attributes.pin] = 1; n++; saleMarker(f, kfmt(f.attributes.saleprice)).addTo(salesLayer); });
+        if(info.hidden) statusEl.textContent = n ? n + ' qualified sales in view from the last 12 months. Tap a price for details.' : 'No qualified sales in view in the last 12 months. Zoom out or move the map.';
+      }).catch(function(){ if(my === salesReq) statusEl.textContent = 'Could not load county sales. Try again in a moment.'; });
+  }
+  soldBtn.addEventListener('click', function(){
+    salesOn = !salesOn; soldBtn.setAttribute('aria-pressed', String(salesOn));
+    if(salesOn && map.getZoom() < 15 && !info.hidden && current && current.lat) map.setView([current.lat, current.lon], 16);
+    loadSales();
+  });
+  var lastReq = 0;
+  function loadLastSale(p){
+    var dd = infoBody.querySelector('.lm-last'); if(!dd) return;
+    if(!p.pin){ dd.textContent = 'n/a'; return; }
+    var my = ++lastReq;
+    fetch(SALES + '?where=' + encodeURIComponent("pin = '" + String(p.pin).replace(/'/g, "''") + "' AND saleprice > 0") + '&outFields=saledate,saleprice,salequal&orderByFields=saledate%20DESC&resultRecordCount=1&returnGeometry=false&f=json')
+      .then(function(r){ return r.json(); }).then(function(j){
+        if(my !== lastReq || !document.body.contains(dd)) return;
+        var a = j && j.features && j.features[0] && j.features[0].attributes;
+        dd.textContent = a ? money(a.saleprice) + ' (' + mon(a.saledate) + ')' + (a.salequal === 'Unqualified' ? ' \u00b7 not market sale' : '') : 'None on record';
+      }).catch(function(){ if(my === lastReq) dd.textContent = 'n/a'; });
+  }
+  var compsReq = 0;
+  function loadComps(p, layer){
+    compsLayer.clearLayers();
+    var box = infoBody.querySelector('.lm-comps'); if(!box) return;
+    var sum = box.querySelector('.sum');
+    var lat = p.lat, lon = p.lon;
+    if((lat == null || lon == null) && layer && layer.getBounds){ var c = layer.getBounds().getCenter(); lat = c.lat; lon = c.lng; }
+    if(lat == null || lon == null){ sum.textContent = 'No location on file for this parcel.'; return; }
+    var my = ++compsReq;
+    function q(ft, days){
+      return fetch(SALES + '?geometry=' + lon + ',' + lat + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&distance=' + ft + '&units=esriSRUnit_Foot' +
+        '&where=' + encodeURIComponent(saleWhere(days)) + '&outFields=' + SALE_FIELDS + '&returnGeometry=true&outSR=4326&resultRecordCount=300&f=json').then(function(r){ return r.json(); });
+    }
+    function rank(j){
+      var seen = {}, subj = Number(p.structsize) || 0;
+      return ((j && j.features) || []).filter(function(f){ var a = f.attributes; if(!f.geometry || a.pin === p.pin || seen[a.pin]) return false; seen[a.pin] = 1; return true; })
+        .map(function(f){ var a = f.attributes, d = miles(lat, lon, f.geometry.y, f.geometry.x), sz = subj && a.structsize ? Math.abs(a.structsize - subj) / subj : 0.5;
+          return {f:f, d:d, score:d + sz * 0.6 + (Date.now() - a.saledate) / 864e5 / 365 * 0.15}; })
+        .sort(function(x, y){ return x.score - y.score; });
+    }
+    var label = '0.5 mi, 12 months';
+    q(2640, 365).then(function(j){
+      var r = rank(j);
+      if(r.length >= 3) return r;
+      label = '1 mi, 24 months';
+      return q(5280, 730).then(rank);
+    }).then(function(r){
+      if(my !== compsReq || !document.body.contains(box)) return;
+      if(!r.length){ sum.textContent = 'No qualified sales recorded within 1 mile in the last 2 years.'; return; }
+      var top = r.slice(0, 5), pp = top.filter(function(x){ return x.f.attributes.structsize; }).map(function(x){ return x.f.attributes.saleprice / x.f.attributes.structsize; }).sort(function(a, b){ return a - b; });
+      var med = pp.length ? Math.round(pp[Math.floor((pp.length - 1) / 2)]) : null;
+      sum.textContent = top.length + ' closest similar sales (' + label + ')' + (med ? '. Median $' + med + '/sq ft.' : '.');
+      var ol = document.createElement('ol');
+      top.forEach(function(x, i){
+        var a = x.f.attributes, ppsf = a.structsize ? Math.round(a.saleprice / a.structsize) : null, li = document.createElement('li');
+        li.innerHTML = '<i>' + (i + 1) + '</i><span>' + esc(title(a.siteaddress || 'Sale')) + '</span><b>' + money(a.saleprice) + '</b>' +
+          '<small>' + mon(a.saledate) + ' &middot; ' + esc(bb(a)) + (a.structsize ? ' &middot; ' + num(a.structsize) + ' sf' : '') + (ppsf ? ' &middot; $' + ppsf + '/sf' : '') + ' &middot; ' + x.d.toFixed(2) + ' mi</small>';
+        ol.appendChild(li);
+        saleMarker(x.f, String(i + 1), 'cmp').addTo(compsLayer);
+      });
+      box.appendChild(ol);
+      var fine = document.createElement('p'); fine.className = 'fine';
+      fine.textContent = 'Recorded Richmond County sales marked qualified. Condition at sale is unknown; this is not an appraisal.';
+      box.appendChild(fine);
+    }).catch(function(){ if(my === compsReq) sum.textContent = 'Could not load county sales right now.'; });
+  }
   var parcels = L.geoJSON(null, {style:function(f){ return (selectedPin && f.properties && f.properties.pin === selectedPin) ? hiStyle : style; }, onEachFeature:function(f, layer){
     if(selectedPin && f.properties && f.properties.pin === selectedPin) hiLayer = layer;
-    var hn = String((f.properties && f.properties.siteaddress) || '').match(/^\d+[A-Z]?\b/);
-    if(hn) layer.bindTooltip(hn[0], {permanent:true, direction:'center', className:'lm-hn', interactive:false});
+    var sa = String((f.properties && f.properties.siteaddress) || '').trim(), hn = sa.match(/^(\d+[A-Z]?)\s+(.*)$/);
+    if(hn) layer.bindTooltip('<span class="n">' + esc(hn[1]) + '</span><span class="st"> ' + esc(title(hn[2])) + '</span>', {permanent:true, direction:'center', className:'lm-hn', interactive:false});
     layer.on('click', function(e){ L.DomEvent.stopPropagation(e); showInfo(f.properties || {}, layer); });
     layer.on('mouseover', function(){ if(layer !== hiLayer) layer.setStyle(hoverStyle); });
     layer.on('mouseout', function(){ if(layer !== hiLayer) layer.setStyle(style); });
@@ -1178,7 +1311,7 @@
       else { hint.textContent = 'County map is busy. Try moving the map again.'; }
     }).catch(function(){ if(my === reqId){ hint.textContent = 'Could not reach the county map. Try again in a moment.'; } });
   }
-  map.on('moveend', function(){ clearTimeout(timer); timer = setTimeout(load, 250); });
+  map.on('moveend', function(){ clearTimeout(timer); timer = setTimeout(function(){ load(); loadSales(); }, 250); });
   load();
 
   function flyToParcel(attrs, at){
