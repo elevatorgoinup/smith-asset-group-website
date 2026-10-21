@@ -946,6 +946,7 @@ document.addEventListener('DOMContentLoaded', function(){
     info.hidden = false;
     if(p.pin) setLink('parcel', p.pin);
     loadComps(p, layer); loadLastSale(p);
+    if(window.sagTrack) window.sagTrack('map_property_viewed', {address: title(p.siteaddress || '') || null, parcel: p.pin || null, neighborhood: title(String(p.neighbhood_desc || '').replace(/^\S+\s+/, '')) || null, zip: (String(p.site_citystzip || '').match(/\d{5}/) || [null])[0], street: title(String(p.siteaddress || '').replace(/^\d+[A-Z]?\s+/, '')) || null, property_type: p.propdesc || null, beds: p.no_bedrooms || null, year_built: p.yr_built || null, assessed: p.curr_val || null});
     if(window.matchMedia('(max-width:760px)').matches) info.scrollIntoView({behavior:'smooth', block:'nearest'});
   }
   function hideInfo(){ info.hidden = true; selectedPin = null; if(hiLayer) hiLayer.setStyle(style); hiLayer = null; clearPin(); }
@@ -1240,6 +1241,7 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   function showHood(name){
     var my = ++browseReq; setLink('hood', name);
+    if(window.sagTrack) window.sagTrack('map_neighborhood_opened', {neighborhood: name});
     statusEl.textContent = 'Loading every street in ' + name + '...';
     el.scrollIntoView({behavior:'smooth', block:'start'});
     getHood(name).then(function(g){
@@ -1276,6 +1278,7 @@ document.addEventListener('DOMContentLoaded', function(){
   function showStreet(a, hood){
     var my = ++browseReq, label = title(stLabel(a));
     setLink('street', [a.street_nam, a.sttype, a.stdirect].map(function(x){ return String(x || '').trim(); }).join('|'), {hood: hood});
+    if(window.sagTrack) window.sagTrack('map_street_opened', {street: label, neighborhood: hood || null});
     statusEl.textContent = 'Loading every address on ' + label + '...';
     var where = fld('street_nam', a.street_nam) + ' AND ' + fld('sttype', a.sttype) + ' AND ' + fld('stdirect', a.stdirect);
     var rows = [];

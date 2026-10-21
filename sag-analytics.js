@@ -12,8 +12,12 @@
     autocapture: { dom_event_allowlist: ['click', 'submit'], element_allowlist: ['a', 'button', 'form'] },
     disable_session_recording: true,
     mask_all_text: false,
+    enable_heatmaps: true,
+    capture_performance: { web_vitals: true },
     respect_dnt: true
   });
+  // Map code calls this for "what are people looking at" events (property areas, never form entries).
+  window.sagTrack = function (name, props) { try { posthog.capture(name, props || {}); } catch (e) {} };
 
   function ev(name, props) { try { posthog.capture(name, props || {}); } catch (e) {} }
   var page = location.pathname.split('/').pop() || 'index.html';
