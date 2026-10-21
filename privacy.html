@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://cdnjs.cloudflare.com https://*.arcgisonline.com https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://gismap.augustaga.gov; connect-src 'self' https://formsubmit.co https://gismap.augustaga.gov; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://formsubmit.co mailto:; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://us-assets.i.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://cdnjs.cloudflare.com https://*.arcgisonline.com https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://gismap.augustaga.gov; connect-src 'self' https://formsubmit.co https://gismap.augustaga.gov https://us.i.posthog.com https://us-assets.i.posthog.com; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://formsubmit.co mailto:; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -97,6 +97,7 @@ input,select,textarea{font-size:16px !important;}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--lime);outline-offset:2px;}
 </style>
 <link rel="stylesheet" href="site.css?v=5">
+<script src="sag-analytics.js" defer></script>
 </head>
 <body>
 
@@ -179,7 +180,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
     <section>
       <h2>Cookies &amp; website data</h2>
-      <p>This website may use basic cookies or analytics to understand how visitors use the site. This information is used in aggregate and is not used to identify you personally.</p>
+      <p>This website uses PostHog analytics (a cookie) to understand how visitors use the site, such as which pages are viewed and which buttons are clicked. We do not record what you type into forms, we do not record your screen, and this information is used in aggregate, not to identify you personally. If your browser sends a Do Not Track signal, analytics stays off.</p>
     </section>
 
     <section>
