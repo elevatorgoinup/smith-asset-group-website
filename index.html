@@ -473,7 +473,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,500..600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,500..600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,500..600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,500..600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
 
 <div class="hero-photo">
 <div class="top-bar"></div>
@@ -639,6 +639,7 @@
       <div class="submit-row">
         <button type="submit" class="btn btn-lime">Get My Cash Offer</button>
         <p class="form-note" id="sellNote">Your info goes straight to Smith Asset Group LLC. We never sell your info.</p>
+        <p class="form-secure" style="margin:8px 0 0;font-size:13px;color:var(--text-muted);">&#128274; Sent over an encrypted connection straight to Smith Asset Group LLC. <a href="privacy.html">Privacy policy</a></p>
       </div>
     </form>
   </div>
@@ -721,6 +722,7 @@
       <div class="submit-row">
         <button type="submit" class="btn btn-coral">Get First Look</button>
         <p class="form-note" id="buyNote">Goes straight to Smith Asset Group LLC. We text the deals that fit, usually before anyone else sees them.</p>
+        <p class="form-secure" style="margin:8px 0 0;font-size:13px;color:var(--text-muted);">&#128274; Sent over an encrypted connection straight to Smith Asset Group LLC. <a href="privacy.html">Privacy policy</a></p>
       </div>
     </form>
   </div>
@@ -752,7 +754,7 @@
 
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha384-c6Rcwz4e4CITMbu/NBmnNS8yN2sC3cUElMEMfP3vqqKFp7GOYaaBBCqmaWBjmkjb" crossorigin="anonymous">
 <style id="livemap-css">
   .lm-search-row{display:flex; gap:10px; margin:18px 0 8px; flex-wrap:wrap;}
   .lm-search-row input{flex:1 1 260px; min-width:0; background:var(--surface-2); border:1px solid var(--border); color:var(--text); padding:12px 14px; border-radius:2px;}
@@ -845,10 +847,10 @@
   .leaflet-control-attribution{background:rgba(18,20,15,.8)!important; color:var(--text-muted)!important;}
   .leaflet-control-attribution a{color:var(--text-muted)!important;}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="lookup.js?v=1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO" crossorigin="anonymous" defer></script>
+<script src="lookup.js?v=2" defer></script>
 <script id="livemap-js">
-(function(){
+document.addEventListener('DOMContentLoaded', function(){
   var el = document.getElementById('lmMap');
   if(!el || !window.L) return;
   var LAYER = 'https://gismap.augustaga.gov/arcgis/rest/services/AGOL/AGSGeneralFeatures/MapServer/32';
@@ -1372,7 +1374,7 @@
     else if(hood){ showHood(hood); }
     else if(q){ input.value = q; search(); }
   })();
-})();
+});
 </script>
 
 <section class="wrap">
@@ -1388,6 +1390,13 @@
 </section>
 
 <footer class="site wrap">
+  <div class="trust-strip" role="list" aria-label="Why you can trust Smith Asset Group" style="display:flex;flex-wrap:wrap;gap:8px 18px;padding:14px 0 18px;margin:0 0 18px;border-bottom:1px solid var(--border,#2c3122);font:500 13.5px/1.4 'IBM Plex Sans',system-ui,sans-serif;color:var(--text-muted,#6b6f62);">
+    <span role="listitem">&#128274; Secure, encrypted site (HTTPS)</span>
+    <span role="listitem">&#10003; We never sell your information</span>
+    <span role="listitem">&#9742; A real person answers: <a href="tel:+17622154466">(762) 215-4466</a></span>
+    <span role="listitem">&#9878; Closings handled by a closing attorney</span>
+    <span role="listitem">&#9873; Augusta, GA based</span>
+  </div>
   <div class="foot-row">
 <div class="copyright">&copy; 2026 Smith Asset Group LLC · Augusta, GA</div>
     <div class="foot-links">
@@ -1479,5 +1488,5 @@ input,select,textarea{font-size:16px !important;}
 .form-note{font-size:14px;}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--lime);outline-offset:2px;}
 </style>
-<script src="site.js?v=8" defer></script>
+<script src="site.js?v=9" defer></script>
 </body></html>

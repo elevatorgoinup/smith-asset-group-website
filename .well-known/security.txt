@@ -1,0 +1,6 @@
+Contact: mailto:smithassetgrp@gmail.com
+Contact: tel:+1-762-215-4466
+Expires: 2027-10-21T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://smithassetgrp.com/.well-known/security.txt
+Policy: https://smithassetgrp.com/privacy.html
