@@ -41,6 +41,7 @@
     }
     else if (t.closest('#lmNear')) ev('map_near_me');
     else if (t.closest('#lmSold')) ev('map_sales_toggled');
+    else if (t.closest('.lm-share')) ev('map_share_clicked');
     else if (t.closest('.lm-sale')) ev('map_sale_opened');
     else if (t.closest('.lm-chip[data-go], .lm-chip[data-hood]')) ev('map_area_jump', { area: t.closest('.lm-chip').textContent.trim() });
     else if (t.closest('#lmMap path.leaflet-interactive')) ev('map_parcel_tapped');

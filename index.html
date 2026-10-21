@@ -825,6 +825,8 @@
   .lm-askform input,.lm-askform select,.lm-askform textarea{width:100%; box-sizing:border-box; padding:9px 10px; font:14px/1.3 inherit; border:1px solid #d6d1c2; border-radius:8px; background:#fff; color:#1d1f19;}
   .lm-note{margin:0; font-size:13px; color:#2f4a1f; font-weight:600;}
   .lm-links{margin:6px 0 0; font-size:13.5px;}
+  .lm-share{all:unset; cursor:pointer; color:#2f4a1f; font-weight:700; text-decoration:underline; text-underline-offset:2px;}
+  .lm-share:focus-visible{outline:2px solid #ffe14d; outline-offset:2px;}
   .lm-jump{display:flex; gap:8px; align-items:center; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding:2px 0 8px;}
   .lm-jump::-webkit-scrollbar{display:none;}
   .lm-jump span{flex:none; font-size:13px; color:var(--text-muted);}
@@ -927,7 +929,7 @@
         '<select name="I am" aria-label="I am"><option>Investor / buyer</option><option>Agent</option><option>Wholesaler</option><option>Neighbor / other</option></select>' +
         '<textarea name="Question" rows="2" placeholder="What do you want to know? (optional)" aria-label="Question"></textarea>' +
         '<button type="submit" class="lm-btn">Send to Smith Asset Group</button><p class="lm-note"></p></form>' +
-      '<p class="lm-links"><a href="' + sv + '" target="_blank" rel="noopener">Street View</a> &middot; <a href="https://www.google.com/maps/search/?api=1&query=' + q + '" target="_blank" rel="noopener">Google Maps</a> &middot; <a href="https://qpublic.schneidercorp.com/Application.aspx?App=RichmondCountyGA&Layer=Parcels&PageType=Search" target="_blank" rel="noopener">County record</a></p>';
+      '<p class="lm-links"><button type="button" class="lm-share" data-pin="' + esc(p.pin || '') + '">Share</button> &middot; <a href="' + sv + '" target="_blank" rel="noopener">Street View</a> &middot; <a href="https://www.google.com/maps/search/?api=1&query=' + q + '" target="_blank" rel="noopener">Google Maps</a> &middot; <a href="https://qpublic.schneidercorp.com/Application.aspx?App=RichmondCountyGA&Layer=Parcels&PageType=Search" target="_blank" rel="noopener">County record</a></p>';
   }
   var style = {color:'#ffe14d', weight:1.8, opacity:1, fillColor:'#ffe14d', fillOpacity:.05};
   var hoverStyle = {color:'#ffffff', weight:3, opacity:1, fillColor:'#ffffff', fillOpacity:.14};
@@ -940,6 +942,7 @@
     if(layer){ layer.setStyle(hiStyle); layer.bringToFront(); }
     current = p; infoBody.innerHTML = popupHtml(p);
     info.hidden = false;
+    if(p.pin) setLink('parcel', p.pin);
     loadComps(p, layer); loadLastSale(p);
     if(window.matchMedia('(max-width:760px)').matches) info.scrollIntoView({behavior:'smooth', block:'nearest'});
   }
@@ -1156,6 +1159,31 @@
     }).catch(function(){ statusEl.textContent = 'Could not reach the county map. Try again in a moment.'; });
   }
 
+  // ---- Shareable links: ?parcel=PIN, ?hood=Name, ?street=NAME|TYPE|DIR, ?q=text
+  var LINK_KEYS = ['parcel', 'hood', 'street', 'q'];
+  function setLink(k, v, extra){
+    try{
+      var u = new URL(location.href);
+      LINK_KEYS.forEach(function(x){ u.searchParams.delete(x); });
+      if(v) u.searchParams.set(k, v);
+      if(extra) Object.keys(extra).forEach(function(x){ if(extra[x]) u.searchParams.set(x, extra[x]); });
+      u.hash = 'parcelLookup';
+      history.replaceState(null, '', u.pathname + u.search + u.hash);
+    }catch(e){}
+  }
+  function shareUrl(k, v, extra){
+    var u = new URL('https://smithassetgrp.com/');
+    u.searchParams.set(k, v); if(extra) Object.keys(extra).forEach(function(x){ if(extra[x]) u.searchParams.set(x, extra[x]); });
+    return u.toString() + '#parcelLookup';
+  }
+  infoBody.addEventListener('click', function(e){
+    var b = e.target.closest('.lm-share'); if(!b) return;
+    var url = shareUrl('parcel', b.getAttribute('data-pin')), name = (current && title(current.siteaddress)) || 'Property';
+    var done = function(){ b.textContent = 'Link copied'; setTimeout(function(){ b.textContent = 'Share'; }, 2000); };
+    if(navigator.share && window.matchMedia('(pointer:coarse)').matches){ navigator.share({title:name + ' | Smith Asset Group map', url:url}).catch(function(){}); return; }
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done, function(){ window.prompt('Copy this link:', url); }); }
+    else window.prompt('Copy this link:', url);
+  });
   var input = document.getElementById('lmSearch'), go = document.getElementById('lmSearchGo');
   var GEO = 'https://gismap.augustaga.gov/arcgis/rest/services/AGS_AddressComposite/GeocodeServer/findAddressCandidates';
   var findAddress = window.SAGLookup ? window.SAGLookup.make(LAYER, GEO, function(u){ return fetch(u).then(function(r){ return r.json(); }); }) : null;
@@ -1209,7 +1237,7 @@
       .then(function(r){ return r.json(); }).then(function(j){ var g = j && j.features && j.features[0] && j.features[0].geometry; if(!g) throw 0; hoodCache[name] = g; return g; });
   }
   function showHood(name){
-    var my = ++browseReq;
+    var my = ++browseReq; setLink('hood', name);
     statusEl.textContent = 'Loading every street in ' + name + '...';
     el.scrollIntoView({behavior:'smooth', block:'start'});
     getHood(name).then(function(g){
@@ -1245,6 +1273,7 @@
   }
   function showStreet(a, hood){
     var my = ++browseReq, label = title(stLabel(a));
+    setLink('street', [a.street_nam, a.sttype, a.stdirect].map(function(x){ return String(x || '').trim(); }).join('|'), {hood: hood});
     statusEl.textContent = 'Loading every address on ' + label + '...';
     var where = fld('street_nam', a.street_nam) + ' AND ' + fld('sttype', a.sttype) + ' AND ' + fld('stdirect', a.stdirect);
     var rows = [];
@@ -1335,6 +1364,14 @@
     }, function(){ statusEl.textContent = 'Location is off. Pick an area or search an address.'; }, {enableHighAccuracy:true, timeout:10000});
   });
   input.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); search(); } });
+  (function(){
+    var sp; try{ sp = new URL(location.href).searchParams; }catch(e){ return; }
+    var pin = sp.get('parcel'), hood = sp.get('hood'), street = sp.get('street'), q = sp.get('q');
+    if(pin){ flyToParcel({pin: pin}); }
+    else if(street){ var t = street.split('|'); showStreet({street_nam: t[0], sttype: t[1] || '', stdirect: t[2] || ''}, hood || null); }
+    else if(hood){ showHood(hood); }
+    else if(q){ input.value = q; search(); }
+  })();
 })();
 </script>
 
