@@ -24,19 +24,23 @@
     if (w.length > 2 && /^\d{5}(-\d{4})?$/.test(w[w.length - 1])) w.pop();
     if (w.length > 2 && STATE.test(w[w.length - 1]) && (isType(w[w.length - 2]) || CITY.test(w[w.length - 2]))) w.pop();
     if (w.length > 2 && CITY.test(w[w.length - 1]) && isType(w[w.length - 2])) w.pop();
-    var m = w.join(' ').match(/^(\d+)-?([A-Z])?\s+(.+)$/); if (!m) return null;
+    var m = w.join(' ').match(/^(\d+)(?:-?([A-Z])|\s+(1\/2))?\s+(.+)$/); if (!m) return null;
+    m = [m[0], m[1], m[2] || m[3] || null, m[4]];
     var t = m[3].split(' ').filter(Boolean), unit = null, dir = null, type = null, i;
     function ab(x) { return ABBR[x] || x; }
     for (i = 0; i < t.length; i++) if (/^(APT|APARTMENT|UNIT|STE|SUITE|LOT|BLDG)$/.test(t[i])) { unit = t.slice(i + 1).join(' ') || null; t = t.slice(0, i); break; }
     var ti = -1; for (i = t.length - 1; i > 0; i--) if (TYPES[ab(t[i])]) { ti = i; break; }
     if (ti > 0) { type = ab(t[ti]); var rest = t.slice(ti + 1); if (rest.length && DIRS[ab(rest[0])]) dir = ab(rest.shift()); if (!unit && rest.length) unit = rest.join(' '); t = t.slice(0, ti); }
-    if (t.length > 1 && DIRS[ab(t[0])] && !dir) dir = ab(t.shift());
+    var dirWord = null;
+    if (t.length > 1 && DIRS[ab(t[0])] && !dir) { dirWord = t[0]; dir = ab(t.shift()); }
     if (!t.length) return null;
-    return {num: +m[1], ext: m[2] || null, name: t.join(' '), type: type, dir: dir, unit: unit};
+    return {num: +m[1], ext: m[2] || null, name: t.join(' '), type: type, dir: dir, dirWord: dirWord, unit: unit};
   }
   function narrow(f, p) {
     function by(test) { if (f.length > 1) { var g = f.filter(test); if (g.length) f = g; } }
-    if (p.ext) by(function (a) { return key(a.extension) === p.ext; }); else by(function (a) { return !key(a.extension); });
+    if (p.ext) by(function (a) { return key(a.extension) === key(p.ext); });
+    else if (p.dir && p.dir.length === 1 && f.some(function (a) { return key(a.extension) === p.dir; }) && !f.some(function (a) { return key(a.stdirect) === p.dir; })) by(function (a) { return key(a.extension) === p.dir; });
+    else by(function (a) { return !key(a.extension); });
     if (p.type) by(function (a) { return key(a.sttype) === p.type; });
     if (p.dir) by(function (a) { return key(a.stdirect) === p.dir; });
     if (p.unit) by(function (a) { return key(a.unit) === key(p.unit) || key(a.siteaddress).slice(-key(p.unit).length) === key(p.unit); });
@@ -51,7 +55,35 @@
     return function find(raw) {
       var p = parse(raw); if (!p) return Promise.resolve({how: 'noparse'});
       var nm = sq(p.name);
-      return rec("house_no = " + p.num + " AND UPPER(street_nam) = '" + nm + "'").then(function (f) {
+      // The address exactly as the county writes it, with spelled-out street types shortened ("Street" -> "ST").
+      var tw = String(raw).toUpperCase().replace(/[.]/g, ' ').split(',')[0].replace(/\s+/g, ' ').trim().split(' ');
+      if (tw.length > 2 && /^\d{5}(-\d{4})?$/.test(tw[tw.length - 1])) tw.pop();
+      if (tw.length > 2 && STATE.test(tw[tw.length - 1])) tw.pop();
+      if (tw.length > 2 && CITY.test(tw[tw.length - 1]) && isType(tw[tw.length - 2])) tw.pop();
+      var typed = tw.join(' '), typedShort = tw.map(function (x, i) { return i > 0 && TYPES[ABBR[x]] ? ABBR[x] : x; }).join(' ');
+      var forms = typed === typedShort ? "'" + sq(typed) + "'" : "'" + sq(typed) + "','" + sq(typedShort) + "'";
+      return rec("UPPER(siteaddress) IN (" + forms + ")").then(function (exact) {
+        if (exact.length) return {done: exact};
+        return rec("house_no = " + p.num + " AND UPPER(street_nam) = '" + nm + "'");
+      }).then(function (f) {
+        if (f && f.done) return f;
+        if (f.length) return f;
+        // "North View Ave", "South Leg Rd": the direction word is part of the street name.
+        if (p.dirWord) { var full = p.dirWord + ' ' + p.name; return rec("house_no = " + p.num + " AND UPPER(street_nam) = '" + sq(full) + "'").then(function (g) {
+          if (g.length) { p.name = full; p.dir = null; nm = sq(full); } return g; }); }
+        return f;
+      }).then(function (f) {
+        if (f && f.done) return f;
+        if (f.length) return f;
+        // "114 AB Clark St": short initials before the street name.
+        var im = p.name.match(/^([A-Z]{1,2}) ([A-Z]{1,2} )?(.+)$/);
+        if (im && !p.ext) return rec("house_no = " + p.num + " AND UPPER(street_nam) = '" + sq(im[3]) + "'").then(function (g) {
+          if (g.length) { if (!im[2] && im[1].length === 1) p.ext = im[1]; p.name = im[3]; nm = sq(im[3]); }
+          return g;
+        });
+        return f;
+      }).then(function (f) {
+        if (f && f.done) return {exactRows: f.done};
         if (f.length) return f;
         // "4458 A Forest Rd": a lone letter after the number is the county's house-number extension.
         var em = p.name.match(/^([A-Z]) (.+)$/);
@@ -61,8 +93,10 @@
         });
         return f;
       }).then(function (f) {
+        if (f && f.exactRows) return f;
         return f.length ? f : rec("house_no = " + p.num + " AND UPPER(street_nam) LIKE '" + nm + "%'");
       }).then(function (f) {
+        if (f && f.exactRows) return done(f.exactRows, 'records');
         if (f.length) return done(narrow(f, p), 'records');
         // Same house number anywhere in the county; pick the closest street spelling.
         return rec("house_no = " + p.num, 2000).then(function (all) {

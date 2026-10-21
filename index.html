@@ -521,7 +521,7 @@
     <h2>Look up any property in Richmond County</h2>
     <span class="count">Live data &middot; straight from Augusta-Richmond County GIS</span>
   </div>
-  <p class="parcel-lede">Search an address, owner, or parcel number, or jump to an area. Tap any lot for the owner, beds and baths, square feet, year built, value, zoning, and flood zone. Free, live from county records, no sign-up.</p>
+  <p class="parcel-lede">Search all 84,525 Richmond County parcels by address, street, owner, or parcel number, or browse any of the county's 51 neighborhoods street by street. Tap a lot for the owner, assessed value, zoning, flood zone, last recorded sale, and nearby sales, plus beds, baths, square feet, and year built where the county has them. Live from Augusta-Richmond County GIS. Free, no sign-up.</p>
 
   <div class="lm-search-row">
     <input id="lmSearch" type="search" placeholder="Address, street, owner name, or parcel #" autocomplete="off" aria-label="Search by address, street, owner name, or parcel number" enterkeyhint="search">
@@ -760,6 +760,7 @@
   .lm-search-row input{flex:1 1 260px; min-width:0; background:var(--surface-2); border:1px solid var(--border); color:var(--text); padding:12px 14px; border-radius:2px;}
   .lm-status{color:var(--text-muted); font-size:14px; min-height:20px; margin:4px 0 8px;}
   .lm-results{display:flex; flex-direction:column; gap:6px; margin-bottom:12px;}
+  .lm-results.lm-scroll{max-height:420px; overflow:auto;}
   .lm-results button{all:unset; cursor:pointer; background:var(--surface); border:1px solid var(--border); padding:10px 12px; border-radius:2px; color:var(--text); font-size:15px;}
   .lm-results button:hover,.lm-results button:focus-visible{border-color:var(--lime);}
   .lm-results small{display:block; color:var(--text-muted); font-size:13px; margin-top:2px;}
@@ -848,7 +849,7 @@
   .leaflet-control-attribution a{color:var(--text-muted)!important;}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO" crossorigin="anonymous" defer></script>
-<script src="lookup.js?v=2" defer></script>
+<script src="lookup.js?v=3" defer></script>
 <script id="livemap-js">
 document.addEventListener('DOMContentLoaded', function(){
   var el = document.getElementById('lmMap');
@@ -897,6 +898,9 @@ document.addEventListener('DOMContentLoaded', function(){
   function title(s){ return String(s || '').toLowerCase().replace(/\b\w/g, function(c){ return c.toUpperCase(); }); }
   function num(v){ return (v || v === 0) ? Number(v).toLocaleString('en-US') : null; }
   function popupHtml(p){
+    if(!String(p.pin || '').trim() && !String(p.own1 || '').trim() && !String(p.siteaddress || '').trim()){
+      return '<h4>No parcel record for this shape</h4><p style="margin:6px 0 0;color:#4b4f44;font-size:13.5px;line-height:1.5">The county map has this outline, but no parcel number, owner, or address is on file for it. These are usually road remnants, slivers, or common areas, not a taxed property. Tap a neighboring lot, or <a href="https://qpublic.schneidercorp.com/Application.aspx?App=RichmondCountyGA&amp;Layer=Parcels&amp;PageType=Search" target="_blank" rel="noopener">check qPublic</a>.</p>';
+    }
     var addr = p.siteaddress ? esc(p.siteaddress) : 'No site address';
     var q = encodeURIComponent((p.siteaddress || '') + ' Augusta GA');
     var baths = (p.fullbaths || p.halfbaths) ? ((p.fullbaths || 0) + (p.halfbaths ? p.halfbaths * 0.5 : 0)) : null;
@@ -1201,7 +1205,7 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   function search(){
     var raw = input.value.trim();
-    resultsEl.innerHTML = '';
+    resultsEl.innerHTML = ''; resultsEl.classList.remove('lm-scroll');
     if(raw.length < 3){ statusEl.textContent = 'Type at least 3 characters: an address, street, owner name, or parcel number.'; return; }
     if(findAddress && /^\d+[A-Za-z]?\s+[A-Za-z0-9]/.test(raw) && !/^[0-9 -]+$/.test(raw)){
       statusEl.textContent = 'Finding ' + raw + '...';
@@ -1334,12 +1338,13 @@ document.addEventListener('DOMContentLoaded', function(){
     if(/^[0-9A-Z]{3}-[0-9A-Z]-[0-9A-Z]{3}/.test(q)){ where = "pin LIKE '" + safe.replace(/\s+/g, '') + "%'"; }
     else if(/^[0-9 -]+$/.test(q) && digits.length >= 6){ where = "parcel_no LIKE '" + digits + "%' OR pin LIKE '" + safe.replace(/\s+/g, '') + "%'"; }
     else { where = "UPPER(siteaddress) LIKE '%" + safe + "%' OR UPPER(own1) LIKE '%" + safe + "%'"; }
-    var url = LAYER + '/query?where=' + encodeURIComponent(where) + '&outFields=pin,siteaddress,own1,curr_val&returnGeometry=false&orderByFields=siteaddress&resultRecordCount=25&f=json';
+    var url = LAYER + '/query?where=' + encodeURIComponent(where) + '&outFields=pin,siteaddress,own1,curr_val&returnGeometry=false&orderByFields=siteaddress&resultRecordCount=200&f=json';
     fetch(url).then(function(r){ return r.json(); }).then(function(j){
       var feats = (j && j.features) || [];
       if(!feats.length){ statusEl.textContent = 'No parcels found for "' + raw + '". Try just the street name, like "Walton Way", or an owner last name.'; return; }
       if(feats.length === 1){ flyToParcel(feats[0].attributes); return; }
-      statusEl.textContent = feats.length + (feats.length === 25 ? '+' : '') + ' matches. Tap one to see it on the map.';
+      statusEl.textContent = feats.length === 200 ? 'Showing the first 200 matches. Add a first name, street, or house number to narrow it down.' : feats.length + ' matches. Tap one to see it on the map.';
+      resultsEl.classList.add('lm-scroll');
       feats.forEach(function(f){
         var a = f.attributes, b = document.createElement('button');
         b.type = 'button';
