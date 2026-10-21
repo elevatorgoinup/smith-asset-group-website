@@ -526,17 +526,21 @@
     <input id="lmSearch" type="search" placeholder="Address, street, owner name, or parcel #" autocomplete="off" aria-label="Search by address, street, owner name, or parcel number" enterkeyhint="search">
     <button id="lmSearchGo" class="btn btn-lime" type="button">Search</button>
   </div>
-  <div class="lm-jump" role="group" aria-label="Jump to an area">
-    <span>Jump to:</span>
+  <div class="lm-jump" role="group" aria-label="Browse a neighborhood">
+    <span>Neighborhoods:</span>
     <button type="button" id="lmNear" class="lm-chip near">&#9737; Near me</button>
-    <button type="button" class="lm-chip" data-go="33.4740,-81.9665">Downtown</button>
-    <button type="button" class="lm-chip" data-go="33.4648,-81.9764">Laney-Walker</button>
-    <button type="button" class="lm-chip" data-go="33.4785,-81.9905">Harrisburg</button>
+    <button type="button" class="lm-chip" data-hood="Central Business District" data-go="33.4740,-81.9665">Downtown</button>
+    <button type="button" class="lm-chip" data-hood="Laney Walker" data-go="33.4648,-81.9764">Laney-Walker</button>
+    <button type="button" class="lm-chip" data-hood="Harrisburg" data-go="33.4785,-81.9905">Harrisburg</button>
+    <button type="button" class="lm-chip" data-hood="Bethlehem">Bethlehem</button>
     <button type="button" class="lm-chip" data-go="33.4660,-82.0005">Midtown</button>
-    <button type="button" class="lm-chip" data-go="33.4795,-82.0300">Summerville</button>
-    <button type="button" class="lm-chip" data-go="33.4690,-82.0700">West Augusta</button>
-    <button type="button" class="lm-chip" data-go="33.4000,-82.0280">South Augusta</button>
-    <button type="button" class="lm-chip" data-go="33.3140,-82.0970">Hephzibah</button>
+    <button type="button" class="lm-chip" data-hood="Summerville" data-go="33.4795,-82.0300">Summerville</button>
+    <button type="button" class="lm-chip" data-hood="West Augusta" data-go="33.4690,-82.0700">West Augusta</button>
+    <button type="button" class="lm-chip" data-hood="Southside">Southside</button>
+    <button type="button" class="lm-chip" data-hood="Windsor Spring">Windsor Spring</button>
+    <button type="button" class="lm-chip" data-hood="Hephzibah" data-go="33.3140,-82.0970">Hephzibah</button>
+    <button type="button" class="lm-chip" data-hood="Blythe">Blythe</button>
+    <button type="button" class="lm-chip all" id="lmAllHoods">All 51 &#9662;</button>
   </div>
   <div id="lmStatus" class="lm-status" role="status" aria-live="polite"></div>
   <div id="lmResults" class="lm-results"></div>
@@ -958,6 +962,16 @@
   .lm-results button{all:unset; cursor:pointer; background:var(--surface); border:1px solid var(--border); padding:10px 12px; border-radius:2px; color:var(--text); font-size:15px;}
   .lm-results button:hover,.lm-results button:focus-visible{border-color:var(--lime);}
   .lm-results small{display:block; color:var(--text-muted); font-size:13px; margin-top:2px;}
+  .lm-browse{border:1px solid var(--border); background:var(--surface); border-radius:2px; padding:12px; display:grid; gap:10px;}
+  .lm-browse-head{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px;}
+  .lm-browse-head b{font-size:15px; color:var(--text);}
+  .lm-browse-head .lm-crumb{all:unset; cursor:pointer; color:var(--lime); font-size:13.5px; font-weight:600;}
+  .lm-browse input{width:100%; box-sizing:border-box; padding:9px 11px; border:1px solid var(--border); border-radius:2px; background:var(--bg); color:var(--text); font:15px/1.3 inherit;}
+  .lm-results .lm-grid{display:flex; flex-wrap:wrap; gap:6px; max-height:300px; overflow:auto; padding:2px;}
+  .lm-results .lm-grid button{padding:7px 10px; font-size:14px;}
+  .lm-results .lm-grid button small{display:inline; margin:0 0 0 6px; font-size:12px;}
+  .lm-results .lm-list{display:flex; flex-direction:column; gap:6px; max-height:360px; overflow:auto; padding:2px;}
+  .lm-jump .lm-chip.all{font-weight:600;}
   .lm-wrap{position:relative; border:1px solid var(--border); background:var(--surface);}
   .lm-map{height:560px; width:100%; background:#0e100b;}
   @media (max-width:640px){ .lm-map{height:440px;} }
@@ -1031,6 +1045,7 @@
   .leaflet-control-attribution a{color:var(--text-muted)!important;}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="lookup.js?v=1"></script>
 <script id="livemap-js">
 (function(){
   var el = document.getElementById('lmMap');
@@ -1302,13 +1317,23 @@
     if(key === loadedKey) return;
     var my = ++reqId;
     hint.hidden = false; hint.textContent = 'Loading parcels...';
-    var url = LAYER + '/query?geometry=' + key + '&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects' +
-      '&outFields=' + FIELDS + '&returnGeometry=true&outSR=4326&geometryPrecision=6&resultRecordCount=2000&f=geojson';
-    fetch(url).then(function(r){ return r.json(); }).then(function(gj){
-      if(my !== reqId) return;
+    var base = LAYER + '/query?geometry=' + key + '&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects' +
+      '&outFields=' + FIELDS + '&returnGeometry=true&outSR=4326&geometryPrecision=6&orderByFields=OBJECTID&resultRecordCount=2000&f=geojson';
+    var all = [];
+    function page(offset){
+      return fetch(base + '&resultOffset=' + offset).then(function(r){ return r.json(); }).then(function(gj){
+        if(my !== reqId) return null;
+        if(!gj || !gj.features) throw 0;
+        all = all.concat(gj.features);
+        var more = (gj.properties && gj.properties.exceededTransferLimit) || gj.exceededTransferLimit || gj.features.length >= 2000;
+        if(more && offset < 10000){ hint.textContent = 'Loading parcels (' + all.length.toLocaleString() + ')...'; return page(offset + gj.features.length); }
+        return all;
+      });
+    }
+    page(0).then(function(feats){
+      if(!feats || my !== reqId) return;
       parcels.clearLayers(); hiLayer = null;
-      if(gj && gj.features){ parcels.addData(gj); if(hiLayer) hiLayer.bringToFront(); loadedKey = key; hint.hidden = true; highlightPending(); }
-      else { hint.textContent = 'County map is busy. Try moving the map again.'; }
+      parcels.addData({type:'FeatureCollection', features:feats}); if(hiLayer) hiLayer.bringToFront(); loadedKey = key; hint.hidden = true; highlightPending();
     }).catch(function(){ if(my === reqId){ hint.textContent = 'Could not reach the county map. Try again in a moment.'; } });
   }
   map.on('moveend', function(){ clearTimeout(timer); timer = setTimeout(function(){ load(); loadSales(); }, 250); });
@@ -1334,33 +1359,138 @@
 
   var input = document.getElementById('lmSearch'), go = document.getElementById('lmSearchGo');
   var GEO = 'https://gismap.augustaga.gov/arcgis/rest/services/AGS_AddressComposite/GeocodeServer/findAddressCandidates';
-  var TYPE_RANK = {PointAddress:0, SubAddress:0, Address:1, StreetAddress:2};
-  function pinAddress(lat, lon, label){
-    var url = LAYER + '/query?geometry=' + lon + ',' + lat + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects' +
-      '&outFields=' + FIELDS + '&returnGeometry=true&outSR=4326&f=geojson';
-    fetch(url).then(function(r){ return r.json(); }).then(function(gj){
-      if(gj && gj.features && gj.features.length){ var pr = gj.features[0].properties || {}; flyToParcel({pin: pr.pin, siteaddress: pr.siteaddress || label}, {lat: lat, lon: lon}); return; }
-      dropPin(lat, lon, label); el.scrollIntoView({behavior:'smooth', block:'center'}); map.flyTo([lat, lon], 20, {duration:.8});
-      statusEl.textContent = 'Pinned ' + label + '. Tap the lot under the pin for its details.';
-    }).catch(function(){ dropPin(lat, lon, label); map.flyTo([lat, lon], 20, {duration:.8}); statusEl.textContent = 'Pinned ' + label + '.'; });
+  var findAddress = window.SAGLookup ? window.SAGLookup.make(LAYER, GEO, function(u){ return fetch(u).then(function(r){ return r.json(); }); }) : null;
+  function listChoices(rows, note){
+    statusEl.textContent = note;
+    rows.slice(0, 25).forEach(function(a){
+      var b = document.createElement('button'); b.type = 'button';
+      b.innerHTML = esc(title(a.siteaddress || a.pin)) + '<small>Parcel ' + esc(a.pin) + '</small>';
+      b.addEventListener('click', function(){ resultsEl.innerHTML = ''; flyToParcel(a); });
+      resultsEl.appendChild(b);
+    });
   }
   function search(){
     var raw = input.value.trim();
     resultsEl.innerHTML = '';
     if(raw.length < 3){ statusEl.textContent = 'Type at least 3 characters: an address, street, owner name, or parcel number.'; return; }
-    if(/^\d+[A-Za-z]?\s+[A-Za-z]/.test(raw)){
+    if(findAddress && /^\d+[A-Za-z]?\s+[A-Za-z0-9]/.test(raw) && !/^[0-9 -]+$/.test(raw)){
       statusEl.textContent = 'Finding ' + raw + '...';
-      var single = /augusta|hephzibah|blythe|\bga\b|\d{5}/i.test(raw) ? raw : raw + ', Augusta, GA';
-      fetch(GEO + '?SingleLine=' + encodeURIComponent(single) + '&outSR=4326&maxLocations=6&outFields=Addr_type&f=json')
-        .then(function(r){ return r.json(); }).then(function(j){
-          var c = ((j && j.candidates) || []).filter(function(x){ return x.score >= 85 && x.location; });
-          c.sort(function(a, b){ return (b.score - a.score) || ((TYPE_RANK[(a.attributes || {}).Addr_type] || 3) - (TYPE_RANK[(b.attributes || {}).Addr_type] || 3)); });
-          if(!c.length) return recordSearch(raw);
-          pinAddress(c[0].location.y, c[0].location.x, c[0].address.replace(/,\s*\d{5}$/, ''));
-        }).catch(function(){ recordSearch(raw); });
+      findAddress(raw).then(function(r){
+        if(r.pin){ var a = r.rows && r.rows[0] || {pin: r.pin}; flyToParcel({pin: r.pin, siteaddress: a.siteaddress}, r.at || null); return; }
+        if(r.pins){ listChoices(r.rows, r.pins.length + ' parcels match "' + raw + '". Tap the right one.'); return; }
+        if(r.at){ dropPin(r.at.lat, r.at.lon, r.label || raw); el.scrollIntoView({behavior:'smooth', block:'center'}); map.flyTo([r.at.lat, r.at.lon], 20, {duration:.8}); statusEl.textContent = 'Pinned ' + (r.label || raw) + '. Tap the lot under the pin for its details.'; return; }
+        recordSearch(raw);
+      }).catch(function(){ recordSearch(raw); });
       return;
     }
+    if(/^[A-Za-z]/.test(raw)){ streetSearch(raw); return; }
     recordSearch(raw);
+  }
+  // ---- Browse: neighborhood -> streets -> every address on the street.
+  var HOODS = 'https://gismap.augustaga.gov/arcgis/rest/services/AGOL/AGSGeneralFeatures/MapServer/26';
+  var hoodCache = {}, hoodLine = null, browseReq = 0;
+  function post(url, params){ return fetch(url, {method:'POST', body:new URLSearchParams(params)}).then(function(r){ return r.json(); }); }
+  function stLabel(a){ return [a.stdirect, a.street_nam, a.sttype].map(function(x){ return String(x || '').trim(); }).filter(Boolean).join(' '); }
+  function fld(name, v){ v = String(v || '').trim(); return v ? name + " = '" + v.replace(/'/g, "''") + "'" : "(" + name + " IS NULL OR " + name + " = '')"; }
+  function panel(head, crumb){
+    resultsEl.innerHTML = '';
+    var box = document.createElement('div'); box.className = 'lm-browse';
+    var h = document.createElement('div'); h.className = 'lm-browse-head'; h.innerHTML = '<b>' + head + '</b>';
+    if(crumb){ var c = document.createElement('button'); c.type = 'button'; c.className = 'lm-crumb'; c.textContent = crumb.text; c.addEventListener('click', crumb.go); h.appendChild(c); }
+    box.appendChild(h); resultsEl.appendChild(box); return box;
+  }
+  function filterBox(box, list, ph){
+    var f = document.createElement('input'); f.type = 'search'; f.placeholder = ph; f.setAttribute('aria-label', ph);
+    f.addEventListener('input', function(){ var q = f.value.trim().toUpperCase(); Array.prototype.forEach.call(list.children, function(b){ b.hidden = q && b.textContent.toUpperCase().indexOf(q) < 0; }); });
+    box.insertBefore(f, list);
+  }
+  function getHood(name){
+    if(hoodCache[name]) return Promise.resolve(hoodCache[name]);
+    return fetch(HOODS + '/query?where=' + encodeURIComponent("NAME = '" + name.replace(/'/g, "''") + "'") + '&returnGeometry=true&outSR=4326&maxAllowableOffset=0.0002&geometryPrecision=5&f=json')
+      .then(function(r){ return r.json(); }).then(function(j){ var g = j && j.features && j.features[0] && j.features[0].geometry; if(!g) throw 0; hoodCache[name] = g; return g; });
+  }
+  function showHood(name){
+    var my = ++browseReq;
+    statusEl.textContent = 'Loading every street in ' + name + '...';
+    el.scrollIntoView({behavior:'smooth', block:'start'});
+    getHood(name).then(function(g){
+      if(my !== browseReq) return;
+      if(hoodLine) map.removeLayer(hoodLine);
+      hoodLine = L.polygon(g.rings.map(function(r){ return r.map(function(p){ return [p[1], p[0]]; }); }), {color:'#c8f135', weight:3, dashArray:'8 6', fill:false, interactive:false}).addTo(map);
+      map.flyToBounds(hoodLine.getBounds(), {padding:[20, 20], maxZoom:17, duration:.8});
+      return post(LAYER + '/query', {geometry:JSON.stringify({rings:g.rings, spatialReference:{wkid:4326}}), geometryType:'esriGeometryPolygon', inSR:'4326', spatialRel:'esriSpatialRelIntersects',
+        where:"siteaddress <> ''", outFields:'street_nam,sttype,stdirect', returnDistinctValues:'true', returnGeometry:'false', orderByFields:'street_nam', resultRecordCount:'5000', f:'json'});
+    }).then(function(j){
+      if(!j || my !== browseReq) return;
+      var seen = {}, sts = ((j.features) || []).map(function(f){ return f.attributes; }).filter(function(a){ var k = stLabel(a); if(!a.street_nam || seen[k]) return false; seen[k] = 1; return true; });
+      sts.sort(function(a, b){ return String(a.street_nam).localeCompare(String(b.street_nam)) || stLabel(a).localeCompare(stLabel(b)); });
+      var box = panel(esc(name) + ': ' + sts.length + ' streets', {text:'All neighborhoods', go:showAllHoods});
+      var grid = document.createElement('div'); grid.className = 'lm-grid';
+      sts.forEach(function(a){ var b = document.createElement('button'); b.type = 'button'; b.textContent = title(stLabel(a)); b.addEventListener('click', function(){ showStreet(a, name); }); grid.appendChild(b); });
+      box.appendChild(grid); filterBox(box, grid, 'Filter streets in ' + name);
+      statusEl.textContent = name + ' is outlined on the map. Tap a street to list every address on it, or tap any lot.';
+    }).catch(function(){ if(my === browseReq) statusEl.textContent = 'Could not load that neighborhood from the county. Try again in a moment.'; });
+  }
+  function showAllHoods(){
+    var my = ++browseReq;
+    statusEl.textContent = 'Loading Richmond County neighborhoods...';
+    fetch(HOODS + '/query?where=1%3D1&outFields=NAME&returnGeometry=false&orderByFields=NAME&f=json').then(function(r){ return r.json(); }).then(function(j){
+      if(my !== browseReq) return;
+      var names = ((j && j.features) || []).map(function(f){ return f.attributes.NAME; }).filter(Boolean).sort();
+      var box = panel('All ' + names.length + ' Richmond County neighborhoods');
+      var grid = document.createElement('div'); grid.className = 'lm-grid';
+      names.forEach(function(n){ var b = document.createElement('button'); b.type = 'button'; b.textContent = n; b.addEventListener('click', function(){ showHood(n); }); grid.appendChild(b); });
+      box.appendChild(grid); filterBox(box, grid, 'Filter neighborhoods');
+      statusEl.textContent = 'Pick a neighborhood to see every street in it.';
+    }).catch(function(){ statusEl.textContent = 'Could not load neighborhoods right now.'; });
+  }
+  function showStreet(a, hood){
+    var my = ++browseReq, label = title(stLabel(a));
+    statusEl.textContent = 'Loading every address on ' + label + '...';
+    var where = fld('street_nam', a.street_nam) + ' AND ' + fld('sttype', a.sttype) + ' AND ' + fld('stdirect', a.stdirect);
+    var rows = [];
+    function page(off){
+      return fetch(LAYER + '/query?where=' + encodeURIComponent(where) + '&outFields=pin,siteaddress,own1,curr_val,lat,lon,house_no,unit&returnGeometry=false&orderByFields=house_no,unit&resultOffset=' + off + '&resultRecordCount=2000&f=json')
+        .then(function(r){ return r.json(); }).then(function(j){ var f = (j && j.features) || []; rows = rows.concat(f.map(function(x){ return x.attributes; })); return (j.exceededTransferLimit || f.length >= 2000) && off < 8000 ? page(off + f.length) : rows; });
+    }
+    page(0).then(function(rows){
+      if(my !== browseReq) return;
+      var box = panel(esc(label) + ': ' + rows.length.toLocaleString() + ' addresses', hood ? {text:'\u2190 ' + hood + ' streets', go:function(){ showHood(hood); }} : null);
+      var list = document.createElement('div'); list.className = 'lm-list';
+      var pts = [];
+      rows.forEach(function(r){
+        if(r.lat && r.lon) pts.push([r.lat, r.lon]);
+        var b = document.createElement('button'); b.type = 'button';
+        b.innerHTML = esc(title(r.siteaddress || r.pin)) + '<small>' + esc(title(r.own1)) + ' &middot; ' + money(r.curr_val) + '</small>';
+        b.addEventListener('click', function(){ flyToParcel(r); });
+        list.appendChild(b);
+      });
+      box.appendChild(list); filterBox(box, list, 'Filter by house number or owner');
+      if(pts.length){ map.flyToBounds(L.latLngBounds(pts), {padding:[30, 30], maxZoom:18, duration:.8}); }
+      statusEl.textContent = 'Every address on ' + label + ' is listed below. Tap one for its details, comps, and owner info.';
+    }).catch(function(){ if(my === browseReq) statusEl.textContent = 'Could not load that street right now.'; });
+  }
+  // Typing just a street name ("Walton Way", "Koger") finds the street itself.
+  function streetSearch(raw){
+    var p = window.SAGLookup && window.SAGLookup.parse('1 ' + raw.replace(/^\s*\d+\s+/, ''));
+    if(!p || !p.name || p.name.length < 2){ recordSearch(raw); return; }
+    var my = ++browseReq;
+    var where = "UPPER(street_nam) LIKE '" + p.name.replace(/'/g, "''") + "%'" + (p.type ? " AND UPPER(sttype) = '" + p.type + "'" : '') + (p.dir ? " AND UPPER(stdirect) = '" + p.dir + "'" : '');
+    statusEl.textContent = 'Searching streets...';
+    fetch(LAYER + '/query?where=' + encodeURIComponent(where) + '&outFields=street_nam,sttype,stdirect&returnDistinctValues=true&returnGeometry=false&orderByFields=street_nam&resultRecordCount=200&f=json')
+      .then(function(r){ return r.json(); }).then(function(j){
+        if(my !== browseReq) return;
+        var seen = {}, sts = ((j && j.features) || []).map(function(f){ return f.attributes; }).filter(function(a){ var k = stLabel(a); if(!a.street_nam || seen[k]) return false; seen[k] = 1; return true; });
+        if(!sts.length){ recordSearch(raw); return; }
+        var exact = sts.filter(function(a){ return String(a.street_nam).trim().toUpperCase() === p.name; });
+        if(sts.length === 1 || (exact.length === 1 && p.type)){ showStreet(exact[0] || sts[0]); return; }
+        var box = panel(sts.length + ' streets match "' + esc(raw) + '"');
+        var grid = document.createElement('div'); grid.className = 'lm-grid';
+        sts.forEach(function(a){ var b = document.createElement('button'); b.type = 'button'; b.textContent = title(stLabel(a)); b.addEventListener('click', function(){ showStreet(a); }); grid.appendChild(b); });
+        var own = document.createElement('button'); own.type = 'button'; own.innerHTML = 'Owners named "' + esc(raw) + '"'; own.addEventListener('click', function(){ recordSearch(raw); }); grid.appendChild(own);
+        box.appendChild(grid);
+        statusEl.textContent = 'Pick the street to list every address on it.';
+      }).catch(function(){ recordSearch(raw); });
   }
   var ABBR = {STREET:'ST', AVENUE:'AVE', DRIVE:'DR', ROAD:'RD', LANE:'LN', COURT:'CT', CIRCLE:'CIR', PLACE:'PL', BOULEVARD:'BLVD', TERRACE:'TER', PARKWAY:'PKWY', HIGHWAY:'HWY', NORTH:'N', SOUTH:'S', EAST:'E', WEST:'W'};
   function recordSearch(raw){
@@ -1368,12 +1498,13 @@
       .split(' ').map(function(w){ return ABBR[w] || w; }).join(' ');
     statusEl.textContent = 'Searching the county records...';
     var digits = q.replace(/[^0-9]/g, ''), safe = q.replace(/'/g, "''"), where;
-    if(/^[0-9 -]+$/.test(q) && digits.length >= 9){ where = "parcel_no LIKE '" + digits + "%'"; }
+    if(/^[0-9A-Z]{3}-[0-9A-Z]-[0-9A-Z]{3}/.test(q)){ where = "pin LIKE '" + safe.replace(/\s+/g, '') + "%'"; }
+    else if(/^[0-9 -]+$/.test(q) && digits.length >= 6){ where = "parcel_no LIKE '" + digits + "%' OR pin LIKE '" + safe.replace(/\s+/g, '') + "%'"; }
     else { where = "UPPER(siteaddress) LIKE '%" + safe + "%' OR UPPER(own1) LIKE '%" + safe + "%'"; }
     var url = LAYER + '/query?where=' + encodeURIComponent(where) + '&outFields=pin,siteaddress,own1,curr_val&returnGeometry=false&orderByFields=siteaddress&resultRecordCount=25&f=json';
     fetch(url).then(function(r){ return r.json(); }).then(function(j){
       var feats = (j && j.features) || [];
-      if(!feats.length){ statusEl.textContent = 'No parcels found for "' + raw + '". Try just the street name, like "Koger", or an owner last name.'; return; }
+      if(!feats.length){ statusEl.textContent = 'No parcels found for "' + raw + '". Try just the street name, like "Walton Way", or an owner last name.'; return; }
       if(feats.length === 1){ flyToParcel(feats[0].attributes); return; }
       statusEl.textContent = feats.length + (feats.length === 25 ? '+' : '') + ' matches. Tap one to see it on the map.';
       feats.forEach(function(f){
@@ -1386,7 +1517,9 @@
     }).catch(function(){ statusEl.textContent = 'Could not reach the county records. Try again in a moment.'; });
   }
   go.addEventListener('click', search);
-  document.querySelectorAll('.lm-jump [data-go]').forEach(function(b){ b.addEventListener('click', function(){
+  document.getElementById('lmAllHoods').addEventListener('click', showAllHoods);
+  document.querySelectorAll('.lm-jump [data-hood]').forEach(function(b){ b.addEventListener('click', function(){ showHood(b.getAttribute('data-hood')); }); });
+  document.querySelectorAll('.lm-jump [data-go]:not([data-hood])').forEach(function(b){ b.addEventListener('click', function(){
     var c = b.getAttribute('data-go').split(',').map(Number);
     statusEl.textContent = b.textContent + '. Tap any lot for its details.';
     el.scrollIntoView({behavior:'smooth', block:'center'}); map.flyTo(c, 16, {duration:.8});
