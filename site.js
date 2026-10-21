@@ -1,6 +1,16 @@
 /* Smith Asset Group shared site script: frame protection + mobile menu */
 // Refuse to run inside another site's frame (clickjacking protection; GitHub Pages can't send frame headers).
 if (window.top !== window.self) { try { window.top.location.replace(window.self.location.href); } catch (e) { document.documentElement.style.visibility = 'hidden'; } }
+// Wake the Living Room app in the background (Render's free plan sleeps it after 15 idle minutes),
+// at most once every 10 minutes per visitor, after the page has finished loading.
+(function(){
+  try{
+    var last = +(sessionStorage.getItem('sagWake') || 0);
+    if(Date.now() - last < 600000 || !window.fetch) return;
+    var go = function(){ try{ sessionStorage.setItem('sagWake', String(Date.now())); fetch('https://smith-asset-group-living-room.onrender.com/healthz', {mode:'no-cors', cache:'no-store', keepalive:true}).catch(function(){}); }catch(e){} };
+    if(document.readyState === 'complete') setTimeout(go, 1500); else window.addEventListener('load', function(){ setTimeout(go, 1500); });
+  }catch(e){}
+})();
 (function(){
   var st = document.createElement('style'); st.id = 'mnav-css';
   st.textContent = ".mnav-btn{display:none; align-items:center; justify-content:center; width:44px; height:44px; margin-left:6px; border-radius:10px; border:1px solid var(--border); background:transparent; color:var(--text); cursor:pointer; font-size:22px; line-height:1;}\n.mnav-panel{position:fixed; inset:0; z-index:3000; background:rgba(8,10,6,.55); display:none;}\n.mnav-panel.open{display:block;}\n.mnav-sheet{position:absolute; top:0; right:0; width:min(320px,86vw); height:100%; background:var(--surface,#1a1d15); border-left:1px solid var(--border); padding:18px 16px 28px; display:flex; flex-direction:column; gap:2px; overflow:auto; box-shadow:-10px 0 30px rgba(0,0,0,.25);}\n.mnav-top{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}\n.mnav-top strong{font-size:17px; color:var(--text);}\n.mnav-close{width:44px; height:44px; border-radius:10px; border:1px solid var(--border); background:transparent; color:var(--text); font-size:22px; cursor:pointer;}\n.mnav-sheet a.mnav-link{display:block; padding:14px 12px; font-size:17px; color:var(--text); border-radius:10px; text-decoration:none;}\n.mnav-sheet a.mnav-link:hover,.mnav-sheet a.mnav-link:focus-visible{background:rgba(127,127,127,.12);}\n.mnav-sheet a.mnav-link.is-here{color:var(--lime); font-weight:600;}\n.mnav-cta{margin-top:14px; display:block; text-align:center; padding:14px; border-radius:10px; font-weight:700; background:var(--lime); color:var(--lime-ink) !important; text-decoration:none;}\n.mnav-call{margin-top:8px; display:block; text-align:center; padding:13px; border-radius:10px; border:1px solid var(--border); color:var(--text) !important; text-decoration:none;}\n@media (max-width:760px){\n  header.site nav.links > a:not(:last-child){display:none !important;}\n  header.site nav.links{gap:8px !important; flex-wrap:nowrap;}\n  .mnav-btn{display:inline-flex;}\n}\n";
