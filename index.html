@@ -1333,6 +1333,7 @@ document.addEventListener('DOMContentLoaded', function(){
   function recordSearch(raw){
     var q = raw.split(',')[0].trim().toUpperCase().replace(/[^A-Z0-9 .&-]/g, '').replace(/\s+/g, ' ')
       .split(' ').map(function(w){ return ABBR[w] || w; }).join(' ');
+    resultsEl.innerHTML = ''; resultsEl.classList.remove('lm-scroll');
     statusEl.textContent = 'Searching the county records...';
     var digits = q.replace(/[^0-9]/g, ''), safe = q.replace(/'/g, "''"), where;
     if(/^[0-9A-Z]{3}-[0-9A-Z]-[0-9A-Z]{3}/.test(q)){ where = "pin LIKE '" + safe.replace(/\s+/g, '') + "%'"; }
