@@ -98,3 +98,15 @@ footer.site{border-top:1px solid var(--border);}
 .more-box summary::before{content:"+ "; font-weight:700;}
 .more-box[open] summary::before{content:"\2013 ";}
 .more-box[open]{padding-bottom:14px;}
+
+/* Plainer, more deliberate details: one solid accent, no gradient text, no decorative stripes or icon bullets. */
+.top-bar{background:#2f4a2a !important; height:3px !important;}
+.title-mid .line{background:none !important; -webkit-background-clip:border-box !important; background-clip:border-box !important; color:#c8f135 !important; -webkit-text-fill-color:#c8f135 !important; padding:0 !important;}
+.title-mid .line::before,.title-mid .line::after{content:none !important;}
+.coord-badge{display:none !important;}
+.eyebrow{border-left:0 !important; padding-left:0 !important;}
+.highlight,.cta-box{border-left-width:1px !important;}
+.fl-perks{list-style:disc; padding-left:20px; gap:4px;}
+.fl-perks li{padding-left:0;}
+.fl-perks li::before{content:none !important;}
+.kicker-row h2::after,section:not(.snf):not(.hero) > h2::after,.form-panel h2::after{background:#9b3d2b !important;}

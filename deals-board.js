@@ -51,7 +51,7 @@
   @media (max-width:640px){ .snf .grid{grid-template-columns:1fr;} }
   .snf .dc{position:relative; background:linear-gradient(180deg,var(--n3),var(--n2)); border:1px solid var(--line); border-radius:14px; overflow:hidden; cursor:pointer; transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;}
   .snf .dc::before{content:""; position:absolute; inset:0 0 auto 0; height:3px; background:linear-gradient(90deg,var(--lime),var(--gold));}
-  .snf .dc:hover,.snf .dc:focus-visible{transform:translateY(-3px); border-color:rgba(242,193,78,.5); box-shadow:0 18px 40px rgba(0,0,0,.45); outline:none;}
+  .snf .dc:hover,.snf .dc:focus-visible{border-color:rgba(242,193,78,.5); outline:none;}
   .snf .dc .ph{aspect-ratio:16/9; background:radial-gradient(400px 140px at 50% 0,rgba(255,255,255,.12),transparent),linear-gradient(135deg,#1b2a47,#0f1a2e); display:flex; align-items:center; justify-content:center; color:#5d6d8c; position:relative;}
   .snf .dc .ph img{width:100%; height:100%; object-fit:cover;}
   .snf .dc .ph svg{width:52px; height:52px;}
@@ -152,15 +152,15 @@
   mount.innerHTML =
     '<div class="sb-wrap">' +
       '<div class="sb-top"><div>' +
-        '<div class="sb-kick"><span class="live"><i></i>Live</span> Prime-time off-market</div>' +
+        '<div class="sb-kick">Off-market deals</div>' +
         '<h2>The SAG <em>Deal Board</em></h2>' +
         '<p class="sb-sub">Off-market deals from Smith Asset Group and our partner network across Augusta and the CSRA. Every inquiry runs through us, so sellers and sources stay protected.</p>' +
-      '</div><div class="scores" aria-label="Deal scoreboard">' +
+      '</div><div class="scores" id="sbScores" aria-label="Deal scoreboard">' +
         '<div class="score av"><b id="sbAv">0</b><span>Available</span></div>' +
         '<div class="score uc"><b id="sbUc">0</b><span>Under contract</span></div>' +
         '<div class="score"><b id="sbCl">0</b><span>Closed</span></div>' +
       '</div></div>' +
-      '<div class="ticker" aria-hidden="true"><div class="ticker-run" id="sbTick"></div></div>' +
+      '<div class="ticker" hidden aria-hidden="true"><div class="ticker-run" id="sbTick"></div></div>' +
       '<div class="tabs" role="tablist">' +
         '<button type="button" class="on" data-p="browse" role="tab" aria-selected="true">Browse deals</button>' +
         '<button type="button" data-p="post" role="tab" aria-selected="false">Post a deal</button>' +
@@ -198,7 +198,7 @@
           '<div><label>Occupancy</label><select name="Occupancy"><option value="">Select</option><option>Vacant</option><option>Owner occupied</option><option>Tenant occupied</option></select></div>' +
           '<div><label>Close by</label><input name="Close by" placeholder="Date"></div>' +
           '<div class="full"><label>Condition &amp; notes (public)</label><textarea name="Public notes" placeholder="Roof, HVAC, foundation, anything a buyer should know"></textarea></div>' +
-        '</div><div class="priv"><h4>&#128274; Private &middot; only Smith Asset Group sees this</h4><div class="g2">' +
+        '</div><div class="priv"><h4>Private &middot; only Smith Asset Group sees this</h4><div class="g2">' +
           '<div class="full"><label>Full property address</label><input name="PRIVATE full address"></div>' +
           '<div class="full"><label>Contract status</label><select name="PRIVATE contract status"><option value="">Select</option><option>Under contract, assignable</option><option>Under contract, double close</option><option>Listing (agent)</option><option>Not yet under contract</option></select></div>' +
           '<div class="full"><label>Your terms (fee, split, access, deadlines)</label><textarea name="PRIVATE terms" style="min-height:70px"></textarea></div>' +
@@ -253,9 +253,9 @@
     });
     var c = function(fn){ return deals.filter(fn).length; };
     var sc = mount.querySelector('.scores'); if(sc) sc.style.display = deals.length ? '' : 'none'; var flt = mount.querySelector('.filters'); if(flt) flt.style.display = deals.length ? '' : 'none';
-    countUp($('sbAv'), c(function(d){ return d.status === 'Available'; }));
-    countUp($('sbUc'), c(function(d){ return /contract/i.test(d.status || ''); }));
-    countUp($('sbCl'), c(function(d){ return /closed|sold/i.test(d.status || ''); }));
+    setNum($('sbAv'), c(function(d){ return d.status === 'Available'; }));
+    setNum($('sbUc'), c(function(d){ return /contract/i.test(d.status || ''); }));
+    setNum($('sbCl'), c(function(d){ return /closed|sold/i.test(d.status || ''); }));
     $('sbCnt').textContent = deals.length ? (list.length + ' of ' + deals.length + ' deals shown') : '';
     if(!deals.length){
       $('sbGrid').innerHTML = '<div class="kick fl-wrap"><div class="cond">Next deal drops to the list first.</div><p>Every new contract goes to our first-look buyers before it is posted here. Four fields, 30 seconds.</p>' + FIRSTLOOK + '</div>';
@@ -268,6 +268,7 @@
     var run = items.join('');
     $('sbTick').innerHTML = run + run;
   }
+  function setNum(el, n){ if(el) el.textContent = String(n); }
   function countUp(el, n){
     var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     if(reduce || n === 0){ el.textContent = n; return; }
