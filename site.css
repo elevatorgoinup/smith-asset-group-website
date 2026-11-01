@@ -106,3 +106,11 @@ footer.site{border-top:1px solid var(--border);}
 .fl-perks{list-style:disc; padding-left:20px; gap:4px;}
 .fl-perks li{padding-left:0;}
 .fl-perks li::before{content:none !important;}
+
+/* Mobile header is its final size before scripts run (stops the page jumping when the menu button loads). */
+@media (max-width:760px){
+  header.site nav.links > a:not(:last-of-type){display:none !important;}
+  header.site nav.links > a:last-of-type{display:inline-flex !important; align-items:center; white-space:nowrap; font-size:14px !important; padding:9px 12px !important; border-radius:10px; font-weight:600;}
+  header.site nav.links{gap:8px !important; flex-wrap:nowrap; min-height:44px; padding-right:52px; position:relative; align-items:center;}
+  header.site nav.links .mnav-btn{position:absolute; right:0; top:50%; transform:translateY(-50%);}
+}
