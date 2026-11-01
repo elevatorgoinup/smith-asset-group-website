@@ -122,7 +122,7 @@ def page(r):
     </section>
     <section class="cta-box">
       <h2>Get a no-obligation cash offer</h2>
-      <p>Tell us about the house in two minutes, or just call or text. No pressure and no obligation.</p>
+      <p>Tell us about the house in two minutes, or just call or text. No pressure and no obligation. Not sure a cash sale makes sense for you? <a class="inline" href="cash-offer-vs-listing-calculator.html">Compare cash vs. listing</a>.</p>
       <div class="cta-row" style="margin-top:12px">
         <a class="btn-a pri" href="index.html#sell">Start my offer</a>
         <a class="btn-a sec" href="tel:+17622154466">(762) 215-4466</a>
