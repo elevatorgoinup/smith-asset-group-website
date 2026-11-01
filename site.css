@@ -114,3 +114,4 @@ footer.site{border-top:1px solid var(--border);}
   header.site nav.links{gap:8px !important; flex-wrap:nowrap; min-height:44px; padding-right:52px; position:relative; align-items:center;}
   header.site nav.links .mnav-btn{position:absolute; right:0; top:50%; transform:translateY(-50%);}
 }
+.chips li a{color:inherit; text-decoration:none; border-bottom:1px dotted currentColor;}
