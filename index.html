@@ -6,7 +6,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Smith Asset">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.s-more{margin:6px 0 14px;border:1px solid var(--border);border-radius:10px;padding:10px 14px;}.s-more summary{cursor:pointer;font-weight:600;font-size:15px;}.s-more[open] summary{margin-bottom:10px;}
+</style>
 <title>Smith Asset Group LLC | Buy &amp; Sell Houses Fast in Augusta, GA</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%2312140f'/%3E%3Ctext%20x='32'%20y='44'%20text-anchor='middle'%20font-family='Georgia,serif'%20font-size='36'%20font-weight='700'%20fill='%23c8f135'%3ES%3C/text%3E%3C/svg%3E">
 <meta name="theme-color" content="#f7f3ea">
@@ -604,9 +605,9 @@
     <form id="sellForm" novalidate>
       <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <div class="form-grid">
+        <div class="field full"><label for="s_address">Property address <span class="req">*</span></label><input id="s_address" name="Property address" type="text" placeholder="Street, City, County" required></div>
         <div class="field"><label for="s_name">Full name <span class="req">*</span></label><input id="s_name" name="Full name" type="text" required></div>
         <div class="field"><label for="s_phone">Phone <span class="req">*</span></label><input id="s_phone" name="Phone" type="tel" required></div>
-        <div class="field"><label for="s_email">Email</label><input id="s_email" name="Email" type="email"></div>
         <div class="field"><label for="s_timeline">Timeline to sell <span class="req">*</span></label>
           <select id="s_timeline" name="Timeline to sell" required>
             <option value="" disabled selected>Select one</option>
@@ -616,11 +617,6 @@
             <option>Just exploring options</option>
           </select>
         </div>
-        <div class="field full"><label for="s_address">Property address <span class="req">*</span></label><input id="s_address" name="Property address" type="text" placeholder="Street, City, County" required></div>
-        <div class="field"><label for="s_sqft">Square footage</label><input id="s_sqft" name="Square footage" type="text" placeholder="e.g. 1,450"></div>
-        <div class="field"><label for="s_year">Year built</label><input id="s_year" name="Year built" type="text" placeholder="e.g. 1998"></div>
-        <div class="field"><label for="s_beds">Bedrooms</label><input id="s_beds" name="Bedrooms" type="text"></div>
-        <div class="field"><label for="s_baths">Bathrooms</label><input id="s_baths" name="Bathrooms" type="text"></div>
         <div class="field"><label for="s_condition">Property condition <span class="req">*</span></label>
           <select id="s_condition" name="Condition" required>
             <option value="" disabled selected>Select one</option>
@@ -631,9 +627,18 @@
             <option>Major repairs needed</option>
           </select>
         </div>
+        <div class="field"><label for="s_email">Email</label><input id="s_email" name="Email" type="email"></div>
+      </div>
+      <details class="s-more" id="s_more"><summary>Add details (optional, helps us make a better offer)</summary>
+      <div class="form-grid">
+        <div class="field"><label for="s_sqft">Square footage</label><input id="s_sqft" name="Square footage" type="text" placeholder="e.g. 1,450"></div>
+        <div class="field"><label for="s_year">Year built</label><input id="s_year" name="Year built" type="text" placeholder="e.g. 1998"></div>
+        <div class="field"><label for="s_beds">Bedrooms</label><input id="s_beds" name="Bedrooms" type="text"></div>
+        <div class="field"><label for="s_baths">Bathrooms</label><input id="s_baths" name="Bathrooms" type="text"></div>
         <div class="field"><label for="s_price">Asking price expectation</label><input id="s_price" name="Asking price expectation" type="text" placeholder="Optional"></div>
         <div class="field full"><label for="s_reason">Reason for selling</label><textarea id="s_reason" name="Reason for selling" placeholder="Optional. Helps us make a fair offer faster."></textarea></div>
       </div>
+      </details>
       <label class="sag-consent"><input type="checkbox" name="SMS consent" value="Yes"> (Optional) Smith Asset Group LLC may call or text me at the number above about my inquiry, including by automated means. Consent is not a condition of any purchase or sale. Msg frequency varies; msg &amp; data rates may apply. Reply STOP to opt out, HELP for help.</label>
       <div class="submit-row">
         <button type="submit" class="btn btn-lime">Get My Cash Offer</button>
@@ -989,6 +994,7 @@ document.addEventListener('DOMContentLoaded', function(){
     if(e.target.closest('.lm-own') && current){
       var set = function(id, v){ var x = document.getElementById(id); if(x && v != null && v !== '') x.value = v; };
       set('s_address', [current.siteaddress, current.site_citystzip].filter(Boolean).join(', '));
+      var more = document.getElementById('s_more'); if(more) more.open = true;
       set('s_sqft', num(current.structsize)); set('s_year', current.yr_built); set('s_beds', current.no_bedrooms);
       set('s_baths', (current.fullbaths || 0) + (current.halfbaths ? current.halfbaths * 0.5 : 0) || '');
       var sell = document.getElementById('sell'); if(sell) sell.scrollIntoView({behavior:'smooth'});
